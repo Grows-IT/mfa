@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CalculatorPage } from '../calculator/calculator.page'
 
 @Component({
   selector: 'app-home',
@@ -8,5 +9,13 @@ import { Component } from '@angular/core';
 export class HomePage {
 
   constructor() {}
+
+  openMfa() {
+
+  }
+
+  // openCalculator() {
+  //   this.(CalculatorPage);
+  // }
 
 }
