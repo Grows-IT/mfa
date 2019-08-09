@@ -1,9 +1,16 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Topics</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Modern Farm</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-list>
+    <div *ngFor="let topic of topics">
+      <ion-button>{{ topic.name }}</ion-button>
+    </div>
+  </ion-list>
 </ion-content>
