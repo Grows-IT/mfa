@@ -16,7 +16,8 @@ const routes: Routes = [
     loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
   },
   { path: 'calculator', loadChildren: './calculator/calculator.module#CalculatorPageModule' },
-  { path: 'courses', loadChildren: './courses/courses.module#CoursesPageModule' }
+  { path: 'courses', loadChildren: './courses/courses.module#CoursesPageModule' },
+  { path: 'farm-vs-modern-farm', loadChildren: './farm-vs-modern-farm/farm-vs-modern-farm.module#FarmVsModernFarmPageModule' }
 ];
 
 @NgModule({
