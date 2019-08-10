@@ -10,7 +10,7 @@
 <ion-content>
   <ion-list>
     <div *ngFor="let topic of currentCourse.topics">
-      <ion-button>{{ topic.name }}</ion-button>
+      <ion-button [routerLink]="['/topic/', topic.id]">{{ topic.name }}</ion-button>
     </div>
   </ion-list>
 </ion-content>

@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'courses', loadChildren: './courses/courses.module#CoursesPageModule' },
   { path: 'farm-vs-modern-farm', loadChildren: './farm-vs-modern-farm/farm-vs-modern-farm.module#FarmVsModernFarmPageModule' },
   { path: 'course/:courseId', loadChildren: './topics/topics.module#TopicsPageModule' },
-  { path: 'sub-topics', loadChildren: './sub-topics/sub-topics.module#SubTopicsPageModule' }
+  { path: 'topic/:topicId', loadChildren: './sub-topics/sub-topics.module#SubTopicsPageModule' }
 ];
 
 @NgModule({
