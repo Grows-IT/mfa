@@ -10,10 +10,12 @@ export class ContentsPage implements OnInit {
   currentSubTopic;
   subTopics = [{
     id: '1' ,
-    name: 'ABOUT อ้อย'
+    name: 'ABOUT อ้อย',
+    contents: ['assets/img/pages/ABOUT อ้อย/1.png']
   }, {
     id: '2',
-    name: 'ดิน'
+    name: 'ดิน',
+    contents: ['assets/img/pages/ดิน/1.png', 'assets/img/pages/ดิน/2.png', 'assets/img/pages/ดิน/3.png']
   }, {
     id: '3',
     name: 'พันธุ์อ้อยทางการค้า'
@@ -30,7 +32,7 @@ export class ContentsPage implements OnInit {
     id: '7',
     name: 'ทดสอบท้ายบท',
     img: 'assets/img/icon-quiz.png'
-  }]
+  }];
   constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
