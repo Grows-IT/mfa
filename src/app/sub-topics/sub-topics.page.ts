@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-sub-topics',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SubTopicsPage implements OnInit {
   currentTopic = null;
-  topics: [{ 
+  topics = [{ 
     id: '1' ,
     name: 'ABOUT อ้อย',
     subTopics: [{
@@ -27,7 +28,8 @@ export class SubTopicsPage implements OnInit {
       name: 'คุณภาพอ้อยและการสะสมน้ำตาล'
     }, {
       id: '7',
-      name: 'ทดสอบท้ายบท'
+      name: 'ทดสอบท้ายบท',
+      img: 'assets/img/icon-quiz.png'
     }]
   }, { 
     id: '2',
@@ -54,9 +56,12 @@ export class SubTopicsPage implements OnInit {
     id: '8',
     name: 'ระบบเก็บเกี่ยวและ Logistic อ้อย'
   }]
-  constructor() { }
+  constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    const topicId = this.activatedRoute.snapshot.paramMap.get('topicId');
+    this.currentTopic = this.topics.find(topic => {
+      if (topic.id === topicId) return topic;
+    })
   }
-
 }
