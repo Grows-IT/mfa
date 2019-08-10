@@ -16,19 +16,8 @@
   </div>
   <ion-grid>
     <ion-row>
-      <ion-col>
-          <img src="assets/img/icon-course-know-yourself.png" />
-      </ion-col>
-      <ion-col>
-          <img src="assets/img/icon-course-empathy.png" />
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-          <img src="assets/img/icon-course-modern-farm.png" [routerLink]="['/topics']"/>
-      </ion-col>
-      <ion-col>
-          <img src="assets/img/icon-course-specialization.png" />
+      <ion-col size="6" *ngFor="let course of courses">
+        <img [src]="course.img" [routerLink]="['/course/', course.id]"/>
       </ion-col>
     </ion-row>
   </ion-grid>
