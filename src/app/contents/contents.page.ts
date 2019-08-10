@@ -35,7 +35,8 @@ export class ContentsPage implements OnInit {
   }, {
     id: '7',
     name: 'ทดสอบท้ายบท',
-    contents: ['assets/img/pages/quiz/1.png', 'assets/img/pages/quiz/2.png']
+    contents: ['assets/img/pages/quiz/1.png', 'assets/img/pages/quiz/2.png'],
+    type: 'quiz'
   }];
   constructor(private activatedRoute: ActivatedRoute) { }
 
