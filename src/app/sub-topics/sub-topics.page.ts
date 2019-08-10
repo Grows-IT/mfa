@@ -60,8 +60,6 @@ export class SubTopicsPage implements OnInit {
 
   ngOnInit() {
     const topicId = this.activatedRoute.snapshot.paramMap.get('topicId');
-    this.currentTopic = this.topics.find(topic => {
-      if (topic.id === topicId) return topic;
-    })
+    this.currentTopic = this.topics.find(topic => topic.id === topicId);
   }
 }
