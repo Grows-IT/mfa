@@ -18,20 +18,24 @@ export class ContentsPage implements OnInit {
     contents: ['assets/img/pages/ดิน/1.png', 'assets/img/pages/ดิน/2.png', 'assets/img/pages/ดิน/3.png']
   }, {
     id: '3',
-    name: 'พันธุ์อ้อยทางการค้า'
+    name: 'พันธุ์อ้อยทางการค้า',
+    contents: ['assets/img/pages/พันธุ์อ้อยทางการค้า/1.png', 'assets/img/pages/พันธุ์อ้อยทางการค้า/2.png', 'assets/img/pages/พันธุ์อ้อยทางการค้า/3.png']
   }, {
     id: '4',
-    name: 'การจัดการพันธุ์อ้อย'
+    name: 'การจัดการพันธุ์อ้อย',
+    contents: ['assets/img/pages/การจัดการพันธุ์อ้อย/1.png', 'assets/img/pages/การจัดการพันธุ์อ้อย/2.png', 'assets/img/pages/การจัดการพันธุ์อ้อย/3.png']
   }, {
     id: '5',
-    name: 'สภาพแวดล้อมที่เหมาะสมสำหรับปลูกอ้อย'
+    name: 'สภาพแวดล้อมที่เหมาะสมสำหรับปลูกอ้อย',
+    contents: ['assets/img/pages/สภาพแวดล้อมที่เหมาะสมสำหรับปลูกอ้อย/1.png', 'assets/img/pages/สภาพแวดล้อมที่เหมาะสมสำหรับปลูกอ้อย/2.png', '']
   }, {
     id: '6',
-    name: 'คุณภาพอ้อยและการสะสมน้ำตาล'
+    name: 'คุณภาพอ้อยและการสะสมน้ำตาล',
+    contents: ['assets/img/pages/คุณภาพอ้อยและการสะสมน้ำตาล/1.png', 'assets/img/pages/คุณภาพอ้อยและการสะสมน้ำตาล/2.png']
   }, {
     id: '7',
     name: 'ทดสอบท้ายบท',
-    img: 'assets/img/icon-quiz.png'
+    contents: ['assets/img/pages/quiz/1.png', 'assets/img/pages/quiz/2.png']
   }];
   constructor(private activatedRoute: ActivatedRoute) { }
 
