@@ -3,19 +3,19 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>currentTopic.name</ion-title>
+    <ion-title>{{ currentTopic.name }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
-    <div *ngFor="let subTopic of currentTopic.subTopics">
+    <div *ngFor="let subTopic of currentTopic.subTopics" [routerLink]="['/sub-topic/', subTopic.id]">
         <ion-item *ngIf="!subTopic.img; else elseBlock">
             <img>
-            <ion-label [routerLink]="['/subTopic/', subTopic.id]">{{ subTopic.name }}</ion-label>
+            <ion-label>{{ subTopic.name }}</ion-label>
         </ion-item>
         <ng-template #elseBlock>
-            <img #showImage src="{{ subTopic.img }}" [routerLink]="['/subTopic/', subTopic.id]"/>
+            <img #showImage src="{{ subTopic.img }}"/>
         </ng-template>
     </div>
   </ion-list>

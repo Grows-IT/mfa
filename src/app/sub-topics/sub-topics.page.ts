@@ -10,8 +10,11 @@ export class SubTopicsPage implements OnInit {
   currentTopic = null;
   topics = [{ 
     id: '1' ,
-    name: 'ABOUT อ้อย',
+    name: 'หลักการผลิตอ้อย',
     subTopics: [{
+      id: '1' ,
+      name: 'ABOUT อ้อย'
+    }, {
       id: '2',
       name: 'ดิน'
     }, {
