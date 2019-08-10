@@ -8,16 +8,18 @@
 </ion-header>
 
 <ion-content>
-  <div>
+  <div class="banner" align="center">
     <img src="assets/img/icon-course-banner.png" />
   </div>
-  <div>
-    <img src="assets/img/icon-course-avatar.png" />
+  <div class="avatar" align="center">
+    <img src="assets/img/avatar.png" />
   </div>
   <ion-grid>
     <ion-row>
       <ion-col size="6" *ngFor="let course of courses">
-        <img [src]="course.img" [routerLink]="['/course/', course.id]"/>
+        <div align="center">
+            <img [src]="course.img" [routerLink]="['/course/', course.id]"/>
+        </div>
       </ion-col>
     </ion-row>
   </ion-grid>
