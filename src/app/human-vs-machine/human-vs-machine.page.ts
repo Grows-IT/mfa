@@ -6,10 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./human-vs-machine.page.scss'],
 })
 export class HumanVsMachinePage implements OnInit {
+  humanDays: number;
+  machineDays: number;
 
   constructor() { }
 
   ngOnInit() {
+    this.humanDays = 1000;
+    this.machineDays = 90;
   }
-
 }
