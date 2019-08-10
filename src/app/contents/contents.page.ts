@@ -43,5 +43,4 @@ export class ContentsPage implements OnInit {
     const subTopicId = this.activatedRoute.snapshot.paramMap.get('subTopicId');
     this.currentSubTopic = this.subTopics.find(subTopic => subTopic.id === subTopicId);
   }
-
 }
