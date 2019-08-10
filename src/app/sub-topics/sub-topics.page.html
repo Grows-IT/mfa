@@ -9,10 +9,9 @@
 
 <ion-content>
   <ion-list>
-    <div *ngFor="let subTopic of currentTopic.subTopics" [routerLink]="['/sub-topic/', subTopic.id]">
-        <ion-item *ngIf="!subTopic.img; else elseBlock">
-            <img>
-            <ion-label>{{ subTopic.name }}</ion-label>
+    <div align="center" *ngFor="let subTopic of currentTopic.subTopics" [routerLink]="['/sub-topic/', subTopic.id]">
+        <ion-item button="true" class="ion-margin" color="success" *ngIf="!subTopic.img; else elseBlock">
+            <ion-label class="ion-text-center">{{ subTopic.name }}</ion-label>
         </ion-item>
         <ng-template #elseBlock>
             <img #showImage src="{{ subTopic.img }}"/>
