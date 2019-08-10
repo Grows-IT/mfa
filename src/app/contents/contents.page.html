@@ -8,5 +8,9 @@
 </ion-header>
 
 <ion-content>
-
+  <ion-slides>
+    <ion-slide *ngFor="let content of currentSubTopic.contents">
+      <img src="{{ content }}"/>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
