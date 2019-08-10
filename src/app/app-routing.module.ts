@@ -4,7 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -22,7 +22,8 @@ const routes: Routes = [
   { path: 'topic/:topicId', loadChildren: './sub-topics/sub-topics.module#SubTopicsPageModule' },
   { path: 'sub-topic/:subTopicId', loadChildren: './contents/contents.module#ContentsPageModule' },
   { path: 'human-vs-machine', loadChildren: './human-vs-machine/human-vs-machine.module#HumanVsMachinePageModule' },
-  { path: 'assess-sugar', loadChildren: './assess-sugar/assess-sugar.module#AssessSugarPageModule' }
+  { path: 'assess-sugar', loadChildren: './assess-sugar/assess-sugar.module#AssessSugarPageModule' },
+  { path: 'login', loadChildren: './login/login.module#LoginPageModule' }
 ];
 
 @NgModule({
