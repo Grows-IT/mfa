@@ -1,16 +1,28 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>{{ currentSubTopic.name }}</ion-title>
-  </ion-toolbar>
+  <div *ngIf="currentSubTopic.type; else elseBlock">
+    <ion-toolbar color="dark">
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>{{ currentSubTopic.name }}</ion-title>
+    </ion-toolbar>
+  </div>
+  <ng-template #elseBlock>
+    <ion-toolbar color="tertiary">
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>{{ currentSubTopic.name }}</ion-title>
+    </ion-toolbar>
+  </ng-template>
 </ion-header>
 
 <ion-content>
-  <ion-slides>
+  <ion-slides pager>
     <ion-slide *ngFor="let content of currentSubTopic.contents">
-      <img src="{{ content }}"/>
+      <div class="ion-margin">
+        <img src="{{ content }}" />
+      </div>
     </ion-slide>
   </ion-slides>
 </ion-content>
