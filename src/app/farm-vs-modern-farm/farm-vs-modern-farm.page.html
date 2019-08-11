@@ -9,4 +9,31 @@
 
 <ion-content>
     <canvas #lineCanvas></canvas>
+
+
+<ion-list lines="full" class="ion-no-margin ion-no-padding">
+  <ion-item>
+      <ion-label stacked>พื้นที่ปลูกอ้อย (ไร่)</ion-label>
+      <ion-input required type="number" [(ngModel)]="sugarcaneArea"></ion-input>
+  </ion-item>
+</ion-list>
+
+<div padding>
+  <ion-button shape="round" (click)="calculate()">คำนวณ</ion-button>
+</div>
+  <div *ngIf="showResult">
+    <div padding ion-text color="#ED5015">
+        <p>การปลูกแบบเก่า ใช้เงินปลูก</p>
+        <h3>{{ oldTotalCost| number : fractionSize }} บาท</h3>
+    </div>
+    <div padding ion-text color="mfa-light-blue">
+        <p>การปลูกแบบ Modern Farm ใช้เงินปลูก</p>
+        <h3>{{ modernTotalCost| number : fractionSize }} บาท</h3>
+    </div>
+    <div padding ion-text color="mfa-yellow">
+        <p>ประหยัดเงิน</p>
+        <h3>{{ reduceCost| number : fractionSize }} บาท</h3>
+    </div>
+  </div>
 </ion-content>
+
