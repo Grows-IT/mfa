@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./human-vs-machine.page.scss'],
 })
 export class HumanVsMachinePage implements OnInit {
+  humanDays: number;
+  machineDays: number;
 
   constructor() { }
 
@@ -100,6 +102,9 @@ export class HumanVsMachinePage implements OnInit {
         totalPriceDiff: this.TotalPriceDiff
     }*/
     
-  }
+  
 
+    this.humanDays = 1000;
+    this.machineDays = 90;
+  }
 }

@@ -9,13 +9,4 @@ import { CalculatorPage } from '../calculator/calculator.page'
 export class HomePage {
 
   constructor() {}
-
-  openMfa() {
-
-  }
-
-  // openCalculator() {
-  //   this.(CalculatorPage);
-  // }
-
 }

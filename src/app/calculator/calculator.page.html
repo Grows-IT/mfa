@@ -16,9 +16,10 @@
         <h1 class="ion-text-center ion-padding">เครื่องมือช่วยคำนวณการทำเกษตรสมัยใหม่</h1>
     </ion-text>
   </div>
-  <div align="center">
-    <img src="assets/img/icon-calculator-farm-modernfarm.png" [routerLink]="['/farm-vs-modern-farm']"/>
+  <div align="center" *ngFor="let calculator of calculators">
+    <img src="{{ calculator.img }}" [routerLink]="[calculator.url]"/>
   </div>
+<<<<<<< HEAD
   <div align="center">
     <img src="assets/img/icon-calculator-human-machine.png" [routerLink]="['/human-vs-machine']"/>
   </div>
@@ -26,4 +27,6 @@
     <img src="assets/img/icon-calculator-sugarcane.png" [routerLink]="['/sugarcane-quantity-view']"/>
   </div>
   
+=======
+>>>>>>> upstream/master
 </ion-content>
