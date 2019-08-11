@@ -4,7 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -20,8 +20,10 @@ const routes: Routes = [
   { path: 'farm-vs-modern-farm', loadChildren: './farm-vs-modern-farm/farm-vs-modern-farm.module#FarmVsModernFarmPageModule' },
   { path: 'course/:courseId', loadChildren: './topics/topics.module#TopicsPageModule' },
   { path: 'topic/:topicId', loadChildren: './sub-topics/sub-topics.module#SubTopicsPageModule' },
-  { path: 'sugarcane-quantity-view', loadChildren: './sugarcane-quantity-view/sugarcane-quantity-view.module#SugarcaneQuantityViewPageModule' },
-  { path: 'human-vs-machine', loadChildren: './human-vs-machine/human-vs-machine.module#HumanVsMachinePageModule' }
+  { path: 'sub-topic/:subTopicId', loadChildren: './contents/contents.module#ContentsPageModule' },
+  { path: 'human-vs-machine', loadChildren: './human-vs-machine/human-vs-machine.module#HumanVsMachinePageModule' },
+  { path: 'assess-sugar', loadChildren: './assess-sugar/assess-sugar.module#AssessSugarPageModule' },
+  { path: 'login', loadChildren: './login/login.module#LoginPageModule' }
 ];
 
 @NgModule({

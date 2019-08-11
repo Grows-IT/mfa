@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./topics.page.scss'],
 })
 export class TopicsPage implements OnInit {
-  currentCourse = null;
+  currentCourse;
   courses = [{
     id: '1',
     name: 'Know Yourself'
@@ -54,8 +54,6 @@ export class TopicsPage implements OnInit {
 
   ngOnInit() {
     const courseId = this.activatedRoute.snapshot.paramMap.get('courseId');
-    this.currentCourse = this.courses.find(course => {
-      if (course.id === courseId) return course;
-    })
+    this.currentCourse = this.courses.find(course => course.id === courseId);
   }
 }
