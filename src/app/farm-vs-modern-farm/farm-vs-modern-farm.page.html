@@ -8,30 +8,81 @@
 </ion-header>
 
 <ion-content>
-<ion-list lines="full" class="ion-no-margin ion-no-padding">
-  <ion-item>
-      <ion-label stacked>พื้นที่ปลูกอ้อย (ไร่)</ion-label>
-      <ion-input required type="number" [(ngModel)]="sugarcaneArea"></ion-input>
-  </ion-item>
-</ion-list>
-<!-- <canvas #lineCanvas></canvas> -->
-
-<div padding>
-  <ion-button shape="round" (click)="calculate()">คำนวณ</ion-button>
-</div>
+  <ion-grid class="ion-margin-top">
+    <ion-row>
+      <ion-col size="1"></ion-col>
+      <ion-col size="4">
+        <ion-text color="tertiary" class="ion-float-right">
+          <h1>พื้นที่ปลูกอ้อย</h1>
+        </ion-text>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button size="large" shape="round" color="medium" class="ion-float-right">
+          <ion-input [(ngModel)]="sugarcaneArea" required type="number" placeholder="ใส่จำนวน"></ion-input>
+        </ion-button>
+      </ion-col>
+      <ion-col size="2">
+        <ion-text color="tertiary">
+          <h1>ไร่</h1>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div align="center">
+    <ion-button size="large" shape="round" (click)="calculate()">คำนวณ</ion-button>
+  </div>
+  <!-- <canvas #lineCanvas></canvas> -->
+  <!--  Chart -->
   <div *ngIf="showResult">
-    <div padding ion-text color="#ED5015">
-        <p>การปลูกแบบเก่า ใช้เงินปลูก</p>
-        <h3>{{ oldTotalCost| number : fractionSize }} บาท</h3>
+    <div align="center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="457.462" height="236.356" viewBox="0 0 457.462 236.356">
+        <line id="Line_1" data-name="Line 1" y2="227.855" transform="translate(4.78 6.001)" fill="none" stroke="#707070"
+          stroke-width="5" />
+        <path id="Path_797" data-name="Path 797" d="M2101.5,1685.59l452.682-233.856V1685.59Z"
+          transform="translate(-2096.72 -1451.733)" fill="#ed5015" />
+        <path id="Path_798" data-name="Path 798" d="M2101.5,1652.676,2554.182,1507.2v145.476Z"
+          transform="translate(-2096.72 -1418.82)" fill="#80b4c3" />
+        <line id="Line_2" data-name="Line 2" x2="457.303" transform="translate(0 233.856)" fill="none" stroke="#707070"
+          stroke-width="5" />
+      </svg>
     </div>
-    <div padding ion-text color="mfa-light-blue">
-        <p>การปลูกแบบ Modern Farm ใช้เงินปลูก</p>
-        <h3>{{ modernTotalCost| number : fractionSize }} บาท</h3>
-    </div>
-    <div padding ion-text color="mfa-yellow">
-        <p>ประหยัดเงิน</p>
-        <h3>{{ reduceCost| number : fractionSize }} บาท</h3>
-    </div>
+    <!-- Output results -->
+    <ion-grid fixed>
+      <ion-row>
+        <ion-col size="2">
+        </ion-col>
+        <ion-col size="10">
+          <ion-text color="danger">
+            <p>การปลูกแบบเก่า ใช้เงินปลูก</p>
+            <h3>{{ oldTotalCost| number : fractionSize }} บาท</h3>
+          </ion-text>
+          <ion-text color="secondary">
+            <p>การปลูกแบบ Modern Farm ใช้เงินปลูก</p>
+            <h3>{{ modernTotalCost| number : fractionSize }} บาท</h3>
+          </ion-text>
+          <ion-text color="warning">
+            <p>ประหยัดเงิน</p>
+            <h3>{{ reduceCost| number : fractionSize }} บาท</h3>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+        </ion-col>
+          <ion-col>
+            <ion-text color="tertiary">
+                <p>อ้อยเพิ่มขึ้น</p>
+                <h1>{{ increaeResultPerRai.toLocaleString() }} ตัน</h1>
+            </ion-text>
+          </ion-col>
+          <ion-col>
+              <ion-text color="tertiary">
+            <p>รายได้เพิ่มขึ้น</p>
+            <h1>{{ totalIncrease.toLocaleString() }} บาท</h1>
+            </ion-text>
+          </ion-col>
+      </ion-row>
+    </ion-grid>
+
   </div>
 </ion-content>
-
