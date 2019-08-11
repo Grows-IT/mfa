@@ -8,158 +8,178 @@
 </ion-header>
 
 <ion-content>
-<!-- Input -->
-  <ion-list lines="full" class="ion-no-margin ion-no-padding">
-    <ion-item>
-        <ion-label stacked>ปริมาณอ้อย (ตัน)</ion-label>
-        <ion-input required type="number" [(ngModel)]="quantity"></ion-input>
-    </ion-item>
-</ion-list>
-<div padding align="center">
-    <button ion-button color="mfa-yellow" round (click)="calculateTotalPrice()">คำนวณ</button>
-</div>
+  <!-- Input -->
+  <ion-text color="tertiary" class="ion-text-center">
+    <h1>ปริมาณอ้อยที่ส่งเข้ามิตรผล</h1>
+  </ion-text>
+  <div align="center">
+    <ion-grid no-padding>
+      <ion-row>
+        <ion-col size="4"></ion-col>
+        <ion-col size="4">
+          <ion-button shape="round" color="medium" class="ion-float-right">
+            <ion-input [(ngModel)]="quantity" required type="number" placeholder="ใส่ตัวเลข"></ion-input>
+          </ion-button>
+        </ion-col>
+        <ion-col size="4">
+          <ion-text color="tertiary" class="ion-text-left">
+            <h3>ตัน</h3>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <div align="center">
+    <ion-button color="warning" shape="round" (click)="calculateTotalPrice()">คำนวณ</ion-button>
+  </div>
 
-<div *ngIf="showResult">
+  <div *ngIf="showResult">
     <!-- Chart -->
-<div align="center" class="ion-margin">
-        <svg xmlns="http://www.w3.org/2000/svg" width="345.464" height="335.677" viewBox="0 0 345.464 335.677">
-          <g id="Group_79" data-name="Group 79">
-            <g id="Group_68" data-name="Group 68" transform="translate(0 2.424)">
-              <g id="Group_60" data-name="Group 60">
-                <path id="Path_909" data-name="Path 909"
-                  d="M540.3,349.408H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
-                  transform="translate(-195.631 -347.816)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_61" data-name="Group 61" transform="translate(0 34.574)">
-                <path id="Path_910" data-name="Path 910"
-                  d="M540.3,360.266H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
-                  transform="translate(-195.631 -358.674)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_62" data-name="Group 62" transform="translate(0 69.141)">
-                <path id="Path_911" data-name="Path 911"
-                  d="M540.3,371.122H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
-                  transform="translate(-195.631 -369.53)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_63" data-name="Group 63" transform="translate(0 103.715)">
-                <path id="Path_912" data-name="Path 912"
-                  d="M540.3,381.98H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
-                  transform="translate(-195.631 -380.388)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_64" data-name="Group 64" transform="translate(0 138.285)">
-                <path id="Path_913" data-name="Path 913"
-                  d="M540.3,392.837H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
-                  transform="translate(-195.631 -391.245)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_65" data-name="Group 65" transform="translate(0 172.856)">
-                <path id="Path_914" data-name="Path 914"
-                  d="M540.3,403.694H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
-                  transform="translate(-195.631 -402.102)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_66" data-name="Group 66" transform="translate(0 207.427)">
-                <path id="Path_915" data-name="Path 915"
-                  d="M540.3,414.551H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
-                  transform="translate(-195.631 -412.959)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_67" data-name="Group 67" transform="translate(0 241.997)">
-                <path id="Path_916" data-name="Path 916"
-                  d="M540.3,425.408H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
-                  transform="translate(-195.631 -423.816)" fill="#e6e7e8" />
-              </g>
+    <div align="center" class="ion-margin">
+      <svg xmlns="http://www.w3.org/2000/svg" width="345.464" height="335.677" viewBox="0 0 345.464 335.677">
+        <g id="Group_79" data-name="Group 79">
+          <g id="Group_68" data-name="Group 68" transform="translate(0 2.424)">
+            <g id="Group_60" data-name="Group 60">
+              <path id="Path_909" data-name="Path 909"
+                d="M540.3,349.408H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
+                transform="translate(-195.631 -347.816)" fill="#e6e7e8" />
             </g>
-            <g id="Group_77" data-name="Group 77" transform="translate(59.143 3.414)">
-              <g id="Group_69" data-name="Group 69">
-                <path id="Path_917" data-name="Path 917"
-                  d="M215,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,215,641.787Z"
-                  transform="translate(-214.205 -348.127)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_70" data-name="Group 70" transform="translate(36.382)">
-                <path id="Path_918" data-name="Path 918"
-                  d="M226.427,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,226.427,641.787Z"
-                  transform="translate(-225.631 -348.127)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_71" data-name="Group 71" transform="translate(72.768)">
-                <path id="Path_919" data-name="Path 919"
-                  d="M237.854,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,237.854,641.787Z"
-                  transform="translate(-237.058 -348.127)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_72" data-name="Group 72" transform="translate(109.15)">
-                <path id="Path_920" data-name="Path 920"
-                  d="M249.28,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,249.28,641.787Z"
-                  transform="translate(-248.484 -348.127)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_73" data-name="Group 73" transform="translate(145.536)">
-                <path id="Path_921" data-name="Path 921"
-                  d="M260.707,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,260.707,641.787Z"
-                  transform="translate(-259.911 -348.127)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_74" data-name="Group 74" transform="translate(181.921)">
-                <path id="Path_922" data-name="Path 922"
-                  d="M272.134,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,272.134,641.787Z"
-                  transform="translate(-271.338 -348.127)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_75" data-name="Group 75" transform="translate(218.304)">
-                <path id="Path_923" data-name="Path 923"
-                  d="M283.56,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,283.56,641.787Z"
-                  transform="translate(-282.764 -348.127)" fill="#e6e7e8" />
-              </g>
-              <g id="Group_76" data-name="Group 76" transform="translate(254.689)">
-                <path id="Path_924" data-name="Path 924"
-                  d="M294.987,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,294.987,641.787Z"
-                  transform="translate(-294.191 -348.127)" fill="#e6e7e8" />
-              </g>
+            <g id="Group_61" data-name="Group 61" transform="translate(0 34.574)">
+              <path id="Path_910" data-name="Path 910"
+                d="M540.3,360.266H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
+                transform="translate(-195.631 -358.674)" fill="#e6e7e8" />
             </g>
-            <rect id="Rectangle_149" data-name="Rectangle 149" width="41.455" height="232.369"
-              transform="translate(87.026 48.285)" fill="#0f4532" />
-            <rect id="Rectangle_150" data-name="Rectangle 150" width="41.455" height="183.246"
-              transform="translate(128.481 97.409)" fill="#ffb911" />
-            <rect id="Rectangle_151" data-name="Rectangle 151" width="41.455" height="35.674"
-              transform="translate(217.607 245.659)" fill="#0f4532" />
-            <rect id="Rectangle_152" data-name="Rectangle 152" width="41.455" height="87.045"
-              transform="translate(259.062 194.288)" fill="#ffb911" />
-            <g id="Group_78" data-name="Group 78" transform="translate(12.018)">
-              <path id="Path_925" data-name="Path 925" d="M532.1,632.486H199.405V347.055h9.553V622.933H532.1Z"
-                transform="translate(-199.405 -347.055)" fill="#d1d3d4" />
+            <g id="Group_62" data-name="Group 62" transform="translate(0 69.141)">
+              <path id="Path_911" data-name="Path 911"
+                d="M540.3,371.122H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
+                transform="translate(-195.631 -369.53)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_63" data-name="Group 63" transform="translate(0 103.715)">
+              <path id="Path_912" data-name="Path 912"
+                d="M540.3,381.98H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
+                transform="translate(-195.631 -380.388)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_64" data-name="Group 64" transform="translate(0 138.285)">
+              <path id="Path_913" data-name="Path 913"
+                d="M540.3,392.837H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
+                transform="translate(-195.631 -391.245)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_65" data-name="Group 65" transform="translate(0 172.856)">
+              <path id="Path_914" data-name="Path 914"
+                d="M540.3,403.694H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
+                transform="translate(-195.631 -402.102)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_66" data-name="Group 66" transform="translate(0 207.427)">
+              <path id="Path_915" data-name="Path 915"
+                d="M540.3,414.551H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
+                transform="translate(-195.631 -412.959)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_67" data-name="Group 67" transform="translate(0 241.997)">
+              <path id="Path_916" data-name="Path 916"
+                d="M540.3,425.408H196.427a.8.8,0,1,1,0-1.592H540.3a.8.8,0,0,1,0,1.592Z"
+                transform="translate(-195.631 -423.816)" fill="#e6e7e8" />
             </g>
           </g>
-          <text id="คนตัด" transform="translate(94.961 325.677)" fill="#0f4532" font-size="26"
-            font-family="Kanit-SemiBold, Kanit" font-weight="600">
-            <tspan x="0" y="0">คนตัด</tspan>
-          </text>
-          <text id="รถตัด" transform="translate(230.046 324.677)" fill="#0f4532" font-size="25"
-            font-family="Kanit-SemiBold, Kanit" font-weight="600">
-            <tspan x="0" y="0">รถตัด</tspan>
-          </text>
-          <text id="_10_คน" data-name="10 คน" transform="translate(65.647 36.51)" fill="#ed5015" font-size="23"
-            font-family="Kanit-SemiBold, Kanit" font-weight="600">
-            <tspan x="0" y="0">10 คน</tspan>
-          </text>
-          <text id="_108_วัน" data-name="108 วัน" transform="translate(156.294 229.551) rotate(-90)" fill="#fff"
-            font-size="23" font-family="Kanit-SemiBold, Kanit" font-weight="600">
-            <tspan x="0" y="0">{{ totalDayManPowerBurned }} วัน</tspan>
-          </text>
-          <text id="_7_วัน" data-name="7 วัน" transform="translate(286.416 260.03) rotate(-90)" fill="#fff" font-size="23"
-            font-family="Kanit-SemiBold, Kanit" font-weight="600">
-            <tspan x="0" y="0">{{ totalDayCartPower}} วัน</tspan>
-          </text>
-          <text id="_1_คัน" data-name="1 คัน" transform="translate(207.491 232.278)" fill="#ed5015" font-size="23"
-            font-family="Kanit-SemiBold, Kanit" font-weight="600">
-            <tspan x="0" y="0">1 คัน</tspan>
-          </text>
-        </svg>
+          <g id="Group_77" data-name="Group 77" transform="translate(59.143 3.414)">
+            <g id="Group_69" data-name="Group 69">
+              <path id="Path_917" data-name="Path 917"
+                d="M215,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,215,641.787Z"
+                transform="translate(-214.205 -348.127)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_70" data-name="Group 70" transform="translate(36.382)">
+              <path id="Path_918" data-name="Path 918"
+                d="M226.427,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,226.427,641.787Z"
+                transform="translate(-225.631 -348.127)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_71" data-name="Group 71" transform="translate(72.768)">
+              <path id="Path_919" data-name="Path 919"
+                d="M237.854,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,237.854,641.787Z"
+                transform="translate(-237.058 -348.127)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_72" data-name="Group 72" transform="translate(109.15)">
+              <path id="Path_920" data-name="Path 920"
+                d="M249.28,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,249.28,641.787Z"
+                transform="translate(-248.484 -348.127)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_73" data-name="Group 73" transform="translate(145.536)">
+              <path id="Path_921" data-name="Path 921"
+                d="M260.707,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,260.707,641.787Z"
+                transform="translate(-259.911 -348.127)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_74" data-name="Group 74" transform="translate(181.921)">
+              <path id="Path_922" data-name="Path 922"
+                d="M272.134,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,272.134,641.787Z"
+                transform="translate(-271.338 -348.127)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_75" data-name="Group 75" transform="translate(218.304)">
+              <path id="Path_923" data-name="Path 923"
+                d="M283.56,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,283.56,641.787Z"
+                transform="translate(-282.764 -348.127)" fill="#e6e7e8" />
+            </g>
+            <g id="Group_76" data-name="Group 76" transform="translate(254.689)">
+              <path id="Path_924" data-name="Path 924"
+                d="M294.987,641.787a.8.8,0,0,1-.8-.8V348.923a.8.8,0,0,1,1.592,0V640.991A.8.8,0,0,1,294.987,641.787Z"
+                transform="translate(-294.191 -348.127)" fill="#e6e7e8" />
+            </g>
+          </g>
+          <rect id="Rectangle_149" data-name="Rectangle 149" width="41.455" height="232.369"
+            transform="translate(87.026 48.285)" fill="#0f4532" />
+          <rect id="Rectangle_150" data-name="Rectangle 150" width="41.455" height="183.246"
+            transform="translate(128.481 97.409)" fill="#ffb911" />
+          <rect id="Rectangle_151" data-name="Rectangle 151" width="41.455" height="35.674"
+            transform="translate(217.607 245.659)" fill="#0f4532" />
+          <rect id="Rectangle_152" data-name="Rectangle 152" width="41.455" height="87.045"
+            transform="translate(259.062 194.288)" fill="#ffb911" />
+          <g id="Group_78" data-name="Group 78" transform="translate(12.018)">
+            <path id="Path_925" data-name="Path 925" d="M532.1,632.486H199.405V347.055h9.553V622.933H532.1Z"
+              transform="translate(-199.405 -347.055)" fill="#d1d3d4" />
+          </g>
+        </g>
+        <text id="คนตัด" transform="translate(94.961 325.677)" fill="#0f4532" font-size="26"
+          font-family="Kanit-SemiBold, Kanit" font-weight="600">
+          <tspan x="0" y="0">คนตัด</tspan>
+        </text>
+        <text id="รถตัด" transform="translate(230.046 324.677)" fill="#0f4532" font-size="25"
+          font-family="Kanit-SemiBold, Kanit" font-weight="600">
+          <tspan x="0" y="0">รถตัด</tspan>
+        </text>
+        <text id="_10_คน" data-name="10 คน" transform="translate(65.647 36.51)" fill="#ed5015" font-size="23"
+          font-family="Kanit-SemiBold, Kanit" font-weight="600">
+          <tspan x="0" y="0">10 คน</tspan>
+        </text>
+        <text id="_108_วัน" data-name="108 วัน" transform="translate(156.294 229.551) rotate(-90)" fill="#fff"
+          font-size="23" font-family="Kanit-SemiBold, Kanit" font-weight="600">
+          <tspan x="0" y="0">{{ totalDayManPowerBurned }} วัน</tspan>
+        </text>
+        <text id="_7_วัน" data-name="7 วัน" transform="translate(286.416 260.03) rotate(-90)" fill="#fff" font-size="23"
+          font-family="Kanit-SemiBold, Kanit" font-weight="600">
+          <tspan x="0" y="0">{{ totalDayCartPower}} วัน</tspan>
+        </text>
+        <text id="_1_คัน" data-name="1 คัน" transform="translate(207.491 232.278)" fill="#ed5015" font-size="23"
+          font-family="Kanit-SemiBold, Kanit" font-weight="600">
+          <tspan x="0" y="0">1 คัน</tspan>
+        </text>
+      </svg>
     </div>
-    <ion-list lines="full" class="ion-no-margin ion-no-padding">
-        <div padding ion-text color="mfa-green">
-            <p>ใช้คนตัดจ่ายเงิน</p>
-            <h3>{{ totalPriceManPowerBurned| number : fractionSize }} บาท</h3>
-        </div>
-        <div padding ion-text color="mfa-yellow">
-            <p>ใช้รถตัดจ่ายเงิน</p>
-            <h3>{{ totalPriceCartPower| number : fractionSize }} บาท</h3>
-        </div>
-        <div padding ion-text color="mfa-orange">
-            <p>ประหยัดเงิน</p>
-            <h3>{{ priceBurnedCart| number : fractionSize }} บาท</h3>
-        </div>
-    </ion-list>
-</div>
+    <ion-grid fixed>
+      <ion-row>
+        <ion-col size="2">
+        </ion-col>
+        <ion-col size="10">
+            <ion-text color="tertiary">
+                <p>ใช้คนตัดจ่ายเงิน</p>
+                <h1>{{ totalPriceManPowerBurned| number : fractionSize }} บาท</h1>
+              </ion-text>
+              <ion-text color="warning">
+                <p>ใช้รถตัดจ่ายเงิน</p>
+                <h1>{{ totalPriceCartPower| number : fractionSize }} บาท</h1>
+              </ion-text>
+              <ion-text color="primary">
+                <p>ประหยัดเงิน</p>
+                <h1>{{ priceBurnedCart| number : fractionSize }} บาท</h1>
+              </ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 </ion-content>

@@ -40,20 +40,19 @@ export class HumanVsMachinePage implements OnInit {
 
     const cartPower = 400
     const manPowerBurned = 12
-    const manPowerFresh = 4
+    // const manPowerFresh = 4
     const numberManPower = 10
 
-    this.totalDayCartPower = (this.quantity / cartPower)
+    this.totalDayCartPower = Math.ceil(this.quantity / cartPower)
     this.totalDayManPowerBurned = Math.ceil(this.quantity / numberManPower / manPowerBurned)
-    const totalDayManPowerFresh = (this.quantity / numberManPower / manPowerFresh)
+    // const totalDayManPowerFresh = (this.quantity / numberManPower / manPowerFresh)
 
     this.totalPriceCartPower = Math.floor(this.quantity * totalPerTonCartPower)
     this.totalPriceManPowerBurned = Math.floor(this.quantity * totalPerTonManPowerBurned)
-    const totalPriceManPowerFresh = Math.floor(this.quantity * totalPerTonManPowerFresh)
+    // const totalPriceManPowerFresh = Math.floor(this.quantity * totalPerTonManPowerFresh)
 
     this.priceBurnedCart = Math.floor(this.totalPriceManPowerBurned - this.totalPriceCartPower)
-    const priceFreshCart = Math.floor(totalPriceManPowerFresh - this.totalPriceCartPower)
+    // const priceFreshCart = Math.floor(totalPriceManPowerFresh - this.totalPriceCartPower)
     this.showResult = true;
   }
-
 }
