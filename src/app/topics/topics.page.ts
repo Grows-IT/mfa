@@ -53,9 +53,9 @@ export class TopicsPage implements OnInit {
   constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    const courseId = this.activatedRoute.snapshot.paramMap.get('courseId');
-    this.currentCourse = this.courses.find(course => {
-      if (course.id === courseId) return course;
-    })
+    // const courseId = this.activatedRoute.snapshot.paramMap.get('courseId');
+    // this.currentCourse = this.courses.find(course => {
+    //   if (course.id === courseId) return course;
+    // })
   }
 }
