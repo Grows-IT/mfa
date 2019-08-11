@@ -1,0 +1,24 @@
+body{
+    font-family:"Kanit-SemiBold", "Kanit";
+  }
+
+.mfa-input-number{
+    border-radius: 20px; 
+    padding: 12px 20px; 
+    margin: 14px 5px 8px 5px; 
+    background-color: #B8B8B8;
+    width:95%;
+}
+
+h1.result-text{
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+p.result-text{
+    margin: 30px 0px 0px 0px;
+    padding:0;
+    line-height: 0%;
+    font-size: 0.8em;
+    vertical-align: bottom;
+}
