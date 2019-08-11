@@ -8,15 +8,13 @@
 </ion-header>
 
 <ion-content>
-    <canvas #lineCanvas></canvas>
-
-
 <ion-list lines="full" class="ion-no-margin ion-no-padding">
   <ion-item>
       <ion-label stacked>พื้นที่ปลูกอ้อย (ไร่)</ion-label>
       <ion-input required type="number" [(ngModel)]="sugarcaneArea"></ion-input>
   </ion-item>
 </ion-list>
+<!-- <canvas #lineCanvas></canvas> -->
 
 <div padding>
   <ion-button shape="round" (click)="calculate()">คำนวณ</ion-button>
