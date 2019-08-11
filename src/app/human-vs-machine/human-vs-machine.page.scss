@@ -1,0 +1,124 @@
+body{
+  font-family:"Kanit-SemiBold", "Kanit";
+}
+.mfa-input-number{
+    border-radius: 20px; 
+    padding: 12px 20px; 
+    margin: 14px 5px 8px 5px; 
+    background-color: #B8B8B8;
+    //background-color:var(--ion-color-medium);
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    color: var(--ion-color-light);
+    font-weight: bold;
+    font-size: 1em;
+    width: 95%;
+}
+
+h1.result-text{
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+p.result-text{
+    margin: 30px 0px 0px 0px;
+    padding:0;
+    line-height: 0%;
+    font-size: 0.8em;
+    vertical-align: bottom;
+}
+
+table.compare-price{
+    width:100%; 
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5px;
+}
+
+table.cutTable {
+    font-family: "Kanit-SemiBold", "Kanit";
+    border: 2px solid #000000;
+    text-align: left;
+    border-collapse: collapse;
+    margin: 20px auto;
+  }
+  table.cutTable td, table.cutTable th {
+    padding: 0px 5px;
+  }
+  table.cutTable tbody td {
+    font-size: 13px;
+    color: #0F4532;
+  }
+  table.cutTable thead {
+    background: #0F4532;
+    border-bottom: 3px solid #0F4532;
+  }
+  table.cutTable thead th {
+    font-size: 15px;
+    font-weight: bold;
+    color: #E6E6E6;
+    text-align: center;
+    border-left: 2px solid #4A4A4A;
+  }
+  table.cutTable thead th:first-child {
+    border-left: none;
+  }
+  
+  table.cutTable tfoot td {
+    font-size: 12px;
+  }
+
+
+.text-center {
+	text-align: center;
+}
+
+.pricing-box-container {
+	display: flex;
+	//align-items: center;
+	align-items: flex-start;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.pricing-box {
+	background-color: #ffffff;
+	box-shadow: 0px 2px 15px 0px rgba(0,0,0,0.5);
+	border-radius: 4px;
+	flex: 1;
+	padding: 0 30px 30px;
+	margin: 2%;
+	min-width: 200px;
+	max-width: 300px;
+}
+
+.pricing-box h5 {
+	text-transform: uppercase;
+}
+
+.price {
+	margin: 24px 0;
+	font-size: 22px;
+	font-weight: 600;
+}
+
+.price sub, .price sup {
+	font-size: 16px;
+	font-weight: 100;
+}
+
+.features-list {
+	padding: 0;
+	list-style-type: none;
+}
+
+.features-list li {
+	font-weight: normal;
+	padding: 12px 0;
+	font-size: 12px;
+}
+
+.features-list li:not(:last-of-type) {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
