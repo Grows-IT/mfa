@@ -34,8 +34,8 @@ export class LoginPage implements OnInit {
 
   onClick(): void {
     console.log(this.username + ' ' + this.password);
-    const result = this.authService.getConfig();
-    console.log(result);
+    // const result = this.authService.login();
+    // console.log(result);
     // const user = this.users.find(user => user.username == this.username);
     // if (user && user.password == this.password) {
     //   this.errorMessage = null;
