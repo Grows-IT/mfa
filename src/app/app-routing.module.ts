@@ -23,7 +23,8 @@ const routes: Routes = [
   { path: 'sub-topic/:subTopicId', loadChildren: './contents/contents.module#ContentsPageModule' },
   { path: 'human-vs-machine', loadChildren: './human-vs-machine/human-vs-machine.module#HumanVsMachinePageModule' },
   { path: 'assess-sugar', loadChildren: './assess-sugar/assess-sugar.module#AssessSugarPageModule' },
-  { path: 'login', loadChildren: './login/login.module#LoginPageModule' }
+  { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
+  { path: 'static/:pageId', loadChildren: './static/static.module#StaticPageModule' }
 ];
 
 @NgModule({
