@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   token: string;
-  site = 'http://mitrphol-mfa.southeastasia.cloudapp.azure.com/moodle';
-  example = 'http://example.com/';
+  loginUrl = 'http://mitrphol-mfa.southeastasia.cloudapp.azure.com/moodle/login/token.php';
 
   constructor(private http: HttpClient) { }
 
-  login(username: string, password: string) {
+  login(username: string, password: string, callback: (err: string) => void) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Accept':  'application/json',
@@ -19,6 +18,22 @@ export class AuthService {
       })
     };
 
-    return this.http.post(this.site, httpOptions)
+    const params = new HttpParams({
+      fromObject: {
+        username: username,
+        password: password,
+        service: 'moodle_mobile_app'
+      }
+    });
+
+    this.http.post<any>(this.loginUrl, params, httpOptions).subscribe(res => {
+      if (res.error) return callback(res.error);
+      this.token = res.token;
+      callback(null);
+    }, (err) => callback(err));
+  }
+
+  isLoggedin() {
+    return this.token.length > 0;
   }
 }

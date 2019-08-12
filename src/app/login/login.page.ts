@@ -33,15 +33,9 @@ export class LoginPage implements OnInit {
   }
 
   onClick(): void {
-    console.log(this.username + ' ' + this.password);
-    // const result = this.authService.login();
-    // console.log(result);
-    // const user = this.users.find(user => user.username == this.username);
-    // if (user && user.password == this.password) {
-    //   this.errorMessage = null;
-    //   this.router.navigate(['/home']);
-    // } else {
-    //   this.errorMessage = 'Wrong username or password! Please try again.';
-    // }
+    this.authService.login(this.username, this.password, (err) => {
+      if (err) return this.errorMessage = err;
+      this.router.navigate(['/home']);
+    });
   }
 }
