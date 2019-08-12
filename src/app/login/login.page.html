@@ -1,26 +1,13 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-title>Login</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content>
-  <!-- <ion-item>
-    <ion-label>Username: </ion-label>
-    <ion-input type="text" [(ngModel)]="username"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>Password: </ion-label>
-    <ion-input type="password" [(ngModel)]="password"></ion-input>
-  </ion-item>
-  <ion-button (click)="onClick()">
-    Login
-  </ion-button>
-  <ion-text color="danger">
-    {{ errorMessage }}
-  </ion-text> -->
-  <div align="center" class="ion-margin">
-      <svg xmlns="http://www.w3.org/2000/svg" width="416.903" height="530.471" viewBox="0 0 416.903 530.471">
+ 
+  <div align="center" class="ion-margin" style="margin-top:150px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="416.903" height="130.471" viewBox="0 0 416.903 130.471">
         <g id="Group_48" data-name="Group 48">
           <g id="Group_6" data-name="Group 6" transform="translate(0)">
             <path id="Path_28" data-name="Path 28" d="M666.58,390.878,654.1,364.909v25.969Z" transform="translate(-654.1 -364.909)" fill="#0c2651"/>
@@ -58,26 +45,39 @@
             </g>
           </g>
         </g>
-        <text id="USERNAME" transform="translate(14.767 184.466)" fill="#ed5015" font-size="18" font-family="WorkSans-Medium, Work Sans" font-weight="500"><tspan x="0" y="0">USERNAME</tspan></text>
-        <text id="PASSWORD" transform="translate(14.767 253.771)" fill="#ed5015" font-size="18" font-family="WorkSans-Medium, Work Sans" font-weight="500"><tspan x="0" y="0">PASSWORD</tspan></text>
-        <g id="Rectangle_113" data-name="Rectangle 113" transform="translate(147.98 155.471)" fill="#0d708d" stroke="#707070" stroke-width="1">
-          <rect width="253.619" height="49.313" rx="19" stroke="none"/>
-          <rect x="0.5" y="0.5" width="252.619" height="48.313" rx="18.5" fill="none"/>
-        </g>
-        <g id="Rectangle_114" data-name="Rectangle 114" transform="translate(147.98 224.776)" fill="#0d708d" stroke="#707070" stroke-width="1">
-          <rect width="253.619" height="49.313" rx="19" stroke="none"/>
-          <rect x="0.5" y="0.5" width="252.619" height="48.313" rx="18.5" fill="none"/>
-        </g>
-        <!-- Login button -->
-        <g id="Button_Log_In" data-name="Button Log In" transform="translate(22 -98.529)">
-          <rect id="Rectangle_9" data-name="Rectangle 9" width="309" height="50" rx="25" transform="translate(33 538)" fill="#ed5015"/>
-          <text id="LOG_IN" data-name="LOG IN" transform="translate(161 570)" fill="#fff" font-size="16" font-family="Lato-Bold, Lato" font-weight="700"><tspan x="0" y="0">LOG IN</tspan></text>
-        </g>
-        <text id="DON_T_HAVE_AN_ACCOUNT_YET_SIGN_UP" data-name="DON’T HAVE AN ACCOUNT YET?  SIGN UP" transform="translate(210 527.471)" font-size="16" font-family="Lato-Light, Lato" font-weight="300"><tspan x="-155.824" y="0">DON’T HAVE AN ACCOUNT YET?</tspan><tspan y="0" font-family="Lato-Medium, Lato" font-weight="500"> </tspan><tspan y="0" xml:space="preserve" font-family="Lato-Heavy, Lato" font-weight="800"> SIGN UP</tspan></text>
-        <!-- Input -->
-        <text id="_" data-name="••••••••••••" transform="translate(209.463 254.771)" fill="#fff" font-size="18" font-family="Lato-Regular, Lato"><tspan x="0" y="0"></tspan></text>
-        <text id="Mirandav" transform="translate(228.676 186.801)" fill="#fff" font-size="22" font-family="Lato-Regular, Lato">
-        </text>
       </svg>
-  </div>
+    </div>
+      <ion-grid>
+          <ion-row justify-content-center align-items-center> 
+            <ion-col center size="3">
+          <ion-label color="danger" style="font-size:20px; font-family:WorkSans-Medium, Work Sans; font-weight:500">Username: </ion-label>
+          </ion-col>
+          <ion-col left size="5">
+          <ion-input class="login-input-text" type="text" [(ngModel)]="username"></ion-input>
+          </ion-col>
+      </ion-row>
+      <ion-row justify-content-center align-items-center> 
+        <ion-col center size="3">
+          <ion-label color="danger" style="font-size:20px; font-family:WorkSans-Medium, Work Sans; font-weight:500">Password: </ion-label>
+        </ion-col>
+        <ion-col left size="5">
+          <ion-input class="login-input-text" type="password" [(ngModel)]="password"></ion-input>
+        </ion-col>
+      </ion-row>
+      </ion-grid>
+      <ion-grid style="margin-top:125px;">
+      <ion-row justify-content-center align-items-center> 
+          <ion-col size="6">
+              <ion-button class="login-button" expand="full" shape="round" color="danger">Log in</ion-button>
+          </ion-col>
+      </ion-row>
+      <ion-row justify-content-center align-items-center> 
+          <ion-col size="8">
+              <ion-text>DON’T HAVE AN ACCOUNT YET? </ion-text><ion-text style="font-weight: bold"> SIGN UP</ion-text>
+          </ion-col>
+      </ion-row>
+    </ion-grid>
+       <ion-text color="danger">
+          {{ errorMessage }}
+        </ion-text>
 </ion-content>
