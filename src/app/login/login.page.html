@@ -5,17 +5,17 @@
 </ion-header>
 
 <ion-content>
-  <ion-item>
-    <ion-label>Username: </ion-label>
-    <ion-input type="text" [(ngModel)]="username"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>Password: </ion-label>
-    <ion-input type="password" [(ngModel)]="password"></ion-input>
-  </ion-item>
-  <ion-button (click)="onClick()">
-    Login
-  </ion-button>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)" (keyup.enter)="onSubmit(loginForm.value)">
+    <ion-item>
+      <ion-label>Username: </ion-label>
+      <ion-input type="text" formControlName="username" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Password: </ion-label>
+      <ion-input type="password" formControlName="password" required></ion-input>
+    </ion-item>
+        <ion-button [disabled]="!loginForm.valid">Login</ion-button>
+  </form>
   <ion-text color="danger">
     {{ errorMessage }}
   </ion-text>
@@ -68,14 +68,14 @@
           <rect width="253.619" height="49.313" rx="19" stroke="none"/>
           <rect x="0.5" y="0.5" width="252.619" height="48.313" rx="18.5" fill="none"/>
         </g> -->
-        <!-- Login button -->
-        <!-- <g id="Button_Log_In" data-name="Button Log In" transform="translate(22 -98.529)">
+  <!-- Login button -->
+  <!-- <g id="Button_Log_In" data-name="Button Log In" transform="translate(22 -98.529)">
           <rect id="Rectangle_9" data-name="Rectangle 9" width="309" height="50" rx="25" transform="translate(33 538)" fill="#ed5015"/>
           <text id="LOG_IN" data-name="LOG IN" transform="translate(161 570)" fill="#fff" font-size="16" font-family="Lato-Bold, Lato" font-weight="700"><tspan x="0" y="0">LOG IN</tspan></text>
         </g>
         <text id="DON_T_HAVE_AN_ACCOUNT_YET_SIGN_UP" data-name="DON’T HAVE AN ACCOUNT YET?  SIGN UP" transform="translate(210 527.471)" font-size="16" font-family="Lato-Light, Lato" font-weight="300"><tspan x="-155.824" y="0">DON’T HAVE AN ACCOUNT YET?</tspan><tspan y="0" font-family="Lato-Medium, Lato" font-weight="500"> </tspan><tspan y="0" xml:space="preserve" font-family="Lato-Heavy, Lato" font-weight="800"> SIGN UP</tspan></text> -->
-        <!-- Input -->
-        <!-- <text id="_" data-name="••••••••••••" transform="translate(209.463 254.771)" fill="#fff" font-size="18" font-family="Lato-Regular, Lato"><tspan x="0" y="0"></tspan></text>
+  <!-- Input -->
+  <!-- <text id="_" data-name="••••••••••••" transform="translate(209.463 254.771)" fill="#fff" font-size="18" font-family="Lato-Regular, Lato"><tspan x="0" y="0"></tspan></text>
         <text id="Mirandav" transform="translate(228.676 186.801)" fill="#fff" font-size="22" font-family="Lato-Regular, Lato">
         </text>
       </svg>

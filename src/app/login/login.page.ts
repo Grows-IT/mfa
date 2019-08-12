@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 import { AuthService } from '../auth.service';
 
@@ -14,26 +14,33 @@ export class LoginPage implements OnInit {
   username: string;
   password: string;
   errorMessage: string;
+  loginForm: FormGroup;
   users = [];
 
   constructor(
     private router: Router,
     private authService: AuthService,
-  ) { }
-
-  ngOnInit() {
-    for (let index = 0; index < 30; index++) {
-      const user = {
-        id: index.toString(),
-        username: 'user' + index,
-        password: 'password' + index
-      }
-      this.users.push(user);
-    }
+    private formBuilder: FormBuilder,
+  ) {
+    this.loginForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
   }
 
-  onClick(): void {
-    this.authService.login(this.username, this.password, (err) => {
+  ngOnInit() {
+    // for (let index = 0; index < 30; index++) {
+    //   const user = {
+    //     id: index.toString(),
+    //     username: 'user' + index,
+    //     password: 'password' + index
+    //   }
+    //   this.users.push(user);
+    // }
+  }
+
+  onSubmit(loginData): void {
+    this.authService.login(loginData.username, loginData.password, (err) => {
       if (err) return this.errorMessage = err;
       this.router.navigate(['/home']);
     });
