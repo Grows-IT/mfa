@@ -13,24 +13,35 @@
 ion-content{
     --ion-background-color: var(--ion-color-tertiary);
 }
-body{
-    font-family:"Kanit-SemiBold", "Kanit";
-  }
 .mfa-input-number{
+    border-width: 0px;
     border-radius: 20px; 
-    padding: 12px 20px; 
-    margin: 14px 5px 8px 5px; 
-    background-color: #B8B8B8;
+    padding: 12px 0px; 
+    text-align: center;
+    margin: 6px 5px 8px 5px; 
+    background-color: #FFFFFF;
     //background-color:var(--ion-color-medium);
     -moz-border-radius: 20px;
     -webkit-border-radius: 20px;
     -webkit-appearance: none; 
     -moz-appearance:textfield;
-    color: var(--ion-color-light);
+    color: var(--ion-color-dark);
     font-weight: bold;
     font-size: 1em;
     width: 95%;
     -moz-appearance: textfield;
     -webkit-appearance: none;
-    margin: 0;
+}
+
+p.result-border{
+    border-width: 0px;
+    border-radius: 20px; 
+    padding: 12px 0px; 
+    text-align: center;
+    margin: 6px 5px 8px 5px; 
+    background-color: lightgrey;
+    font-weight: bold;
+    font-size: 1em;
+    width: 95%;
+    
 }

@@ -23,8 +23,8 @@
           <h4>{{ input.name }}</h4>
         </ion-text>
       </ion-col>
-      <ion-col size="2">
-          <ion-input class="mfa-input-number" [(ngModel)]="input.value" type="number"></ion-input>
+      <ion-col size="3">
+          <input class="mfa-input-number" [(ngModel)]="input.value" type="number">
       </ion-col>
       <ion-col size="2">
         <ion-text color="light">
@@ -47,10 +47,8 @@
             <h4>น้ำหนักอ้อยทั้งพื้นที่</h4>
           </ion-text>
         </ion-col>
-        <ion-col size="4">
-          <ion-button shape="round" color="medium">
-            <ion-input>{{ totalWeightAll.toFixed(0)| number : fractionSize }}</ion-input>
-          </ion-button>
+        <ion-col size="3">
+          <p class="result-border">{{ totalWeightAll.toFixed(0)| number : fractionSize }}</p>
         </ion-col>
         <ion-col size="2">
           <ion-text color="light">
@@ -65,10 +63,8 @@
             <h4>ผลผลิตอ้อย ต่อ ไร่</h4>
           </ion-text>
         </ion-col>
-        <ion-col size="4">
-          <ion-button shape="round" color="medium">
-            <ion-input class="ion-text-center">{{ totalOutput.toFixed(0)| number : fractionSize }}</ion-input>
-          </ion-button>
+        <ion-col size="3">
+          <p class="result-border">{{ totalOutput.toFixed(0)| number : fractionSize }}</p>
         </ion-col>
         <ion-col size="2">
           <ion-text color="light">
