@@ -8,6 +8,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TopicsPage implements OnInit {
   currentCourse;
+  demoTopic = {
+    id: '1' ,
+    name: 'หลักการผลิตอ้อย'
+  }
   courses = [{
     id: '1',
     name: 'Know Yourself'
@@ -18,9 +22,6 @@ export class TopicsPage implements OnInit {
     id: '3',
     name: 'Modern Farm',
     topics: [{ 
-      id: '1' ,
-      name: 'หลักการผลิตอ้อย'
-    }, { 
       id: '2',
       name: 'การเตรียมดินและการจัดการปุ๋ยสำหรับการปลูกอ้อย'
     }, { 
