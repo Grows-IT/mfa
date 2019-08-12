@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)" (keyup.enter)="onSubmit(loginForm.value)">
+  <form [formGroup]="loginForm" (keyup.enter)="onSubmit(loginForm.value)">
     <ion-item>
       <ion-label>Username: </ion-label>
       <ion-input type="text" formControlName="username" required></ion-input>
@@ -14,7 +14,7 @@
       <ion-label>Password: </ion-label>
       <ion-input type="password" formControlName="password" required></ion-input>
     </ion-item>
-        <ion-button [disabled]="!loginForm.valid">Login</ion-button>
+        <ion-button [disabled]="!loginForm.valid" (click)="onSubmit(loginForm.value)">Login</ion-button>
   </form>
   <ion-text color="danger">
     {{ errorMessage }}
