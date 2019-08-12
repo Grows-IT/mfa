@@ -23,11 +23,11 @@ export class ContentsPage implements OnInit {
   }, {
     id: '4',
     name: 'การจัดการพันธุ์อ้อย',
-    contents: ['assets/img/pages/การจัดการพันธุ์อ้อย/1.png', 'assets/img/pages/การจัดการพันธุ์อ้อย/2.png', 'assets/img/pages/การจัดการพันธุ์อ้อย/3.png']
+    contents: ['assets/img/pages/การจัดการพันธุ์อ้อย/1.png', 'assets/img/pages/การจัดการพันธุ์อ้อย/2.png', 'assets/img/pages/การจัดการพันธุ์อ้อย/3.png', 'assets/img/pages/การจัดการพันธุ์อ้อย/4.png', 'assets/img/pages/การจัดการพันธุ์อ้อย/5.png', 'assets/img/pages/การจัดการพันธุ์อ้อย/6.png']
   }, {
     id: '5',
     name: 'สภาพแวดล้อมที่เหมาะสมสำหรับปลูกอ้อย',
-    contents: ['assets/img/pages/สภาพแวดล้อมที่เหมาะสมสำหรับปลูกอ้อย/1.png', 'assets/img/pages/สภาพแวดล้อมที่เหมาะสมสำหรับปลูกอ้อย/2.png', '']
+    contents: ['assets/img/pages/สภาพแวดล้อมที่เหมาะสมสำหรับปลูกอ้อย/1.png', 'assets/img/pages/สภาพแวดล้อมที่เหมาะสมสำหรับปลูกอ้อย/2.png']
   }, {
     id: '6',
     name: 'คุณภาพอ้อยและการสะสมน้ำตาล',
