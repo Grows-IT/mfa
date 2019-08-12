@@ -19,6 +19,6 @@ export class AuthService {
       })
     };
 
-    return this.http.post(this.site)
+    return this.http.post(this.site, httpOptions)
   }
 }
