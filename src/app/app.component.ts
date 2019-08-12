@@ -15,7 +15,8 @@ export class AppComponent {
     title: 'Home',
     url: '/home'
   }, {
-    title: 'My Account'
+    title: 'My Account',
+    url: '/static/2'
   }, {
     title: 'Knowledge Room',
     url: '/courses'
@@ -26,11 +27,14 @@ export class AppComponent {
     title: 'Calculator',
     url: '/calculator'
   }, {
-    title: 'Question - Answer'
+    title: 'Question - Answer',
+    url: '/static/3'
   }, {
-    title: 'Settings'
+    title: 'Settings',
+    url: '/static/4'
   }, {
-    title: 'Logout'
+    title: 'Logout',
+    url: '/login'
   }];
 
   constructor(

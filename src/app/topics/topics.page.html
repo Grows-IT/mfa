@@ -9,9 +9,13 @@
 
 <ion-content>
   <ion-list class="ion-margin-top">
-      <ion-button class="ion-margin" size="large" expand="block" shape="round" color="warning" [routerLink]="['/topic/', demoTopic.id]">{{ demoTopic.name }}</ion-button>
     <div *ngFor="let topic of currentCourse.topics">
-      <ion-button class="ion-margin" size="large" expand="block" shape="round" color="success" [routerLink]="['/topic/', topic.id]">{{ topic.name }}</ion-button>
+      <div *ngIf="topic.id == '1'; else elseBlock">
+          <ion-button class="ion-margin" size="large" expand="block" shape="round" color="warning" [routerLink]="['/topic/', topic.id]">{{ topic.name }}</ion-button>
+      </div>
+      <ng-template #elseBlock>
+          <ion-button class="ion-margin" size="large" expand="block" shape="round" color="success" [routerLink]="['/topic/', topic.id]">{{ topic.name }}</ion-button>
+      </ng-template>
     </div>
   </ion-list>
 </ion-content>
