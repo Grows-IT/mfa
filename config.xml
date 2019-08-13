@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.grows-it.app" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.growsit.app" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MFA</name>
     <description>The official Modern Farm Academy mobile app by Grows-IT.</description>
     <author email="warit.s@grows-it.com" href="http://grows-it.com/">Grows-IT development team</author>

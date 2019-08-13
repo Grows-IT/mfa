@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,29 +14,35 @@ export class LoginPage implements OnInit {
   username: string;
   password: string;
   errorMessage: string;
+  loginForm: FormGroup;
   users = [];
 
-  constructor(private router: Router) { }
-
-  ngOnInit() {
-    for (let index = 0; index < 30; index++) {
-      const user = {
-        id: index.toString(),
-        username: 'user' + index,
-        password: 'password' + index
-      }
-      this.users.push(user);
-    }
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private formBuilder: FormBuilder,
+  ) {
+    this.loginForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
   }
 
-  onClick(): void {
-    console.log(this.username + ' ' + this.password);
-    const user = this.users.find(user => user.username == this.username);
-    if (user && user.password == this.password) {
-      this.errorMessage = null;
+  ngOnInit() {
+    // for (let index = 0; index < 30; index++) {
+    //   const user = {
+    //     id: index.toString(),
+    //     username: 'user' + index,
+    //     password: 'password' + index
+    //   }
+    //   this.users.push(user);
+    // }
+  }
+
+  onSubmit(loginData): void {
+    this.authService.login(loginData.username, loginData.password, (err) => {
+      if (err) return this.errorMessage = err;
       this.router.navigate(['/home']);
-    } else {
-      this.errorMessage = 'Wrong username or password! Please try again.';
-    }
+    });
   }
 }
