@@ -15,27 +15,77 @@
     </ion-text>
   </div>
   <!-- Input -->
+  <form [formGroup]="inputForm" (keyup.enter)="calculateTotalWeight(inputForm.value)">
   <ion-grid class="ion-margin-top">
-    <ion-row *ngFor="let input of inputs">
+    <ion-row>
       <ion-col size="1"></ion-col>
       <ion-col size="4">
         <ion-text color="light" class="ion-float-right">
-          <h4>{{ input.name }}</h4>
+          <h4>พื้นที่ชาวไร่</h4>
         </ion-text>
       </ion-col>
       <ion-col size="3">
-          <input class="mfa-input-number" [(ngModel)]="input.value" type="number">
+          <input class="mfa-input-number" formControlName="area" type="number">
       </ion-col>
       <ion-col size="2">
         <ion-text color="light">
-          <h4> {{ input.unit }}</h4>
+          <h4> ไร่</h4>
         </ion-text>
       </ion-col>
     </ion-row>
+    <ion-row>
+        <ion-col size="1"></ion-col>
+        <ion-col size="4">
+          <ion-text color="light" class="ion-float-right">
+            <h4>ความกว้างของพื้นที่</h4>
+          </ion-text>
+        </ion-col>
+        <ion-col size="3">
+            <input class="mfa-input-number" formControlName="areaWidth" type="number">
+        </ion-col>
+        <ion-col size="2">
+          <ion-text color="light">
+            <h4> เมตร</h4>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col size="1"></ion-col>
+          <ion-col size="4">
+            <ion-text color="light" class="ion-float-right">
+              <h4>ระยะร่องปลูก</h4>
+            </ion-text>
+          </ion-col>
+          <ion-col size="3">
+              <input class="mfa-input-number" formControlName="gap" type="number">
+          </ion-col>
+          <ion-col size="2">
+            <ion-text color="light">
+              <h4> เมตร</h4>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="1"></ion-col>
+            <ion-col size="4">
+              <ion-text color="light" class="ion-float-right">
+                <h4>จำนวนหน่ออ้อย</h4>
+              </ion-text>
+            </ion-col>
+            <ion-col size="3">
+                <input class="mfa-input-number" formControlName="caneBlock" type="number">
+            </ion-col>
+            <ion-col size="2">
+              <ion-text color="light">
+                <h4> หน่อ</h4>
+              </ion-text>
+            </ion-col>
+          </ion-row>
   </ion-grid>
   <div padding align="center">
-    <ion-button color="primary" shape="round" size="large" (click)="calculateTotalWeight()">คำนวณ</ion-button>
+    <ion-button color="primary" shape="round" size="large" (click)="calculateTotalWeight(inputForm.value)" [disabled]="inputForm.invalid">คำนวณ</ion-button>
   </div>
+  </form>
 
   <!-- Output -->
   <div *ngIf="showResult">

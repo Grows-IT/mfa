@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-assess-sugar',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./assess-sugar.page.scss'],
 })
 export class AssessSugarPage implements OnInit {
+  inputForm: FormGroup;
   totalWeightAll: number;
   totalOutput: number;
   area: number;
@@ -40,16 +42,26 @@ export class AssessSugarPage implements OnInit {
     value: null
   }]
 
-  constructor() { }
+  constructor(
+    private formBuilder: FormBuilder,
+  ) { 
+    this.inputForm = this.formBuilder.group({
+      area: ['', Validators.min(1)],
+      areaWidth: ['', Validators.min(1)],
+      gap: ['', Validators.min(1)],
+      caneBlock: ['', Validators.min(1)],
+    });
+  }
 
   ngOnInit() {
   }
 
-  calculateTotalWeight() {
-    this.area = this.inputs[0].value;
-    this.areaWidth = this.inputs[1].value;
-    this.gap = this.inputs[2].value;
-    this.caneBlock = this.inputs[3].value;
+  calculateTotalWeight(data) {
+    if (data.area <= 0 || data.areaWidth <= 0 || data.gap <= 0 || data.caneBlock <= 0) return;
+    this.area = data.area;
+    this.areaWidth = data.areaWidth
+    this.gap = data.gap;
+    this.caneBlock = data.caneBlock;
 
     const areaLenght = this.area * 1600 / this.areaWidth
     const totalGap = this.areaWidth / this.gap
