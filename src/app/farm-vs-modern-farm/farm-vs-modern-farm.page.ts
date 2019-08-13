@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Chart } from 'chart.js';
+// import { Chart } from 'chart.js';
+
+import { pages } from "../pages";
 
 @Component({
   selector: 'app-farm-vs-modern-farm',
@@ -15,8 +17,10 @@ export class FarmVsModernFarmPage implements OnInit {
   reduceCost: number;
   totalIncrease: number;
   increaeResultPerRai: number;
-
+  report = pages[0].img;
   showResult = false;
+  showReport = false;
+  showReportButtonLabel = 'ดูรายละเอียด';
   
   constructor() { }
 
@@ -93,5 +97,15 @@ export class FarmVsModernFarmPage implements OnInit {
     this.totalIncrease = Math.floor(this.reduceCost + increaseIncomeByArea)
     // this.lineChartMethod();
     this.showResult = true;
+  }
+
+  onShowReportButtonClick(): void {
+    if (this.showReport) {
+      this.showReportButtonLabel = 'ดูรายละเอียด';
+      this.showReport = false;
+    } else {
+      this.showReportButtonLabel = 'ซ่อนรายละเียด';
+      this.showReport = true;
+    }
   }
 }
