@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 // import { Chart } from 'chart.js';
 
 import { pages } from "../pages";
@@ -21,8 +22,15 @@ export class FarmVsModernFarmPage implements OnInit {
   showResult = false;
   showReport = false;
   showReportButtonLabel = 'ดูรายละเอียด';
+  inputForm: FormGroup;
   
-  constructor() { }
+  constructor(
+    private formBuilder: FormBuilder,
+  ) { 
+    this.inputForm = this.formBuilder.group({
+      sugarcaneArea: ['', Validators.min(1)]
+    });
+  }
 
   ngOnInit() {
     //this.lineChartMethod();
@@ -51,7 +59,9 @@ export class FarmVsModernFarmPage implements OnInit {
   //   });
   // }
 
-  calculate(): void {
+  calculate(data): void {
+    if (data.sugarcaneArea <= 0) return;
+    this.sugarcaneArea = data.sugarcaneArea;
     const SugarCanePrice = 700
 
     const oldPrepareLandPlant = 250

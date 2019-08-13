@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-human-vs-machine',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./human-vs-machine.page.scss'],
 })
 export class HumanVsMachinePage implements OnInit {
+  inputForm: FormGroup;
   quantity: number;
   totalPriceManPowerBurned: number;
   totalPriceManPowerFresh: number;
@@ -27,11 +29,19 @@ export class HumanVsMachinePage implements OnInit {
   calsugarcaneLoadPriceCartPower: number;
   calclearBurned: number;
 
-  constructor() { }
+  constructor(
+    private formBuilder: FormBuilder,
+  ) {
+    this.inputForm = this.formBuilder.group({
+      quantity: ['', Validators.min(1)]
+    });
+   }
 
   ngOnInit() {
   }
-  calculateTotalPrice() {
+  calculateTotalPrice(data) {
+    if (data.quantity <= 0) return;
+    this.quantity = data.quantity;
     const sugarcaneCutPriceManPowerBurned = 100
     const sugarcaneCutPriceManPowerFresh = 100
     const sugarcaneCutPriceCartPower = 190

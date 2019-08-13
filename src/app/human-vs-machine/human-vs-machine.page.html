@@ -12,12 +12,13 @@
   <ion-text color="tertiary" class="ion-text-center">
     <h1>ปริมาณอ้อยที่ส่งเข้ามิตรผล</h1>
   </ion-text>
+  <form [formGroup]="inputForm" (keyup.enter)="calculateTotalPrice(inputForm.value)">
   <div align="center">
     <ion-grid no-padding>
       <ion-row>
         <ion-col size="4"></ion-col>
         <ion-col size="3">
-            <input class="mfa-input-number" style="margin-top:5px;" [(ngModel)]="quantity" type="number" min="1" placeholder="ใส่ตัวเลข">
+            <input required class="mfa-input-number" style="margin-top:5px;" formControlName="quantity" type="number" min="1" placeholder="ใส่ตัวเลข">
         </ion-col>
         <ion-col size="2">
           <ion-text color="tertiary" class="ion-text-left">
@@ -28,8 +29,9 @@
     </ion-grid>
   </div>
   <div align="center">
-    <ion-button color="warning" shape="round" (click)="calculateTotalPrice()">คำนวณ</ion-button>
+    <ion-button color="warning" shape="round" (click)="calculateTotalPrice(inputForm.value)" [disabled]="inputForm.invalid">คำนวณ</ion-button>
   </div>
+</form>
 
   <div *ngIf="showResult">
     <!-- Chart -->
