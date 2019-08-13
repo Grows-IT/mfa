@@ -10,12 +10,10 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  siteUrl = 'http://mitrphol-mfa.southeastasia.cloudapp.azure.com/moodle';
-  username: string;
-  password: string;
   errorMessage: string;
+  loginAttempt: number = 0;
   loginForm: FormGroup;
-  users = [];
+  // users = [];
 
   constructor(
     private router: Router,
@@ -41,7 +39,11 @@ export class LoginPage implements OnInit {
 
   onSubmit(loginData): void {
     this.authService.login(loginData.username, loginData.password, (err) => {
-      if (err) return this.errorMessage = err;
+      if (err) {
+        this.loginAttempt += 1;
+        return this.errorMessage = err + '. Login attempt: ' + this.loginAttempt;
+      }
+      this.loginAttempt = 0;
       this.router.navigate(['/home']);
     });
   }
