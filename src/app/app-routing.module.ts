@@ -24,7 +24,8 @@ const routes: Routes = [
   { path: 'human-vs-machine', loadChildren: './human-vs-machine/human-vs-machine.module#HumanVsMachinePageModule' },
   { path: 'assess-sugar', loadChildren: './assess-sugar/assess-sugar.module#AssessSugarPageModule' },
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
-  { path: 'static/:pageId', loadChildren: './static/static.module#StaticPageModule' }
+  { path: 'static/:pageId', loadChildren: './static/static.module#StaticPageModule' },
+  { path: 'my-account', loadChildren: './my-account/my-account.module#MyAccountPageModule' }
 ];
 
 @NgModule({
