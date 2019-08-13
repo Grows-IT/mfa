@@ -15,32 +15,6 @@ export class AssessSugarPage implements OnInit {
   gap: number;
   areaWidth: number;
   showResult = false;
-  inputs = [{
-    id: '1',
-    name: 'พื้นที่ชาวไร่',
-    unit: 'ไร่',
-    value: null
-  }, {
-    id: '2',
-    name: 'ความกว้างของพื้นที่',
-    unit: 'เมตร',
-    value: null
-  // }, {
-  //   id: '3',
-  //   name: 'ความยาวของพื้นที่',
-  //   unit: 'เมตร',
-  //   value: null
-  }, {
-    id: '4',
-    name: 'ระยะร่องปลูก',
-    unit: 'เมตร',
-    value: null
-  }, {
-    id: '5',
-    name: 'จำนวนหน่ออ้อย',
-    unit: 'หน่อ',
-    value: null
-  }]
 
   constructor(
     private formBuilder: FormBuilder,
