@@ -114,7 +114,7 @@ export class FarmVsModernFarmPage implements OnInit {
       this.showReportButtonLabel = 'ดูรายละเอียด';
       this.showReport = false;
     } else {
-      this.showReportButtonLabel = 'ซ่อนรายละเียด';
+      this.showReportButtonLabel = 'ซ่อนรายละเอียด';
       this.showReport = true;
     }
   }
