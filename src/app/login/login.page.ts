@@ -37,7 +37,7 @@ export class LoginPage implements OnInit {
     // }
   }
 
-  onSubmit(loginData): void {
+  onSubmit(loginData: any): void {
     this.authService.login(loginData.username, loginData.password, (err) => {
       if (err) {
         this.loginAttempt += 1;
@@ -47,7 +47,7 @@ export class LoginPage implements OnInit {
       //   if (err) return console.log(err);
       //   console.log('Seccuess');
       // });
-      this.authService.getUserProfile().subscribe(user => console.log(user.firstname));
+      // this.authService.getUserProfile().subscribe(user => console.log(user.firstname));
       this.loginAttempt = 0;
       this.router.navigate(['/home']);
     });
