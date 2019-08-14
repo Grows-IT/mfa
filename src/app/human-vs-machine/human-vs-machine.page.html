@@ -18,25 +18,27 @@
     <h1>ปริมาณอ้อยที่ส่งเข้ามิตรผล</h1>
   </ion-text>
   <form [formGroup]="inputForm" (keyup.enter)="calculateTotalPrice(inputForm.value)">
-  <div align="center">
-    <ion-grid no-padding>
-      <ion-row>
-        <ion-col size="4"></ion-col>
-        <ion-col size="3">
-            <input required class="mfa-input-number" style="margin-top:5px;" formControlName="quantity" type="number" min="1" placeholder="ใส่ตัวเลข">
-        </ion-col>
-        <ion-col size="2">
-          <ion-text color="tertiary" class="ion-text-left">
-            <h3>ตัน</h3>
-          </ion-text>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
-  <div align="center">
-    <ion-button color="warning" shape="round" (click)="calculateTotalPrice(inputForm.value)" [disabled]="inputForm.invalid">คำนวณ</ion-button>
-  </div>
-</form>
+    <div align="center">
+      <ion-grid no-padding>
+        <ion-row>
+          <ion-col size="4"></ion-col>
+          <ion-col size="3">
+            <input required class="mfa-input-number" style="margin-top:5px;" formControlName="quantity" type="number"
+              min="1" placeholder="ใส่ตัวเลข">
+          </ion-col>
+          <ion-col size="2">
+            <ion-text color="tertiary" class="ion-text-left">
+              <h3>ตัน</h3>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div align="center">
+      <ion-button color="warning" shape="round" (click)="calculateTotalPrice(inputForm.value)"
+        [disabled]="inputForm.invalid">คำนวณ</ion-button>
+    </div>
+  </form>
 
   <div *ngIf="showResult">
     <!-- Chart -->
@@ -161,7 +163,7 @@
           <tspan x="0" y="0">{{ totalDayCartPower}} วัน</tspan>
         </text>
         <text id="_1_คัน" data-name="1 คัน" transform="translate(216.491 240.278)" fill="#ed5015" font-size="16"
-          font-family="Kanit-SemiBold, Kanit" font-weight="600"> 
+          font-family="Kanit-SemiBold, Kanit" font-weight="600">
           <tspan x="0" y="0">1 คัน</tspan>
         </text>
       </svg>
@@ -172,119 +174,165 @@
         <ion-col size="2">
         </ion-col>
         <ion-col size="10">
-            <ion-text color="tertiary">
-                <p class="result-text">ใช้คนตัดจ่ายเงิน</p>
-                <h1 class="result-text">{{ totalPriceManPowerBurned| number : fractionSize }} บาท</h1>
-              </ion-text>
-              <ion-text color="warning">
-                <p class="result-text">ใช้รถตัดจ่ายเงิน</p>
-                <h1 class="result-text">{{ totalPriceCartPower| number : fractionSize }} บาท</h1>
-              </ion-text>
-              <ion-text color="primary">
-                <p class="result-text">ประหยัดเงิน</p>
-                <h1 class="result-text" style="font-size: 2.2em">{{ priceBurnedCart| number : fractionSize }} บาท</h1>
-              </ion-text>
+          <ion-text color="tertiary">
+            <p class="result-text">ใช้คนตัดจ่ายเงิน</p>
+            <h1 class="result-text">{{ totalPriceManPowerBurned| number : fractionSize }} บาท</h1>
+          </ion-text>
+          <ion-text color="warning">
+            <p class="result-text">ใช้รถตัดจ่ายเงิน</p>
+            <h1 class="result-text">{{ totalPriceCartPower| number : fractionSize }} บาท</h1>
+          </ion-text>
+          <ion-text color="primary">
+            <p class="result-text">ประหยัดเงิน</p>
+            <h1 class="result-text" style="font-size: 2.2em">{{ priceBurnedCart| number : fractionSize }} บาท</h1>
+          </ion-text>
         </ion-col>
       </ion-row>
     </ion-grid>
-    
+
     <!-- Caluation Table-->
     <table class="compare-price">
-        <tr>
-          <td style="padding-left: 8%;">ค่าใช้จ่าย ต่อ 1 ตัน</td>
-        </tr>
-        <tr>
-          <td>
-            <div class="pricing-box-container">
-                <div class="pricing-box text-center">
-                  <h5>ใช้คนตัด<BR>อ้อยไฟไหม้</h5>
-                  <p class="price">380 บาท</p>
-                  <ul class="features-list">
-                    <li>ค่าตัดอ้อย <strong>100</strong> บาท</li>
-                    <li>ค่าคีบอ้อย <strong>100</strong> บาท</li>
-                    <li>ค่าบรรทุก <strong>150</strong> บาท</li>
-                    <li>ค่าหักอ้อยไฟไหม้ <strong>30</strong> บาท</li>
-                  </ul>
-                </div>
-              
-                <div class="pricing-box text-center">
-                  <h5>ใช้คนตัด<BR>อ้อยสด </h5>
-                    <p class="price">350 บาท</p>
-                    <ul class="features-list">
-                      <li>ค่าตัดอ้อย <strong>100</strong> บาท</li>
-                      <li>ค่าคีบอ้อย <strong>100</strong> บาท</li>
-                      <li>ค่าบรรทุก <strong>150</strong> บาท</li>
-                      <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
-                    </ul>
-                </div>
-              
-                <div class="pricing-box text-center">
-                  <h5>ใช้รถตัด<BR>อ้อยสด</h5>
-                    <p class="price">340 บาท</p>
-                    <ul class="features-list">
-                      <li>ค่าตัดอ้อย <strong>190</strong> บาท</li>
-                      <li>ค่าคีบอ้อย <strong>-</strong> บาท</li>
-                      <li>ค่าบรรทุก <strong>150</strong> บาท</li>
-                      <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
-                    </ul>
-                </div>
+      <tr>
+        <td style="padding-left: 8%;">ค่าใช้จ่าย ต่อ 1 ตัน</td>
+        <td style="padding-left: 8%;">ค่าใช้จ่าย ต่อ {{quantity| number : fractionSize}} ตัน</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="pricing-box-container">
+            <div class="pricing-box text-center">
+              <h5>ใช้คนตัด<BR>อ้อยไฟไหม้</h5>
+              <p class="price">380 บาท</p>
+              <div *ngIf="hide1">
+                <ul class="features-list">
+                  <li>ค่าตัดอ้อย <strong>100</strong> บาท</li>
+                  <li>ค่าคีบอ้อย <strong>100</strong> บาท</li>
+                  <li>ค่าบรรทุก <strong>150</strong> บาท</li>
+                  <li>ค่าหักอ้อยไฟไหม้ <strong>30</strong> บาท</li>
+                </ul>
               </div>
-          </td>
-        </tr>
-      </table>
-       <table class="compare-price">
-          <tr>
-            <td style="padding-left: 8%;">ค่าใช้จ่าย ต่อ {{quantity| number : fractionSize}} ตัน</td>
-          </tr>
-          <tr>
-            <td>
-              <div class="pricing-box-container">
-                  <div class="pricing-box text-center">
-                    <h5>ใช้คนตัด<BR>อ้อยไฟไหม้</h5>
-                    <p class="price">{{ totalPriceManPowerBurned| number : fractionSize }} บาท</p>
-                    <ul class="features-list">
-                      <li>ค่าตัดอ้อย <strong>{{calsugarcaneCutPriceManPowerBurned| number : fractionSize}}</strong> บาท</li>
-                      <li>ค่าคีบอ้อย <strong>{{calsugarcaneGetPriceManPowerBurned| number : fractionSize}}</strong> บาท</li>
-                      <li>ค่าบรรทุก <strong>{{calsugarcaneLoadPriceManPowerBurned| number : fractionSize}}</strong> บาท</li>
-                      <li>ค่าหักอ้อยไฟไหม้ <strong>{{calclearBurned| number : fractionSize}}</strong> บาท</li>
-                    </ul>
-                  </div>
-                
-                  <div class="pricing-box text-center">
-                    <h5>ใช้คนตัด<BR>อ้อยสด </h5>
-                      <p class="price">{{ totalPriceManPowerFresh| number : fractionSize }} บาท</p>
-                      <ul class="features-list">
-                        <li>ค่าตัดอ้อย <strong>{{calsugarcaneCutPriceManPowerFresh| number : fractionSize}}</strong> บาท</li>
-                        <li>ค่าคีบอ้อย <strong>{{calsugarcaneGetPriceManPowerFresh| number : fractionSize}}</strong> บาท</li>
-                        <li>ค่าบรรทุก <strong>{{calsugarcaneLoadPriceManPowerFresh| number : fractionSize}}</strong> บาท</li>
-                        <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
-                      </ul>
-                  </div>
-                
-                  <div class="pricing-box text-center">
-                    <h5>ใช้รถตัด<BR>อ้อยสด</h5>
-                      <p class="price">{{ totalPriceCartPower| number : fractionSize }} บาท</p>
-                      <ul class="features-list">
-                        <li>ค่าตัดอ้อย <strong>{{calsugarcaneCutPriceCartPower| number : fractionSize}}</strong> บาท</li>
-                        <li>ค่าคีบอ้อย <strong>-</strong> บาท</li>
-                        <li>ค่าบรรทุก <strong>{{calsugarcaneLoadPriceCartPower| number : fractionSize}}</strong> บาท</li>
-                        <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
-                      </ul>
-                  </div>
-                </div>
-            </td>
-          </tr>
-        </table>
-        <div style="width:100%; text-align: left;">
-        <table class="cutTable">
-          <thead tyle="border: 1px solid #000;">
+              <button ion-button full round (click)="showDiv('hide1')">
+                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide1"></ion-icon>
+                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide1"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="pricing-box-container">
+            <div class="pricing-box text-center">
+              <h5>ใช้คนตัด<BR>อ้อยไฟไหม้</h5>
+              <p class="price">{{ totalPriceManPowerBurned| number : fractionSize }} บาท</p>
+              <div *ngIf="hide1">
+                <ul class="features-list">
+                  <li>ค่าตัดอ้อย <strong>{{calsugarcaneCutPriceManPowerBurned| number : fractionSize}}</strong> บาท</li>
+                  <li>ค่าคีบอ้อย <strong>{{calsugarcaneGetPriceManPowerBurned| number : fractionSize}}</strong> บาท</li>
+                  <li>ค่าบรรทุก <strong>{{calsugarcaneLoadPriceManPowerBurned| number : fractionSize}}</strong> บาท</li>
+                  <li>ค่าหักอ้อยไฟไหม้ <strong>{{calclearBurned| number : fractionSize}}</strong> บาท</li>
+                </ul>
+              </div>
+              <button (click)="showDiv('hide1')">
+                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide1"></ion-icon>
+                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide1"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="pricing-box-container">
+            <div class="pricing-box text-center">
+              <h5>ใช้คนตัด<BR>อ้อยสด </h5>
+              <p class="price">350 บาท</p>
+              <div *ngIf="hide2">
+                <ul class="features-list">
+                  <li>ค่าตัดอ้อย <strong>100</strong> บาท</li>
+                  <li>ค่าคีบอ้อย <strong>100</strong> บาท</li>
+                  <li>ค่าบรรทุก <strong>150</strong> บาท</li>
+                  <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
+                </ul>
+              </div>
+              <button ion-button full round (click)="showDiv('hide2')">
+                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide2"></ion-icon>
+                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide2"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="pricing-box-container">
+            <div class="pricing-box text-center">
+              <h5>ใช้คนตัด<BR>อ้อยสด </h5>
+              <p class="price">{{ totalPriceManPowerFresh| number : fractionSize }} บาท</p>
+              <div *ngIf="hide2">
+                <ul class="features-list">
+                  <li>ค่าตัดอ้อย <strong>{{calsugarcaneCutPriceManPowerFresh| number : fractionSize}}</strong> บาท</li>
+                  <li>ค่าคีบอ้อย <strong>{{calsugarcaneGetPriceManPowerFresh| number : fractionSize}}</strong> บาท</li>
+                  <li>ค่าบรรทุก <strong>{{calsugarcaneLoadPriceManPowerFresh| number : fractionSize}}</strong> บาท</li>
+                  <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
+                </ul>
+              </div>
+              <button ion-button full round (click)="showDiv('hide2')">
+                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide2"></ion-icon>
+                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide2"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="pricing-box-container">
+            <div class="pricing-box text-center">
+              <h5>ใช้รถตัด<BR>อ้อยสด</h5>
+              <p class="price">340 บาท</p>
+              <div *ngIf="hide3">
+                <ul class="features-list">
+                  <li>ค่าตัดอ้อย <strong>190</strong> บาท</li>
+                  <li>ค่าคีบอ้อย <strong>-</strong> บาท</li>
+                  <li>ค่าบรรทุก <strong>150</strong> บาท</li>
+                  <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
+                </ul>
+              </div>
+              <button (click)="showDiv('hide3')">
+                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide3"></ion-icon>
+                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide3"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="pricing-box-container">
+            <div class="pricing-box text-center">
+              <h5>ใช้รถตัด<BR>อ้อยสด</h5>
+              <p class="price">{{ totalPriceCartPower| number : fractionSize }} บาท</p>
+              <div *ngIf="hide3">
+                <ul class="features-list">
+                  <li>ค่าตัดอ้อย <strong>{{calsugarcaneCutPriceCartPower| number : fractionSize}}</strong> บาท</li>
+                  <li>ค่าคีบอ้อย <strong>-</strong> บาท</li>
+                  <li>ค่าบรรทุก <strong>{{calsugarcaneLoadPriceCartPower| number : fractionSize}}</strong> บาท</li>
+                  <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
+                </ul>
+              </div>
+              <button (click)="showDiv('hide3')">
+                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide3"></ion-icon>
+                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide3"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <div style="width:100%; text-align: left;">
+      <table class="cutTable">
+        <thead tyle="border: 1px solid #000;">
           <tr>
             <th colspan="4" style="text-align: center;">
               ความสามารถในการตัดอ้อย
             </th>
           </tr>
-          </thead>
-          <tbody>
+        </thead>
+        <tbody>
           <tr>
             <td>
               รถ 1 คัน ตัด อ้อยสด ได้
@@ -309,7 +357,7 @@
             <td>
               ตันต่อวัน ใช้เวลาตัด
             </td>
-            <td>
+            <td style="text-align: right;">
               {{totalDayManPowerBurned| number : fractionSize}} วัน
             </td>
           </tr>
@@ -327,10 +375,10 @@
               {{totalDayManPowerFresh| number : fractionSize}} วัน
             </td>
           </tr>
-          </tbody>
-        </table>
-        </div>
+        </tbody>
+      </table>
+    </div>
   </div>
-  
+
 
 </ion-content>
