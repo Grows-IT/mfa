@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 
+import { Observable } from 'rxjs';
+
+import { User } from './user';
+
 const siteUrl = 'http://mitrphol-mfa.southeastasia.cloudapp.azure.com/moodle'
 const loginWsUrl = siteUrl + '/login/token.php';
 const getSiteInfoWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_webservice_get_site_info'
@@ -67,11 +71,17 @@ export class AuthService {
       callback(err.error.message)
     });
   }
-}
 
-export interface User {
-  userid: string;
-  firstname: string;
-  lastname: string;
-  userpictureurl: 'string'
+  getUserProfile(): Observable<User> {
+    const params = new HttpParams({
+      fromObject: {
+        'wsfunction': 'core_webservice_get_site_info',
+        'moodlewssettingfilter': 'true',
+        'moodlewssettingfileurl': 'true',
+        'wstoken': this.token
+      }
+    });
+
+    return this.http.post<User>(getSiteInfoWsUrl, params, httpOptions);
+  }
 }
