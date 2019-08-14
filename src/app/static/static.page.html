@@ -3,6 +3,11 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
+    <ion-buttons *ngIf="page.nextPageId" slot="primary">
+      <ion-button [routerLink]="['/static/', page.nextPageId]">
+        <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>{{ page.name }}</ion-title>
   </ion-toolbar>
 </ion-header>

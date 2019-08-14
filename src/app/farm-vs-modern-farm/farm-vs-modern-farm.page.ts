@@ -108,14 +108,4 @@ export class FarmVsModernFarmPage implements OnInit {
     // this.lineChartMethod();
     this.showResult = true;
   }
-
-  onShowReportButtonClick(): void {
-    if (this.showReport) {
-      this.showReportButtonLabel = 'ดูรายละเอียด';
-      this.showReport = false;
-    } else {
-      this.showReportButtonLabel = 'ซ่อนรายละเอียด';
-      this.showReport = true;
-    }
-  }
 }
