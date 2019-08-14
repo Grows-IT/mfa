@@ -5,6 +5,7 @@ import { Validators, FormGroup, FormBuilder } from '@angular/forms';
   selector: 'app-human-vs-machine',
   templateUrl: './human-vs-machine.page.html',
   styleUrls: ['./human-vs-machine.page.scss'],
+  
 })
 export class HumanVsMachinePage implements OnInit {
   inputForm: FormGroup;
@@ -35,9 +36,20 @@ export class HumanVsMachinePage implements OnInit {
     this.inputForm = this.formBuilder.group({
       quantity: ['', Validators.min(1)]
     });
+    
    }
 
   ngOnInit() {
+  }
+  hide1:boolean = false;
+  hide2:boolean = false;
+  hide3:boolean = false;
+  showDiv(divHide){
+    switch (divHide){
+      case "hide1": this.hide1=!this.hide1; break;
+      case "hide2": this.hide2=!this.hide2; break;
+      case "hide3": this.hide3=!this.hide3; break;
+    }
   }
   calculateTotalPrice(data) {
     if (data.quantity <= 0) return;
