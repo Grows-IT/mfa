@@ -43,6 +43,10 @@ export class LoginPage implements OnInit {
         this.loginAttempt += 1;
         return this.errorMessage = err + '. Login attempt: ' + this.loginAttempt;
       }
+      this.authService.getUserInfo((err, user) => {
+        if (err) return console.log(err);
+        console.log('Seccuess');
+      });
       this.loginAttempt = 0;
       this.router.navigate(['/home']);
     });
