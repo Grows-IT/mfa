@@ -8,14 +8,14 @@
 </ion-header>
 
 <ion-content>
+  <ion-text class="ion-text-center" *ngIf="!currentCourse.topics">
+    <h1>Coming soon!</h1>
+  </ion-text>
   <ion-list class="ion-margin-top">
     <div *ngFor="let topic of currentCourse.topics">
-      <div *ngIf="topic.id == '1'; else elseBlock">
-          <ion-button class="ion-margin button" size="large" expand="block" shape="round" [routerLink]="['/topic/', topic.id]">{{ topic.name }}</ion-button>
-      </div>
-      <ng-template #elseBlock>
-          <ion-button class="ion-margin" size="large" expand="block" shape="round" [routerLink]="['/topic/', topic.id]">{{ topic.name }}</ion-button>
-      </ng-template>
+      <ion-button class="ion-margin" size="large" expand="block" shape="round" [routerLink]="['/topic/', topic.id]">
+        {{ topic.name }}
+      </ion-button>
     </div>
   </ion-list>
 </ion-content>
