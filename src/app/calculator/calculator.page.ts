@@ -9,17 +9,17 @@ export class CalculatorPage implements OnInit {
   calculators = [{
     id: '1',
     img: 'assets/img/icon-calculator-farm-modernfarm.png',
-    url: '/farm-vs-modern-farm'
+    url: '/calculator/farm-vs-modern-farm'
   }, {
     id: '2',
     img: 'assets/img/icon-calculator-human-machine.png',
-    url: '/human-vs-machine'
+    url: '/calculator/human-vs-machine'
   }, {
     id: '3',
     img: 'assets/img/icon-calculator-sugarcane.png',
-    url: '/assess-sugar'
+    url: '/calculator/assess-sugar'
   }];
-  
+
   constructor() { }
 
   ngOnInit() {
