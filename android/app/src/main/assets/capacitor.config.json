@@ -1,0 +1,7 @@
+{
+  "appId": "com.growsit.mitrpholmfa",
+  "appName": "MFA",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}
