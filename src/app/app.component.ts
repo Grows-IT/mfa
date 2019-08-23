@@ -21,7 +21,7 @@ export class AppComponent {
     url: '/courses'
   }, {
     title: 'Modern Farm',
-    url: '/course/3'
+    url: '/courses/3/topics'
   }, {
     title: 'Calculators',
     url: '/calculators'
