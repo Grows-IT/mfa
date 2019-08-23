@@ -12,7 +12,7 @@
     <h1>Coming soon!</h1>
   </ion-text>
   <ion-list>
-    <div align="center" *ngFor="let activity of currentTopic.activities" [routerLink]="['activities/', activity.id]">
+    <div align="center" *ngFor="let activity of currentTopic.activities" [routerLink]="[activity.id, 'pages']">
       <ion-item lines="none" button="true" class="ion-padding" *ngIf="!activity.img; else elseBlock">
         <ion-label class="ion-padding" class="ion-text-center">
           <h1>{{ activity.name }}</h1>
