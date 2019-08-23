@@ -11,10 +11,6 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
   },
-  {
-    path: 'list',
-    loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
-  },
   { path: 'courses', loadChildren: './courses/courses.module#CoursesPageModule' },
   { path: 'courses/:courseId/topics', loadChildren: './courses/topics/topics.module#TopicsPageModule' },
   { path: 'courses/:courseId/topics/:topicId/activities',
