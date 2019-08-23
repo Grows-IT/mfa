@@ -19,9 +19,9 @@
 
 <ion-content>
   <ion-slides pager>
-    <ion-slide *ngFor="let content of currentActivity.contents">
+    <ion-slide *ngFor="let page of currentActivity.pages">
       <div class="ion-margin">
-        <img src="{{ content }}" />
+        <img src="{{ page }}" />
       </div>
     </ion-slide>
   </ion-slides>
