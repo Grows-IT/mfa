@@ -17,6 +17,6 @@
     </ion-text>
   </div>
   <div align="center" *ngFor="let calculator of calculators">
-    <img src="{{ calculator.img }}" [routerLink]="[calculator.url]"/>
+    <img src="{{ calculator.img }}" [routerLink]="calculator.url"/>
   </div>
 </ion-content>

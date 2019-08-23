@@ -7,8 +7,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./contents.page.scss'],
 })
 export class ContentsPage implements OnInit {
-  currentSubTopic;
-  subTopics = [{
+  currentActivity;
+  activities = [{
     id: '1' ,
     name: 'ABOUT อ้อย',
     contents: ['assets/img/pages/ABOUT อ้อย/1.png']
@@ -41,7 +41,7 @@ export class ContentsPage implements OnInit {
   constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    const subTopicId = this.activatedRoute.snapshot.paramMap.get('subTopicId');
-    this.currentSubTopic = this.subTopics.find(subTopic => subTopic.id === subTopicId);
+    const activityId = this.activatedRoute.snapshot.paramMap.get('activityId');
+    this.currentActivity = this.activities.find(activity => activity.id === activityId);
   }
 }

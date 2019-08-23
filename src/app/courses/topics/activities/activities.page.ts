@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-sub-topics',
-  templateUrl: './sub-topics.page.html',
-  styleUrls: ['./sub-topics.page.scss'],
+  selector: 'app-activities',
+  templateUrl: './activities.page.html',
+  styleUrls: ['./activities.page.scss'],
 })
-export class SubTopicsPage implements OnInit {
+export class ActivitiesPage implements OnInit {
   currentTopic = null;
-  topics = [{ 
+  topics = [{
     id: '1' ,
     name: 'หลักการผลิตอ้อย',
-    subTopics: [{
+    activities: [{
       id: '1' ,
       name: 'ABOUT อ้อย'
     }, {
