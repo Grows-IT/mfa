@@ -59,15 +59,15 @@
         <ion-col size="10">
           <ion-text color="danger">
             <p class="result-text">การปลูกแบบเก่า ใช้เงินปลูก</p>
-            <h3 class="result-text">{{ oldTotalCost| number : fractionSize }} บาท</h3>
+            <h3 class="result-text">{{ oldTotalCost | number }} บาท</h3>
           </ion-text>
           <ion-text color="secondary">
             <p class="result-text">การปลูกแบบ Modern Farm ใช้เงินปลูก</p>
-            <h3 class="result-text">{{ modernTotalCost| number : fractionSize }} บาท</h3>
+            <h3 class="result-text">{{ modernTotalCost | number }} บาท</h3>
           </ion-text>
           <ion-text color="warning">
             <p class="result-text">ประหยัดเงิน</p>
-            <h3 class="result-text">{{ reduceCost| number : fractionSize }} บาท</h3>
+            <h3 class="result-text">{{ reduceCost | number }} บาท</h3>
           </ion-text>
         </ion-col>
       </ion-row>
@@ -77,13 +77,13 @@
         <ion-col size="4">
           <ion-text color="tertiary">
             <p class="result-text">อ้อยเพิ่มขึ้น</p>
-            <h1 class="result-text">{{ increaeResultPerRai.toLocaleString() }} ตัน</h1>
+            <h1 class="result-text">{{ increaeResultPerRai | number }} ตัน</h1>
           </ion-text>
         </ion-col>
         <ion-col size="6">
           <ion-text color="tertiary">
             <p class="result-text">รายได้เพิ่มขึ้น</p>
-            <h1 class="result-text">{{ totalIncrease.toLocaleString() }} บาท</h1>
+            <h1 class="result-text">{{ totalIncrease | number }} บาท</h1>
           </ion-text>
         </ion-col>
       </ion-row>

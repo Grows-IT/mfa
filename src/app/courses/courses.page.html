@@ -18,7 +18,7 @@
     <ion-row>
       <ion-col size="6" *ngFor="let course of courses">
         <div align="center">
-            <img [src]="course.img" [routerLink]="['/course/', course.id]"/>
+            <img [src]="course.img" [routerLink]="[course.id, 'topics']"/>
         </div>
       </ion-col>
     </ion-row>

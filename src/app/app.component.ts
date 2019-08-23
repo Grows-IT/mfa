@@ -23,8 +23,8 @@ export class AppComponent {
     title: 'Modern Farm',
     url: '/course/3'
   }, {
-    title: 'Calculator',
-    url: '/calculator'
+    title: 'Calculators',
+    url: '/calculators'
   }, {
     title: 'Question - Answer',
     url: '/static/3'
