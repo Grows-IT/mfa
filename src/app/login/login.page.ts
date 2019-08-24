@@ -11,7 +11,7 @@ import { AuthService } from '../auth.service';
 })
 export class LoginPage implements OnInit {
   errorMessage: string;
-  loginAttempt: number = 0;
+  loginAttempt = 0;
   loginForm: FormGroup;
   // users = [];
 
