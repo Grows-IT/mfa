@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 
-import { pages } from '../../pages';
-
 @Component({
   selector: 'app-farm-vs-modern-farm',
   templateUrl: './farm-vs-modern-farm.page.html',
@@ -15,10 +13,7 @@ export class FarmVsModernFarmPage implements OnInit {
   reduceCost: number;
   totalIncrease: number;
   increaeResultPerRai: number;
-  report = pages[0].img;
   showResult = false;
-  showReport = false;
-  showReportButtonLabel = 'ดูรายละเอียด';
   inputForm: FormGroup;
 
   constructor(

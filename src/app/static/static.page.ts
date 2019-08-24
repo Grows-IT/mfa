@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { pages } from '../pages';
+import { pages } from './pages';
 
 @Component({
   selector: 'app-static',
