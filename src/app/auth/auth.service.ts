@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { User } from './user.model';
 
 const siteUrl = 'http://mitrphol-mfa.southeastasia.cloudapp.azure.com/moodle';
 const loginWsUrl = siteUrl + '/login/token.php';
@@ -13,30 +16,23 @@ const httpOptions = {
   })
 };
 
-export interface User {
-  userid: string;
-  firstname: string;
-  lastname: string;
-  userpictureurl: string;
+export interface LoginResponseData {
+  token: string;
+  privatetoken: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private user = new BehaviorSubject<User>(null);
   token: string;
 
   constructor(
     private http: HttpClient,
-  ) {
-    // if (!this.token) {
-    //   this.storage.get('token').then(token => {
-    //     this.token = token;
-    //   });
-    // }
-  }
+  ) {}
 
-  login(username: string, password: string, callback: (err: string) => void) {
+  login(username: string, password: string): Observable<string> {
     const params = new HttpParams({
       fromObject: {
         username,
@@ -45,14 +41,15 @@ export class AuthService {
       }
     });
 
-    this.http.post<any>(loginWsUrl, params, httpOptions).subscribe(res => {
+    return this.http.post<any>(loginWsUrl, params, httpOptions).pipe(map(res => {
       if (res.error) {
-        return callback(res.error);
+        return res.error;
       }
       this.token = res.token;
-      // this.storage.set('token', this.token);
-      callback(null);
-    }, (err) => callback(err.error.message));
+      return null;
+    }, (error: any) => {
+      return error.error.message;
+    }));
   }
 
   isLoggedin() {
