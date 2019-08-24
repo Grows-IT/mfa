@@ -33,7 +33,7 @@ export class AppComponent {
     url: '/static/4'
   }, {
     title: 'Logout',
-    url: '/login'
+    url: '/auth/login'
   }];
 
   constructor(

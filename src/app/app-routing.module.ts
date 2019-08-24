@@ -15,8 +15,8 @@ const routes: Routes = [{
   path: 'calculators',
   loadChildren: './calculators/calculators.module#CalculatorsPageModule'
 }, {
-  path: 'login',
-  loadChildren: './login/login.module#LoginPageModule'
+  path: 'auth',
+  loadChildren: './auth/auth.module#AuthModule'
 }, {
   path: 'static/:pageId',
   loadChildren: './static/static.module#StaticPageModule'
