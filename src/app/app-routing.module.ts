@@ -14,15 +14,16 @@ const routes: Routes = [{
 }, {
   path: 'calculators',
   loadChildren: './calculators/calculators.module#CalculatorsPageModule'
-},
-  // { path: 'calculators/farm-vs-modern-farm',
-  //   loadChildren: './calculators/farm-vs-modern-farm/farm-vs-modern-farm.module#FarmVsModernFarmPageModule' },
-  // { path: 'calculators/human-vs-machine', loadChildren: './calculators/human-vs-machine/human-vs-machine.module#HumanVsMachinePageModule' },
-  // { path: 'calculators/assess-sugar', loadChildren: './calculators/assess-sugar/assess-sugar.module#AssessSugarPageModule' },
-  // { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
-  // { path: 'static/:pageId', loadChildren: './static/static.module#StaticPageModule' },
-  // { path: 'my-account', loadChildren: './my-account/my-account.module#MyAccountPageModule' }
-];
+}, {
+  path: 'login',
+  loadChildren: './login/login.module#LoginPageModule'
+}, {
+  path: 'static/:pageId',
+  loadChildren: './static/static.module#StaticPageModule'
+}, {
+  path: 'my-account',
+  loadChildren: './my-account/my-account.module#MyAccountPageModule'
+}];
 
 @NgModule({
   imports: [
