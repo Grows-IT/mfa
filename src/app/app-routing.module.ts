@@ -23,9 +23,6 @@ const routes: Routes = [{
 }, {
   path: 'static/:pageId',
   loadChildren: './static/static.module#StaticPageModule'
-}, {
-  path: 'my-account',
-  loadChildren: './my-account/my-account.module#MyAccountPageModule'
 }];
 
 @NgModule({
