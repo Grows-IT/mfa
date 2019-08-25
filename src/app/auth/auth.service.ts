@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map, timeout, catchError } from 'rxjs/operators';
+import { from } from 'rxjs';
+import { timeout, tap, map } from 'rxjs/operators';
+
+import { Plugins } from '@capacitor/core';
 
 import { User } from './user.model';
 
@@ -25,7 +27,6 @@ export interface LoginResponseData {
   providedIn: 'root'
 })
 export class AuthService {
-  private user = new BehaviorSubject<User>(null);
   token: string;
 
   constructor(
@@ -43,39 +44,25 @@ export class AuthService {
 
     return this.http.post<any>(loginWsUrl, params, httpOptions).pipe(
       timeout(10000),
-      map(res => {
+      tap(res => {
       if (res.error) {
         throw new Error(res.error);
       }
       this.token = res.token;
+      Plugins.Storage.set({ key: 'token', value: res.token });
     }));
   }
 
-  isLoggedin() {
-    return this.token.length > 0;
+  autoLogin() {
+    return from(Plugins.Storage.get({ key: 'token'})).pipe(tap(data => {
+      if (!data || !data.value) {
+        throw new Error('Auth token not found.');
+      }
+      this.token = data.value;
+    }));
   }
 
-  getUserInfo(callback: (err: string, user?: User) => void) {
-    const params = new HttpParams({
-      fromObject: {
-        wsfunction: 'core_webservice_get_site_info',
-        moodlewssettingfilter: 'true',
-        moodlewssettingfileurl: 'true',
-        wstoken: this.token
-      }
-    });
-
-    this.http.post<any>(getSiteInfoWsUrl, params, httpOptions).subscribe(res => {
-      if (res.error) {
-        return callback(res.error);
-      }
-      callback(null);
-    }, (err) => {
-      callback(err.error.message);
-    });
-  }
-
-  getUserProfile(): Observable<User> {
+  getUserProfile() {
     const params = new HttpParams({
       fromObject: {
         wsfunction: 'core_webservice_get_site_info',
