@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import { from } from 'rxjs';
+import { from, of } from 'rxjs';
 import { timeout, tap, map } from 'rxjs/operators';
 
 import { Plugins } from '@capacitor/core';
@@ -33,6 +33,19 @@ export class AuthService {
     private http: HttpClient,
   ) {}
 
+  get isLoggedIn() {
+    if (this.token) {
+      return of(!!this.token);
+    }
+    return from(Plugins.Storage.get({ key: 'token'})).pipe(map(data => {
+      if (!data || !data.value) {
+        return false;
+      }
+      this.token = data.value;
+      return true;
+    }));
+  }
+
   login(username: string, password: string) {
     const params = new HttpParams({
       fromObject: {
@@ -54,11 +67,12 @@ export class AuthService {
   }
 
   autoLogin() {
-    return from(Plugins.Storage.get({ key: 'token'})).pipe(tap(data => {
+    return from(Plugins.Storage.get({ key: 'token'})).pipe(map(data => {
       if (!data || !data.value) {
-        throw new Error('Auth token not found.');
+        return false;
       }
       this.token = data.value;
+      return true;
     }));
   }
 
