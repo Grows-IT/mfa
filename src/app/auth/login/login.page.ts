@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Validators, FormGroup, FormControl } from '@angular/forms';
 
 import { LoadingController } from '@ionic/angular';
 
@@ -13,36 +13,40 @@ import { AuthService } from '../auth.service';
 })
 export class LoginPage implements OnInit {
   errorMessage: string;
-  isLoading = false;
   loginForm: FormGroup;
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private formBuilder: FormBuilder,
     private loadingCtrl: LoadingController
-  ) {
-    this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+  ) {}
+
+  ngOnInit() {
+    this.loginForm = new FormGroup({
+      username: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      password: new FormControl({
+        validators: [Validators.required]
+      })
     });
   }
 
-  ngOnInit() {}
-
-  onSubmit(loginData: any): void {
-    this.isLoading = true;
+  onSubmitLoginForm(): void {
+    if (!this.loginForm.valid) {
+      return;
+    }
     this.loadingCtrl.create({
       keyboardClose: true,
       message: 'Logging in...'
     }).then(loadingEl => {
       loadingEl.present();
-      this.authService.login(loginData.username, loginData.password).subscribe(error => {
+      this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
         loadingEl.dismiss();
-        if (error) {
-          return this.errorMessage = error;
-        }
         this.router.navigate(['/home']);
+      }, error => {
+        loadingEl.dismiss();
+        this.errorMessage = error.message;
       });
     });
   }

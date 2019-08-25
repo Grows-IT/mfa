@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, timeout, catchError } from 'rxjs/operators';
 
 import { User } from './user.model';
 
@@ -32,7 +32,7 @@ export class AuthService {
     private http: HttpClient,
   ) {}
 
-  login(username: string, password: string): Observable<string> {
+  login(username: string, password: string) {
     const params = new HttpParams({
       fromObject: {
         username,
@@ -41,14 +41,13 @@ export class AuthService {
       }
     });
 
-    return this.http.post<any>(loginWsUrl, params, httpOptions).pipe(map(res => {
+    return this.http.post<any>(loginWsUrl, params, httpOptions).pipe(
+      timeout(10000),
+      map(res => {
       if (res.error) {
-        return res.error;
+        throw new Error(res.error);
       }
       this.token = res.token;
-      return null;
-    }, (error: any) => {
-      return error.error.message;
     }));
   }
 
