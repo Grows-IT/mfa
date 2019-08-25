@@ -1,9 +1,3 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-title>Login</ion-title>
-  </ion-toolbar>
-</ion-header> -->
-
 <ion-content>
   <div align="center" class="ion-margin" style="margin-top:150px;">
     <svg xmlns="http://www.w3.org/2000/svg" width="416.903" height="130.471" viewBox="0 0 416.903 130.471">
@@ -90,7 +84,7 @@
       </g>
     </svg>
   </div>
-  <form [formGroup]="loginForm" (keyup.enter)="onSubmit(loginForm.value)">
+  <form [formGroup]="loginForm" (keyup.enter)="onSubmitLoginForm()">
     <ion-grid>
       <ion-row justify-content-center align-items-center>
         <ion-col center size="3">
@@ -120,7 +114,7 @@
       <ion-row class="ion-justify-content-center">
         <ion-col size="6">
           <ion-button class="login-button" expand="full" shape="round" color="danger" [disabled]="!loginForm.valid"
-            (click)="onSubmit(loginForm.value)">Log in</ion-button>
+            (click)="onSubmitLoginForm()">Log in</ion-button>
         </ion-col>
       </ion-row>
       <ion-row class="ion-justify-content-center">
