@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 
 import { LoadingController } from '@ionic/angular';
 
 import { AuthService } from '../auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage implements OnInit, OnDestroy {
+  private loginSub: Subscription;
   errorMessage: string;
   loginForm: FormGroup;
 
@@ -49,5 +51,11 @@ export class LoginPage implements OnInit {
         this.errorMessage = error.message;
       });
     });
+  }
+
+  ngOnDestroy() {
+    if (this.loginSub) {
+      this.loginSub.unsubscribe();
+    }
   }
 }

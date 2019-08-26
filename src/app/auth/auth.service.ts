@@ -19,12 +19,22 @@ const httpOptions = {
   })
 };
 
+export interface GetSiteInfoResponseData {
+  userid: string;
+  username: string;
+  firstname: string;
+  lastname: string;
+  userpictureurl: string;
+  errorcode: string;
+  message: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private token: string;
-  private user = new BehaviorSubject<User>(null);
+  private userBs = new BehaviorSubject<User>(null);
 
   constructor(
     private http: HttpClient,
@@ -44,10 +54,24 @@ export class AuthService {
   }
 
   get userProfile(): Observable<User> {
-    if (!this.user.value) {
-      return this.getSiteInfo();
+    if (this.userBs.value) {
+      return this.userBs.asObservable();
     }
-    return this.user.asObservable();
+    return from(Plugins.Storage.get({ key: 'user' })).pipe(map(storedData => {
+      if (!storedData || !storedData.value) {
+        return null;
+      }
+      const parsedData = JSON.parse(storedData.value) as {
+        id: string;
+        username: string;
+        firstName: string;
+        lastName: string;
+        imgUrl: string;
+      };
+      const user = new User(parsedData.id, parsedData.username, parsedData.firstName, parsedData.lastName, parsedData.imgUrl);
+      this.userBs.next(user);
+      return user;
+    }));
   }
 
   login(username: string, password: string) {
@@ -59,18 +83,16 @@ export class AuthService {
       }
     });
 
-    return this.http.post<any>(loginWsUrl, params, httpOptions).pipe(
-      timeout(10000),
-      tap(res => {
-        if (res.error) {
-          throw new Error(res.error);
-        }
-        this.token = res.token;
-        Plugins.Storage.set({ key: 'token', value: res.token });
-      }));
+    return this.http.post<any>(loginWsUrl, params, httpOptions).pipe(timeout(10000), tap(res => {
+      if (res.error) {
+        throw new Error(res.error);
+      }
+      this.token = res.token;
+      Plugins.Storage.set({ key: 'token', value: res.token });
+    }));
   }
 
-  private getSiteInfo() {
+  getSiteInfo() {
     const params = new HttpParams({
       fromObject: {
         wsfunction: 'core_webservice_get_site_info',
@@ -80,14 +102,20 @@ export class AuthService {
       }
     });
 
-    return this.http.post<any>(getSiteInfoWsUrl, params, httpOptions).pipe(
-      timeout(10000),
-      map(res => {
+    return this.http.post<GetSiteInfoResponseData>(getSiteInfoWsUrl, params, httpOptions).pipe(timeout(10000), map(res => {
       if (res.errorcode) {
         throw new Error(res.message);
       }
+      const data = JSON.stringify({
+        id: res.userid,
+        username: res.username,
+        firstName: res.firstname,
+        lastName: res.lastname,
+        imgUrl: res.userpictureurl
+      });
+      Plugins.Storage.set({ key: 'user', value: data });
       const user = new User(res.userid, res.username, res.firstname, res.lastname, res.userpictureurl);
-      this.user.next(user);
+      this.userBs.next(user);
       return user;
     }));
   }
