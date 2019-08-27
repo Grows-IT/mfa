@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { CoursesService } from './courses.service';
+
 @Component({
   selector: 'app-courses',
   templateUrl: './courses.page.html',
@@ -24,9 +26,14 @@ export class CoursesPage implements OnInit {
     img: 'assets/img/icon-course-specialization.png'
   }];
 
-  constructor() { }
+  constructor(private coursesService: CoursesService) { }
 
   ngOnInit() {
+    this.coursesService.getCourses().subscribe(courses => {
+      console.log(courses);
+    }, err => {
+      console.log(err.message);
+    });
   }
 
 }

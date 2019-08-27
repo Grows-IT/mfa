@@ -40,6 +40,10 @@ export class AuthService {
     private http: HttpClient,
   ) { }
 
+  get userToken() {
+    return this.token;
+  }
+
   get isLoggedIn() {
     if (this.token) {
       return of(!!this.token);
