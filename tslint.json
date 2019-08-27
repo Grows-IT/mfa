@@ -4,6 +4,14 @@
     "codelyzer"
   ],
   "rules": {
+    "variable-name": {
+      "options": [
+        "ban-keywords",
+        "check-format",
+        "allow-leading-underscore",
+        "allow-pascal-case"
+      ]
+    },
     "array-type": false,
     "arrow-parens": false,
     "deprecation": {

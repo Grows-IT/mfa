@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
-
 import { LoadingController } from '@ionic/angular';
 
 import { AuthService } from '../auth.service';
@@ -43,7 +42,7 @@ export class LoginPage implements OnInit, OnDestroy {
       message: 'Logging in...'
     }).then(loadingEl => {
       loadingEl.present();
-      this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
+      this.loginSub = this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
         loadingEl.dismiss();
         this.router.navigate(['/home']);
       }, error => {

@@ -19,15 +19,15 @@ export class ProfilePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.userSub = this.authService.userProfile.subscribe(user => {
-      if (!user) {
-        this.getSiteInfoSub = this.authService.getSiteInfo().subscribe(u => {
-          this.user = u;
-        }, err => {
-          console.log('Error getSiteInfo(): ', err.message);
-        });
-      }
-    });
+    // this.userSub = this.authService.userProfile.subscribe(user => {
+    //   if (!user) {
+    //     this.getSiteInfoSub = this.authService.getSiteInfo().subscribe(u => {
+    //       this.user = u;
+    //     }, err => {
+    //       console.log('Error getSiteInfo(): ', err.message);
+    //     });
+    //   }
+    // });
   }
 
   ngOnDestroy() {
