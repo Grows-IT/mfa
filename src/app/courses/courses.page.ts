@@ -1,13 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { CoursesService } from './courses.service';
+import { AuthService } from '../auth/auth.service';
+import { User } from '../auth/user.model';
 
 @Component({
   selector: 'app-courses',
   templateUrl: './courses.page.html',
   styleUrls: ['./courses.page.scss'],
 })
-export class CoursesPage implements OnInit {
+export class CoursesPage implements OnInit, OnDestroy {
+  user: User;
+  private userSub: Subscription;
+  private coursesSub: Subscription;
   courses = [{
     id: 1,
     name: 'Know Yourself',
@@ -26,14 +32,27 @@ export class CoursesPage implements OnInit {
     img: 'assets/img/icon-course-specialization.png'
   }];
 
-  constructor(private coursesService: CoursesService) { }
+  constructor(
+    private authService: AuthService,
+    private coursesService: CoursesService
+  ) { }
 
   ngOnInit() {
-    this.coursesService.getCourses().subscribe(courses => {
-      console.log(courses);
-    }, err => {
-      console.log(err.message);
+    this.userSub = this.authService.user.subscribe(user => {
+      this.user = user;
+      this.coursesSub = this.coursesService.getCourses(user).subscribe(courses => {
+        // this.courses = courses;
+        console.log(courses);
+      });
     });
   }
 
+  ngOnDestroy() {
+    if (this.userSub) {
+      this.userSub.unsubscribe();
+    }
+    if (this.coursesSub) {
+      this.coursesSub.unsubscribe();
+    }
+  }
 }
