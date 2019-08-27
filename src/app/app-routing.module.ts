@@ -13,7 +13,8 @@ const routes: Routes = [{
   canLoad: [AuthGuard]
 }, {
   path: 'courses',
-  loadChildren: './courses/courses.module#CoursesPageModule'
+  loadChildren: './courses/courses.module#CoursesPageModule',
+  canLoad: [AuthGuard]
 }, {
   path: 'calculators',
   loadChildren: './calculators/calculators.module#CalculatorsPageModule'
