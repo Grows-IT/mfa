@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { CoursesService } from './courses.service';
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
+import { Course } from './course.model';
 
 @Component({
   selector: 'app-courses',
@@ -12,6 +13,7 @@ import { User } from '../auth/user.model';
 })
 export class CoursesPage implements OnInit, OnDestroy {
   user: User;
+  courses: Course[];
   private coursesSub: Subscription;
   knowYourself = {
     id: 1,
@@ -32,25 +34,7 @@ export class CoursesPage implements OnInit, OnDestroy {
     id: 4,
     name: 'Specialization',
     img: 'assets/img/icon-course-specialization.png'
-  }
-
-  courses = [{
-    id: 1,
-    name: 'Know Yourself',
-    img: 'assets/img/icon-course-know-yourself.png'
-  }, {
-    id: 2,
-    name: 'Empathy',
-    img: 'assets/img/icon-course-empathy.png'
-  }, {
-    id: 3,
-    name: 'Modern Farm',
-    img: 'assets/img/icon-course-modern-farm.png'
-  }, {
-    id: 4,
-    name: 'Specialization',
-    img: 'assets/img/icon-course-specialization.png'
-  }];
+  };
 
   constructor(
     private authService: AuthService,
@@ -63,7 +47,7 @@ export class CoursesPage implements OnInit, OnDestroy {
     });
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
       if (courses) {
-        console.log(courses);
+        this.courses = courses;
       }
     });
   }
