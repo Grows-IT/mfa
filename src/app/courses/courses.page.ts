@@ -12,8 +12,28 @@ import { User } from '../auth/user.model';
 })
 export class CoursesPage implements OnInit, OnDestroy {
   user: User;
-  private userSub: Subscription;
   private coursesSub: Subscription;
+  knowYourself = {
+    id: 1,
+    name: 'Know Yourself',
+    img: 'assets/img/icon-course-know-yourself.png'
+  };
+  empathy = {
+    id: 2,
+    name: 'Empathy',
+    img: 'assets/img/icon-course-empathy.png'
+  };
+  modernFarm = {
+    id: 3,
+    name: 'Modern Farm',
+    img: 'assets/img/icon-course-modern-farm.png'
+  };
+  specialization = {
+    id: 4,
+    name: 'Specialization',
+    img: 'assets/img/icon-course-specialization.png'
+  }
+
   courses = [{
     id: 1,
     name: 'Know Yourself',
@@ -38,19 +58,17 @@ export class CoursesPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.userSub = this.authService.user.subscribe(user => {
+    this.authService.user.subscribe(user => {
       this.user = user;
-      this.coursesSub = this.coursesService.getCourses(user).subscribe(courses => {
-        // this.courses = courses;
+    });
+    this.coursesSub = this.coursesService.courses.subscribe(courses => {
+      if (courses) {
         console.log(courses);
-      });
+      }
     });
   }
 
   ngOnDestroy() {
-    if (this.userSub) {
-      this.userSub.unsubscribe();
-    }
     if (this.coursesSub) {
       this.coursesSub.unsubscribe();
     }
