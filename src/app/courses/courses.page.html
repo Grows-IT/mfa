@@ -8,18 +8,32 @@
 </ion-header>
 
 <ion-content>
-  <div class="banner" align="center">
-    <img src="assets/img/icon-course-banner.png" />
-  </div>
-  <div class="avatar" align="center">
-    <img src="assets/img/avatar.png" routerLink="/static/2"/>
-  </div>
   <ion-grid>
     <ion-row>
-      <ion-col size="6" *ngFor="let course of courses">
-        <div align="center">
-            <img [src]="course.img" [routerLink]="[course.id, 'topics']"/>
-        </div>
+      <ion-col>
+        <ion-img src="assets/img/icon-course-banner.png"></ion-img>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" offset="4">
+        <ion-img src="assets/img/avatar.png" routerLink="/static/2"></ion-img>
+        <ion-text class="ion-text-center"><h3>{{ user.firstName }} {{user.lastName }}</h3></ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" offset="2" margin>
+        <ion-img [src]="knowYourself.img" [routerLink]="[knowYourself.id, 'topics']"></ion-img>
+      </ion-col>
+      <ion-col size="4" margin>
+        <ion-img [src]="empathy.img" [routerLink]="[empathy.id, 'topics']"></ion-img>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" offset="2" margin>
+        <ion-img [src]="modernFarm.img" [routerLink]="[modernFarm.id, 'topics']"></ion-img>
+      </ion-col>
+      <ion-col size="4" margin>
+        <ion-img [src]="specialization.img" [routerLink]="[specialization.id, 'topics']"></ion-img>
       </ion-col>
     </ion-row>
   </ion-grid>
