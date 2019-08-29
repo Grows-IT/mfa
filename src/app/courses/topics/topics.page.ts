@@ -17,6 +17,7 @@ export class TopicsPage implements OnInit {
   }, {
     id: '3',
     name: 'Modern Farm',
+    img: './assets/img/modern-farm-banner.png',
     topics: [{
       id: '1' ,
       name: 'หลักการผลิตอ้อย'
