@@ -3,7 +3,13 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/courses"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ currentCourse.name }}</ion-title>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="7" offset="2">
+          <ion-img [src]="currentCourse.img"></ion-img>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
 
@@ -11,11 +17,17 @@
   <ion-text class="ion-text-center" *ngIf="!currentCourse.topics">
     <h1>Coming soon!</h1>
   </ion-text>
-  <ion-list class="ion-margin-top">
-    <div *ngFor="let topic of currentCourse.topics">
-      <ion-button class="ion-margin" size="large" expand="block" shape="round" [routerLink]="[topic.id, 'activities']">
-        {{ topic.name }}
-      </ion-button>
-    </div>
-  </ion-list>
+  <ion-grid class="topics" *ngIf="currentCourse.topics">
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <div *ngFor="let topic of currentCourse.topics">
+            <ion-button class="ion-margin" size="large" expand="block" shape="round" [routerLink]="[topic.id, 'activities']">
+              {{ topic.name }}
+            </ion-button>
+          </div>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
