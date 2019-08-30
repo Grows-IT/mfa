@@ -20,13 +20,10 @@
   <ion-grid class="topics" *ngIf="currentCourse.topics">
     <ion-row>
       <ion-col>
-        <ion-list>
-          <div *ngFor="let topic of currentCourse.topics">
-            <ion-button class="ion-margin" size="large" expand="block" shape="round" [routerLink]="[topic.id, 'activities']">
-              {{ topic.name }}
-            </ion-button>
-          </div>
-        </ion-list>
+        <ion-button *ngFor="let topic of currentCourse.topics" margin size="large" expand="full" shape="round"
+          [routerLink]="[topic.id, 'activities']">
+          {{ topic.name }}
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
