@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { MenuController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
 import { Plugins, Capacitor } from '@capacitor/core';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -38,7 +40,9 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private menuCtrl: MenuController
   ) {
     this.initializeApp();
   }
@@ -52,8 +56,10 @@ export class AppComponent {
   }
 
   navigate(p: any) {
-    if (p.url) {
-      this.router.navigate([p.url]);
+    if (p.title === 'Logout') {
+      this.authService.logout();
+      this.menuCtrl.enable(false);
     }
+    this.router.navigateByUrl(p.url);
   }
 }

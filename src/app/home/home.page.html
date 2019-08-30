@@ -7,7 +7,7 @@
       Modern Farm Academy
     </ion-title>
     <ion-buttons slot="primary">
-        <ion-avatar padding routerLink="/auth/profile">
+        <ion-avatar *ngIf="user" padding routerLink="/auth/profile">
           <ion-img [src]="user.imgUrl"></ion-img>
         </ion-avatar>
 
