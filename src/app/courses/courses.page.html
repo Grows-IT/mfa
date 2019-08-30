@@ -10,13 +10,15 @@
 <ion-content>
   <ion-grid>
     <ion-row>
-      <ion-col>
+      <ion-col margin>
         <ion-img src="assets/img/icon-course-banner.png"></ion-img>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col size="4" offset="4">
-        <ion-img src="assets/img/avatar.png" routerLink="/static/2"></ion-img>
+        <ion-avatar>
+            <ion-img [src]="user.imgUrl" routerLink="/auth/profile"></ion-img>
+        </ion-avatar>
         <ion-text class="ion-text-center"><h3>{{ user.firstName }} {{user.lastName }}</h3></ion-text>
       </ion-col>
     </ion-row>
