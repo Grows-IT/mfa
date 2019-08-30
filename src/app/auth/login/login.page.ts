@@ -2,9 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
+import { MenuController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 import { AuthService } from '../auth.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -12,14 +14,17 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit, OnDestroy {
-  private loginSub: Subscription;
   errorMessage: string;
   loginForm: FormGroup;
+  private loginSub: Subscription;
+  private backButtonSub: Subscription;
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private menuCtrl: MenuController,
+    private platform: Platform
   ) {}
 
   ngOnInit() {
@@ -27,9 +32,13 @@ export class LoginPage implements OnInit, OnDestroy {
       username: new FormControl(null, {
         validators: [Validators.required]
       }),
-      password: new FormControl({
+      password: new FormControl(null, {
         validators: [Validators.required]
       })
+    });
+    this.backButtonSub = this.platform.backButton.subscribe(() => {
+      const app = 'app';
+      navigator[app].exitApp();
     });
   }
 
@@ -43,11 +52,15 @@ export class LoginPage implements OnInit, OnDestroy {
     }).then(loadingEl => {
       loadingEl.present();
       this.loginSub = this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
+        this.errorMessage = null;
+        this.loginForm.value.username = null;
+        this.loginForm.value.password = null;
+        this.menuCtrl.enable(true);
+        this.router.navigateByUrl('/home');
         loadingEl.dismiss();
-        this.router.navigate(['/home']);
       }, error => {
-        loadingEl.dismiss();
         this.errorMessage = error.message;
+        loadingEl.dismiss();
       });
     });
   }
@@ -55,6 +68,9 @@ export class LoginPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.loginSub) {
       this.loginSub.unsubscribe();
+    }
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
     }
   }
 }

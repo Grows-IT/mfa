@@ -62,6 +62,11 @@ export class AuthService {
     }));
   }
 
+  logout() {
+    this._user.next(null);
+    Plugins.Storage.clear();
+  }
+
   autoLogin() {
     return this.getUserFromStorage().pipe(map(user => {
       this._user.next(user);
@@ -81,7 +86,7 @@ export class AuthService {
       timeout(10000),
       map(res => {
         if (res.error) {
-          throw new Error(res.message);
+          throw new Error(res.error);
         }
         return res.token;
       })
