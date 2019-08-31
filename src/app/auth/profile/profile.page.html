@@ -15,7 +15,9 @@
           <h1>My Account</h1>
         </ion-text>
         <ion-avatar>
-          <ion-img [src]="user.imgUrl"></ion-img>
+          <ion-img [src]="user.imgUrl" (click)="onPickImage()">
+              <input *ngIf="usePicker" class="picker" type="file" accept="image/jpeg" #filePicker (change)="onFileChosen($event)" />
+          </ion-img>
         </ion-avatar>
         <ion-text text-center color="light">
           <h4>{{ user.firstName }} {{ user.lastName }}</h4>
