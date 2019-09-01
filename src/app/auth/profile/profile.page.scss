@@ -7,10 +7,18 @@
 
 ion-avatar {
   margin: auto;
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
 }
 
 .picker {
   display: none;
+}
+
+.grid {
+  height: 100%;
+}
+
+.row {
+  height: 40%;
 }

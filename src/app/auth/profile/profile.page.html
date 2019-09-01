@@ -8,9 +8,9 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col margin size="8" offset="2" class="background">
+  <ion-grid class="grid">
+    <ion-row class="row">
+      <ion-col margin class="background">
         <ion-text text-center color="light">
           <h1>My Account</h1>
         </ion-text>
@@ -20,7 +20,7 @@
           </ion-img>
         </ion-avatar>
         <ion-text text-center color="light">
-          <h4>{{ user.firstName }} {{ user.lastName }}</h4>
+          <h1>{{ user.firstName }} {{ user.lastName }}</h1>
         </ion-text>
       </ion-col>
     </ion-row>
