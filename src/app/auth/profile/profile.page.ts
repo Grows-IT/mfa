@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { Subscription } from 'rxjs';
 import { Plugins, Capacitor, CameraSource, CameraResultType } from '@capacitor/core';
 import { Platform } from '@ionic/angular';
+import fixOrientation from 'fix-orientation-capacitor';
 
 import { AuthService } from '../auth.service';
 import { User } from '../user.model';
@@ -37,25 +38,25 @@ export class ProfilePage implements OnInit, OnDestroy {
     }
   }
 
-  onPickImage() {
+  async onPickImage() {
     if (!Capacitor.isPluginAvailable('Camera') || this.usePicker) {
       this.filePickerRef.nativeElement.click();
       return;
     }
-    Plugins.Camera.getPhoto({
-      quality: 50,
-      source: CameraSource.Prompt,
-      correctOrientation: true,
-      width: 300,
-      resultType: CameraResultType.Uri
-    }).then(image => {
-      this.user.imgUrl = image.webPath;
-    }).catch(err => {
-      console.log(err);
+    try {
+      const image = await Plugins.Camera.getPhoto({
+        quality: 60,
+        correctOrientation: false,
+        source: CameraSource.Prompt,
+        resultType: CameraResultType.DataUrl
+      });
+      this.user.imgUrl = await fixOrientation(image);
+    } catch (error) {
+      console.log(error);
       if (this.usePicker) {
         this.filePickerRef.nativeElement.click();
       }
-    });
+    }
   }
 
   onFileChosen(event: Event) {
