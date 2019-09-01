@@ -7,10 +7,9 @@
       Modern Farm Academy
     </ion-title>
     <ion-buttons slot="primary">
-        <ion-avatar *ngIf="user" padding routerLink="/auth/profile">
-          <ion-img [src]="user.imgUrl"></ion-img>
-        </ion-avatar>
-
+      <ion-avatar padding routerLink="/auth/profile">
+        <ion-img [src]="user.imgUrl"></ion-img>
+      </ion-avatar>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -64,12 +63,12 @@
     <ion-row>
       <ion-col>
         <div align="center">
-          <img src="assets/img/icon-dashboard-modern-farm.png" routerLink="/courses"/>
+          <img src="assets/img/icon-dashboard-modern-farm.png" routerLink="/courses" />
         </div>
       </ion-col>
       <ion-col>
         <div align="center">
-          <img src="assets/img/icon-dashboard-calculator.png" routerLink="/calculators"/>
+          <img src="assets/img/icon-dashboard-calculator.png" routerLink="/calculators" />
         </div>
       </ion-col>
     </ion-row>

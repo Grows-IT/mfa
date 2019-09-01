@@ -25,7 +25,7 @@ export class LoginPage implements OnInit, OnDestroy {
     private loadingCtrl: LoadingController,
     private menuCtrl: MenuController,
     private platform: Platform
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loginForm = new FormGroup({
@@ -42,26 +42,25 @@ export class LoginPage implements OnInit, OnDestroy {
     });
   }
 
-  onSubmitLoginForm(): void {
+  async onSubmitLoginForm() {
     if (!this.loginForm.valid) {
       return;
     }
-    this.loadingCtrl.create({
+    const loadingEl = await this.loadingCtrl.create({
       keyboardClose: true,
       message: 'Logging in...'
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.loginSub = this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
-        this.errorMessage = null;
-        this.loginForm.value.username = null;
-        this.loginForm.value.password = null;
-        this.menuCtrl.enable(true);
-        this.router.navigateByUrl('/home');
-        loadingEl.dismiss();
-      }, error => {
-        this.errorMessage = error.message;
-        loadingEl.dismiss();
-      });
+    });
+    loadingEl.present();
+    this.loginSub = this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
+      this.errorMessage = null;
+      this.loginForm.value.username = null;
+      this.loginForm.value.password = null;
+      this.menuCtrl.enable(true);
+      this.router.navigateByUrl('/home');
+      loadingEl.dismiss();
+    }, error => {
+      this.errorMessage = error.message;
+      loadingEl.dismiss();
     });
   }
 

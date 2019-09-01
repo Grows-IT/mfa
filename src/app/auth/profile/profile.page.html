@@ -16,7 +16,8 @@
         </ion-text>
         <ion-avatar>
           <ion-img [src]="user.imgUrl" (click)="onPickImage()">
-              <input *ngIf="usePicker" class="picker" type="file" accept="image/jpeg" #filePicker (change)="onFileChosen($event)" />
+            <input *ngIf="usePicker" class="picker" type="file" accept="image/jpeg" #filePicker
+              (change)="onFileChosen($event)" />
           </ion-img>
         </ion-avatar>
         <ion-text text-center color="light">
