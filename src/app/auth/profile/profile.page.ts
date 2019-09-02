@@ -50,7 +50,7 @@ export class ProfilePage implements OnInit, OnDestroy {
         source: CameraSource.Prompt,
         resultType: CameraResultType.DataUrl
       });
-      this.user.imgUrl = await fixOrientation(image);
+      // Call updateProfilePicture
     } catch (error) {
       console.log(error);
       if (this.usePicker) {
@@ -60,6 +60,12 @@ export class ProfilePage implements OnInit, OnDestroy {
   }
 
   onFileChosen(event: Event) {
-    console.log(event);
+    const pickedFile = (event.target as HTMLInputElement).files[0];
+    if (!pickedFile) {
+      return;
+    }
+    this.authService.updateProfilePicture(pickedFile).subscribe(user => {
+      this.user = user;
+    });
   }
 }
