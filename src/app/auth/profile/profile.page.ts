@@ -7,6 +7,27 @@ import fixOrientation from 'fix-orientation-capacitor';
 import { AuthService } from '../auth.service';
 import { User } from '../user.model';
 
+function base64toBlob(base64Data: string, contentType: string) {
+  contentType = contentType || '';
+  const sliceSize = 1024;
+  const byteCharacters = window.atob(base64Data);
+  const bytesLength = byteCharacters.length;
+  const slicesCount = Math.ceil(bytesLength / sliceSize);
+  const byteArrays = new Array(slicesCount);
+
+  for (let sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+    const begin = sliceIndex * sliceSize;
+    const end = Math.min(begin + sliceSize, bytesLength);
+
+    const bytes = new Array(end - begin);
+    for (let offset = begin, i = 0; offset < end; ++i, ++offset) {
+      bytes[i] = byteCharacters[offset].charCodeAt(0);
+    }
+    byteArrays[sliceIndex] = new Uint8Array(bytes);
+  }
+  return new Blob(byteArrays, { type: contentType });
+}
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
@@ -15,6 +36,7 @@ import { User } from '../user.model';
 export class ProfilePage implements OnInit, OnDestroy {
   @ViewChild('filePicker', { static: false }) filePickerRef: ElementRef<HTMLInputElement>;
   private userSub: Subscription;
+  private imgUpdateSub: Subscription;
   user: User;
   usePicker = false;
 
@@ -36,6 +58,9 @@ export class ProfilePage implements OnInit, OnDestroy {
     if (this.userSub) {
       this.userSub.unsubscribe();
     }
+    if (this.imgUpdateSub) {
+      this.imgUpdateSub.unsubscribe();
+    }
   }
 
   async onPickImage() {
@@ -43,20 +68,16 @@ export class ProfilePage implements OnInit, OnDestroy {
       this.filePickerRef.nativeElement.click();
       return;
     }
-    try {
-      const image = await Plugins.Camera.getPhoto({
-        quality: 60,
-        correctOrientation: false,
-        source: CameraSource.Prompt,
-        resultType: CameraResultType.DataUrl
-      });
-      // Call updateProfilePicture
-    } catch (error) {
-      console.log(error);
-      if (this.usePicker) {
-        this.filePickerRef.nativeElement.click();
-      }
-    }
+    const image = await Plugins.Camera.getPhoto({
+      quality: 50,
+      width: 200,
+      correctOrientation: false,
+      source: CameraSource.Prompt,
+      resultType: CameraResultType.DataUrl
+    });
+    const fixed = await fixOrientation(image);
+    const blob = base64toBlob(fixed.replace('data:image/jpeg;base64,', ''), 'image/jpeg');
+    this.imgUpdateSub = this.authService.updateProfilePicture(blob).subscribe();
   }
 
   onFileChosen(event: Event) {
@@ -64,8 +85,6 @@ export class ProfilePage implements OnInit, OnDestroy {
     if (!pickedFile) {
       return;
     }
-    this.authService.updateProfilePicture(pickedFile).subscribe(user => {
-      this.user = user;
-    });
+    this.imgUpdateSub = this.authService.updateProfilePicture(pickedFile).subscribe();
   }
 }

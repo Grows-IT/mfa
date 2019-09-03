@@ -19,27 +19,6 @@ const httpOptions = {
   })
 };
 
-function base64toBlob(base64Data: string, contentType: string) {
-  contentType = contentType || '';
-  const sliceSize = 1024;
-  const byteCharacters = window.atob(base64Data);
-  const bytesLength = byteCharacters.length;
-  const slicesCount = Math.ceil(bytesLength / sliceSize);
-  const byteArrays = new Array(slicesCount);
-
-  for (let sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
-    const begin = sliceIndex * sliceSize;
-    const end = Math.min(begin + sliceSize, bytesLength);
-
-    const bytes = new Array(end - begin);
-    for (let offset = begin, i = 0; offset < end; ++i, ++offset) {
-      bytes[i] = byteCharacters[offset].charCodeAt(0);
-    }
-    byteArrays[sliceIndex] = new Uint8Array(bytes);
-  }
-  return new Blob(byteArrays, { type: contentType });
-}
-
 export interface GetSiteInfoResponseData {
   userid: string;
   username: string;
@@ -95,20 +74,9 @@ export class AuthService {
     }));
   }
 
-  updateProfilePicture(imageData: string | File) {
-    let imageFile: any;
-    if (typeof imageData === 'string') {
-      try {
-        imageFile = base64toBlob(imageData.replace('data:image/jpeg;base64,', ''), 'image/jpeg');
-      } catch (error) {
-        console.log(error);
-        return;
-      }
-    } else {
-      imageFile = imageData;
-    }
+  updateProfilePicture(imageData: Blob | File) {
     return this.user.pipe(take(1), switchMap(user => {
-      return this.uploadWs(user.token, imageFile).pipe(switchMap(itemId => {
+      return this.uploadWs(user.token, imageData).pipe(switchMap(itemId => {
         return this.coreUserUpdatePictureWs(user.token, user.id, itemId).pipe(switchMap(() => {
           return this.getSiteInfo(user.token).pipe(tap(u => {
             this._user.next(u);
@@ -119,7 +87,7 @@ export class AuthService {
     }));
   }
 
-  private uploadWs(token: string, file: File) {
+  private uploadWs(token: string, file: File | Blob) {
     const uploadData = new FormData();
     uploadData.append('token', token);
     uploadData.append('filearea', 'draft');
