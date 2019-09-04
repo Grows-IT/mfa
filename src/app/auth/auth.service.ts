@@ -20,7 +20,7 @@ const httpOptions = {
 };
 
 export interface GetSiteInfoResponseData {
-  userid: string;
+  userid: number;
   username: string;
   firstname: string;
   lastname: string;
@@ -104,10 +104,10 @@ export class AuthService {
     }));
   }
 
-  private coreUserUpdatePictureWs(token: string, userId: string, itemId: string) {
+  private coreUserUpdatePictureWs(token: string, userId: number, itemId: string) {
     const formData = new FormData();
     formData.append('wstoken', token);
-    formData.append('userid', userId);
+    formData.append('userid', userId.toString());
     formData.append('draftitemid', itemId);
     return this.http.post<{ profileimageurl: string }>(coreUserUpdatePictureWsUrl, formData).pipe(timeout(10000), map(res => {
       if (!res.profileimageurl) {
@@ -179,7 +179,7 @@ export class AuthService {
         return null;
       }
       const parsedData = JSON.parse(storedData.value) as {
-        id: string;
+        id: number;
         username: string;
         firstName: string;
         lastName: string;
