@@ -8,7 +8,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
+  <div text-center>
+    <ion-spinner *ngIf="isLoading"></ion-spinner>
+  </div>
+  <ion-grid *ngIf="!isLoading">
     <ion-row>
       <ion-col margin>
         <ion-img src="assets/img/icon-course-banner.png"></ion-img>
@@ -32,7 +35,7 @@
     </ion-row>
     <ion-row>
       <ion-col size="4" offset="2" margin>
-        <ion-img [src]="modernFarm.img" [routerLink]="[modernFarm.id, 'topics']"></ion-img>
+        <ion-img [src]="modernFarm.imgUrl" [routerLink]="[modernFarm.id, 'topics']"></ion-img>
       </ion-col>
       <ion-col size="4" margin>
         <ion-img [src]="specialization.img" [routerLink]="[specialization.id, 'topics']"></ion-img>

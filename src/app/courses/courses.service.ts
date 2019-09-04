@@ -3,12 +3,14 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, tap, switchMap, catchError, timeout, take } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
-import { Course } from './course.model';
+import { Course, Topic, Activity } from './course.model';
 import { from, BehaviorSubject, of } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 
 const siteUrl = 'http://santaputra.trueddns.com:46921/moodle';
 const getCoursesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses';
+const getCourseContentWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_contents';
+
 const httpOptions = {
   headers: new HttpHeaders({
     Accept: 'application/json',
@@ -17,10 +19,24 @@ const httpOptions = {
 };
 
 export interface CourseData {
-  id: string;
+  id: number;
   shortname: string;
   overviewfiles: [{
     fileurl: string;
+  }];
+}
+
+export interface TopicData {
+  id: number;
+  name: string;
+  modules: [{
+    id: number; // activity
+    name: string;
+    modname: string; // type
+    contents: [{
+      filename: string;
+      fileurl: string;
+    }]
   }];
 }
 
@@ -29,6 +45,7 @@ export interface CourseData {
 })
 export class CoursesService {
   private _courses = new BehaviorSubject<Course[]>(null);
+  private _topics = new BehaviorSubject<Topic[]>(null);
 
   constructor(
     private http: HttpClient,
@@ -53,7 +70,7 @@ export class CoursesService {
     return this.authService.user.pipe(switchMap(user => {
       const params = new HttpParams({
         fromObject: {
-          userid: user.id,
+          userid: user.id.toString(),
           wstoken: user.token
         }
       });
@@ -65,6 +82,32 @@ export class CoursesService {
         this.saveCoursestoStorage(courses);
         return courses;
       }));
+    }));
+  }
+
+  getTopicsByCourseId(courseId: number) {
+    return this.authService.token.pipe(take(1), switchMap(token => {
+      const form = new FormData();
+      form.append('wstoken', token);
+      form.append('courseid', courseId.toString());
+      return this.http.post<TopicData[]>(getCourseContentWsUrl, form).pipe(map(res => {
+        const topics: Topic[] = res.map(topicData => {
+          const activities = topicData.modules.map(m => {
+            const activity = new Activity(m.id, m.name, m.modname);
+            return activity;
+          });
+          return new Topic(topicData.id, topicData.name, activities);
+        });
+        this._topics.next(topics);
+        return topics;
+      }));
+    }));
+  }
+
+  getTopicById(topicId: string) {
+    return this._topics.asObservable().pipe(map(topics => {
+      const topic = topics.find(t => t.id === +topicId);
+      return topic;
     }));
   }
 
@@ -80,7 +123,7 @@ export class CoursesService {
         return null;
       }
       const parsedData = JSON.parse(storedData.value) as {
-        id: string;
+        id: number;
         name: string;
         imgUrl: string;
       }[];

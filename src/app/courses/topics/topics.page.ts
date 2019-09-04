@@ -1,12 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+import { CoursesService } from '../courses.service';
+import { Topic } from '../course.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-topics',
   templateUrl: './topics.page.html',
   styleUrls: ['./topics.page.scss'],
 })
-export class TopicsPage implements OnInit {
+export class TopicsPage implements OnInit, OnDestroy {
+  topics: Topic[];
+  topicsSub: Subscription;
   currentCourse;
   courses = [{
     id: '1',
@@ -19,30 +25,30 @@ export class TopicsPage implements OnInit {
     name: 'Modern Farm',
     img: './assets/img/modern-farm-banner.png',
     topics: [{
-      id: '1' ,
+      id: '1',
       name: 'หลักการผลิตอ้อย'
-    }, { 
+    }, {
       id: '2',
       name: 'การเตรียมดินและการจัดการปุ๋ยสำหรับการปลูกอ้อย'
-    }, { 
+    }, {
       id: '3',
       name: 'ความรู้ทั่วไปเกี่ยวกับเครื่องจักรกลเกษตรและการเก็บเกี่ยว'
-    }, { 
+    }, {
       id: '4',
       name: 'การอารักขาอ้อย'
-    }, { 
+    }, {
       id: '5',
       name: 'น้ำและการจัดการน้ำในไร่'
-    }, { 
+    }, {
       id: '6',
       name: 'Mitr Phol Modern farm'
-    }, { 
+    }, {
       id: '7',
       name: 'เครื่องจักรกลการเกษตรสำหรับ Modern Farm'
-    }, { 
+    }, {
       id: '7',
       name: 'Precision Modern Farming'
-    }, { 
+    }, {
       id: '8',
       name: 'ระบบเก็บเกี่ยวและ Logistic อ้อย'
     }]
@@ -51,10 +57,17 @@ export class TopicsPage implements OnInit {
     name: 'Specialization'
   }];
 
-  constructor(private activatedRoute: ActivatedRoute) { }
+  constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
 
   ngOnInit() {
     const courseId = this.activatedRoute.snapshot.paramMap.get('courseId');
-    this.currentCourse = this.courses.find(course => course.id === courseId);
+    // this.currentCourse = this.courses.find(course => course.id === courseId);
+    this.topicsSub = this.coursesService.getTopicsByCourseId(+courseId).subscribe(topics => {
+      this.topics = topics;
+    });
+  }
+
+  ngOnDestroy() {
+    this.topicsSub.unsubscribe();
   }
 }
