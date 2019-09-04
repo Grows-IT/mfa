@@ -14,6 +14,7 @@ import { Course } from './course.model';
 export class CoursesPage implements OnInit, OnDestroy {
   user: User;
   courses: Course[];
+  isLoading = false;
   private coursesSub: Subscription;
   knowYourself = {
     id: 1,
@@ -25,11 +26,12 @@ export class CoursesPage implements OnInit, OnDestroy {
     name: 'Empathy',
     img: 'assets/img/icon-course-empathy.png'
   };
-  modernFarm = {
-    id: 3,
-    name: 'Modern Farm',
-    img: 'assets/img/icon-course-modern-farm.png'
-  };
+  // modernFarm = {
+  //   id: 3,
+  //   name: 'Modern Farm',
+  //   img: 'assets/img/icon-course-modern-farm.png'
+  // };
+  modernFarm: Course;
   specialization = {
     id: 4,
     name: 'Specialization',
@@ -42,13 +44,14 @@ export class CoursesPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.authService.user.subscribe(user => {
       this.user = user;
     });
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
-      if (courses) {
-        this.courses = courses;
-      }
+      this.modernFarm = courses.find(course => course.name === 'Modern Farm');
+      this.modernFarm.imgUrl = 'assets/img/icon-course-modern-farm.png';
+      this.isLoading = false;
     });
   }
 

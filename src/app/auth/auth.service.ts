@@ -48,6 +48,9 @@ export class AuthService {
   get user() {
     return this._user.asObservable();
   }
+  get token() {
+    return this._user.asObservable().pipe(map(user => user ? user.token : null));
+  }
 
   get isLoggedIn() {
     return this._user.asObservable().pipe(map(user => user ? !!user.token : false));

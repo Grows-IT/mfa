@@ -6,7 +6,7 @@
     <ion-grid>
       <ion-row>
         <ion-col size="7" offset="2">
-          <ion-img [src]="currentCourse.img"></ion-img>
+          <ion-img src="assets/img/modern-farm-banner.png"></ion-img>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -14,7 +14,20 @@
 </ion-header>
 
 <ion-content>
-  <ion-text class="ion-text-center" *ngIf="!currentCourse.topics">
+  <div text-center>
+    <ion-spinner *ngIf="!topics"></ion-spinner>
+  </div>
+  <ion-grid class="topics" *ngIf="topics">
+    <ion-row>
+      <ion-col>
+        <ion-button *ngFor="let topic of topics" margin size="large" expand="full" shape="round"
+          [routerLink]="[topic.id, 'activities']">
+          {{ topic.name }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!-- <ion-text class="ion-text-center" *ngIf="!currentCourse.topics">
     <h1>Coming soon!</h1>
   </ion-text>
   <ion-grid class="topics" *ngIf="currentCourse.topics">
@@ -26,5 +39,5 @@
         </ion-button>
       </ion-col>
     </ion-row>
-  </ion-grid>
+  </ion-grid> -->
 </ion-content>

@@ -1,6 +1,6 @@
 export class Course {
   constructor(
-    public id: string,
+    public id: number,
     public name: string,
     public imgUrl: string
   ) {}
@@ -16,8 +16,9 @@ export class Course {
 
 export class Topic {
   constructor(
-    public id: string,
-    public name: string
+    public id: number,
+    public name: string,
+    public activities: Activity[]
   ) {}
 
   toObject() {
@@ -30,10 +31,9 @@ export class Topic {
 
 export class Activity {
   constructor(
-    public id: string,
+    public id: number,
     public name: string,
     public type: string,
-    public pageUrl: string
   ) {}
 
   toObject() {
@@ -41,7 +41,6 @@ export class Activity {
       id: this.id,
       name: this.name,
       type: this.type,
-      pageUrl: this.pageUrl
     };
   }
 }

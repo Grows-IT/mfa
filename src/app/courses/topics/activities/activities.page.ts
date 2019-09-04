@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CoursesService } from '../../courses.service';
+import { Topic } from '../../course.model';
 
 @Component({
   selector: 'app-activities',
@@ -8,11 +10,12 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ActivitiesPage implements OnInit {
   currentTopic = null;
+  topic: Topic;
   topics = [{
-    id: '1' ,
+    id: '1',
     name: 'หลักการผลิตอ้อย',
     activities: [{
-      id: '1' ,
+      id: '1',
       name: 'ABOUT อ้อย'
     }, {
       id: '2',
@@ -34,35 +37,38 @@ export class ActivitiesPage implements OnInit {
       name: 'ทดสอบท้ายบท',
       img: 'assets/img/icon-quiz.png'
     }]
-  }, { 
+  }, {
     id: '2',
     name: 'การเตรียมดินและการจัดการปุ๋ยสำหรับการปลูกอ้อย'
-  }, { 
+  }, {
     id: '3',
     name: 'ความรู้ทั่วไปเกี่ยวกับเครื่องจักรกลเกษตรและการเก็บเกี่ยว'
-  }, { 
+  }, {
     id: '4',
     name: 'การอารักขาอ้อย'
-  }, { 
+  }, {
     id: '5',
     name: 'น้ำและการจัดการน้ำในไร่'
-  }, { 
+  }, {
     id: '6',
     name: 'Mitr Phol Modern farm'
-  }, { 
+  }, {
     id: '7',
     name: 'เครื่องจักรกลการเกษตรสำหรับ Modern Farm'
-  }, { 
+  }, {
     id: '7',
     name: 'Precision Modern Farming'
-  }, { 
+  }, {
     id: '8',
     name: 'ระบบเก็บเกี่ยวและ Logistic อ้อย'
-  }]
-  constructor(private activatedRoute: ActivatedRoute) { }
+  }];
+  constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
 
   ngOnInit() {
     const topicId = this.activatedRoute.snapshot.paramMap.get('topicId');
-    this.currentTopic = this.topics.find(topic => topic.id === topicId);
+    // this.currentTopic = this.topics.find(topic => topic.id === topicId);
+    this.coursesService.getTopicById(topicId).subscribe(topic => {
+      this.topic = topic;
+    });
   }
 }

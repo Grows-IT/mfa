@@ -3,6 +3,31 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
+    <ion-title>{{ topic.name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div text-center>
+    <ion-spinner *ngIf="!topic"></ion-spinner>
+  </div>
+  <ion-list>
+    <div align="center" *ngFor="let activity of topic.activities" [routerLink]="[activity.id, 'pages']">
+      <ion-item lines="none" button="true" class="ion-padding">
+        <ion-label class="ion-padding" class="ion-text-center">
+          <h1>{{ activity.name }}</h1>
+        </ion-label>
+      </ion-item>
+    </div>
+    <img src="assets/img/icon-quiz.png" />
+  </ion-list>
+</ion-content>
+
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
     <ion-title>{{ currentTopic.name }}</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -23,4 +48,4 @@
       </ng-template>
     </div>
   </ion-list>
-</ion-content>
+</ion-content> -->
