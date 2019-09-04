@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, tap, switchMap, catchError, timeout, take } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
-
-import { Course, Topic, Activity } from './course.model';
 import { from, BehaviorSubject, of } from 'rxjs';
+
+import { Course, Topic, Activity, ActivityFile } from './course.model';
 import { AuthService } from '../auth/auth.service';
 
 const siteUrl = 'http://santaputra.trueddns.com:46921/moodle';
@@ -35,6 +35,7 @@ export interface TopicData {
     modname: string; // type
     contents: [{
       filename: string;
+      mimetype: string;
       fileurl: string;
     }]
   }];
@@ -46,6 +47,8 @@ export interface TopicData {
 export class CoursesService {
   private _courses = new BehaviorSubject<Course[]>(null);
   private _topics = new BehaviorSubject<Topic[]>(null);
+  private _activities = new BehaviorSubject<Activity[]>(null);
+  private _activityFiles = new BehaviorSubject<ActivityFile[]>(null);
 
   constructor(
     private http: HttpClient,
@@ -93,7 +96,8 @@ export class CoursesService {
       return this.http.post<TopicData[]>(getCourseContentWsUrl, form).pipe(map(res => {
         const topics: Topic[] = res.map(topicData => {
           const activities = topicData.modules.map(m => {
-            const activity = new Activity(m.id, m.name, m.modname);
+            const files = m.contents.map(content => new ActivityFile(content.filename, content.mimetype, content.fileurl));
+            const activity = new Activity(m.id, m.name, m.modname, files);
             return activity;
           });
           return new Topic(topicData.id, topicData.name, activities);
@@ -104,10 +108,34 @@ export class CoursesService {
     }));
   }
 
-  getTopicById(topicId: string) {
+  getTopicById(topicId: number) {
     return this._topics.asObservable().pipe(map(topics => {
-      const topic = topics.find(t => t.id === +topicId);
+      const topic = topics.find(t => t.id === topicId);
+      this._activities.next(topic.activities);
       return topic;
+    }));
+  }
+
+  getActivityById(activityId: number) {
+    return this._activities.asObservable().pipe(map(activities => {
+      const activity = activities.find(a => a.id === activityId);
+      return activity;
+    }));
+  }
+
+  getTextFile(url: string) {
+    return this.authService.token.pipe(take(1), switchMap(token => {
+      const params = new HttpParams({
+        fromObject: {
+          token
+        }
+      });
+      return this.http.post(url, params, {
+        headers: new HttpHeaders({
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }), responseType: 'text'
+      });
     }));
   }
 

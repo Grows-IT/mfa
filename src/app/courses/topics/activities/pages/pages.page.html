@@ -1,4 +1,22 @@
 <ion-header>
+  <div>
+    <ion-toolbar color="dark">
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>{{ activity.name }}</ion-title>
+    </ion-toolbar>
+  </div>
+</ion-header>
+
+<div text-center>
+  <ion-spinner *ngIf="!data"></ion-spinner>
+</div>
+<ion-content>
+  <div [innerHTML]="data" *ngIf="data"></div>
+</ion-content>
+
+<!-- <ion-header>
   <div *ngIf="currentActivity.type; else elseBlock">
     <ion-toolbar color="dark">
       <ion-buttons slot="start">
@@ -25,4 +43,4 @@
       </div>
     </ion-slide>
   </ion-slides>
-</ion-content>
+</ion-content> -->

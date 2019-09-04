@@ -34,6 +34,7 @@ export class Activity {
     public id: number,
     public name: string,
     public type: string,
+    public files: ActivityFile[]
   ) {}
 
   toObject() {
@@ -43,4 +44,13 @@ export class Activity {
       type: this.type,
     };
   }
+}
+
+export class ActivityFile {
+  constructor(
+    public name: string,
+    public type: string,
+    public url: string
+  ) {}
+
 }
