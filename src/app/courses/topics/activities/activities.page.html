@@ -12,14 +12,14 @@
     <ion-spinner *ngIf="!topic"></ion-spinner>
   </div>
   <ion-list>
-    <div align="center" *ngFor="let activity of topic.activities" [routerLink]="[activity.id, 'pages']">
+    <div align="center" *ngFor="let page of pages" [routerLink]="[page.id, 'pages']">
       <ion-item lines="none" button="true" class="ion-padding">
         <ion-label class="ion-padding" class="ion-text-center">
-          <h1>{{ activity.name }}</h1>
+          <h1>{{ page.name }}</h1>
         </ion-label>
       </ion-item>
     </div>
-    <img src="assets/img/icon-quiz.png" />
+    <img src="assets/img/icon-quiz.png"/>
   </ion-list>
 </ion-content>
 

@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { CoursesService } from '../../courses.service';
-import { Topic } from '../../course.model';
+import { Topic, Page, Quiz } from '../../course.model';
 
 @Component({
   selector: 'app-activities',
@@ -14,6 +14,8 @@ export class ActivitiesPage implements OnInit, OnDestroy {
   currentTopic = null;
   private topicSub: Subscription;
   topic: Topic;
+  pages: Page[];
+  quiz: Quiz;
   topics = [{
     id: '1',
     name: 'หลักการผลิตอ้อย',
@@ -72,6 +74,8 @@ export class ActivitiesPage implements OnInit, OnDestroy {
     // this.currentTopic = this.topics.find(topic => topic.id === topicId);
     this.topicSub = this.coursesService.getTopicById(topicId).subscribe(topic => {
       this.topic = topic;
+      this.pages = this.topic.activities.filter(activity => activity instanceof Page);
+      this.quiz = this.topic.activities.find(activity => activity instanceof Quiz);
     });
   }
 

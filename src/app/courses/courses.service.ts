@@ -68,6 +68,21 @@ export class CoursesService {
     }));
   }
 
+  getTopicById(topicId: number) {
+    return this._topics.asObservable().pipe(take(1), map(topics => {
+      const topic = topics.find(t => t.id === topicId);
+      this._activities.next(topic.activities);
+      return topic;
+    }));
+  }
+
+  getActivityById(activityId: number) {
+    return this._activities.asObservable().pipe(take(1), map(activities => {
+      const activity = activities.find(a => a.id === activityId);
+      return activity;
+    }));
+  }
+
   getCoursesFromServer() {
     return this.authService.user.pipe(switchMap(user => {
       const params = new HttpParams({
@@ -112,6 +127,9 @@ export class CoursesService {
               }).subscribe(str => {
                 htmlString = str;
                 const resources = module.contents.filter(content => content.mimetype);
+                if (resources.length === 0) {
+                  activities.push(new Page(module.id, module.name, htmlString));
+                }
                 resources.map(resource => {
                   this.http.post(resource.fileurl, params, {
                     headers: new HttpHeaders({
@@ -139,101 +157,6 @@ export class CoursesService {
         return topics;
       }));
     }));
-  }
-
-  private coreCourseGetContents(courseId: number) {
-    return this.authService.token.pipe(switchMap(token => {
-      const form = new FormData();
-      form.append('wstoken', token);
-      form.append('courseid', courseId.toString());
-      return this.http.post<CoreCourseGetContentsResponseData[]>(coreCourseGetContentsWsUrl, form);
-    }));
-  }
-
-  private processPageContents(contents: { filename: string; mimetype: string; fileurl: string; }[]) {
-    const resources = contents.filter(content => content.mimetype);
-    const indexHtml = contents.find(content => !content.mimetype);
-    return this.authService.token.pipe(switchMap(token => {
-      const params = new HttpParams({
-        fromObject: {
-          token
-        }
-      });
-      return this.http.post(indexHtml.fileurl, params, {
-        headers: new HttpHeaders({
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }), responseType: 'text'
-      });
-    }));
-    // return this.getTextFile(indexHtml.fileurl).pipe(switchMap(htmlStr => {
-    //   resources.forEach(resource => {
-    //     return this.getBinaryFile(resource.fileurl).pipe(map(resDataUrl => {
-    //       htmlStr.replace(resource.filename, resDataUrl);
-    //     }));
-    //   });
-    //   return htmlStr;
-    // }));
-  }
-
-  getTopicById(topicId: number) {
-    return this._topics.asObservable().pipe(take(1), map(topics => {
-      const topic = topics.find(t => t.id === topicId);
-      this._activities.next(topic.activities);
-      return topic;
-    }));
-  }
-
-  getActivityById(activityId: number) {
-    return this._activities.asObservable().pipe(take(1), map(activities => {
-      const activity = activities.find(a => a.id === activityId);
-      return activity;
-    }));
-  }
-
-  getTextFile(url: string) {
-    return this.authService.token.pipe(take(1), flatMap(token => {
-      const params = new HttpParams({
-        fromObject: {
-          token
-        }
-      });
-      return this.http.post(url, params, {
-        headers: new HttpHeaders({
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }), responseType: 'text'
-      });
-    }));
-  }
-
-  getBinaryFile(url: string) {
-    return this.authService.token.pipe(take(1), switchMap(token => {
-      const params = new HttpParams({
-        fromObject: {
-          token
-        }
-      });
-      return this.http.post(url, params, {
-        headers: new HttpHeaders({
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }), responseType: 'blob'
-      }).pipe(switchMap(data => {
-        return this.blobToDataUrl(data);
-      }));
-    }));
-  }
-
-  private blobToDataUrl(data: Blob): Observable<string> {
-    return new Observable((observer) => {
-      const fr = new FileReader();
-      fr.onload = () => {
-        const dataUrl = fr.result.toString();
-        observer.next(dataUrl);
-      };
-      fr.readAsDataURL(data);
-    });
   }
 
   private saveCoursestoStorage(courses: Course[]) {
