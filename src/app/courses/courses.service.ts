@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, catchError, timeout, take } from 'rxjs/operators';
+import { map, tap, switchMap, catchError, timeout, take, flatMap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
-import { from, BehaviorSubject, of } from 'rxjs';
+import { from, BehaviorSubject, of, Observable } from 'rxjs';
 
-import { Course, Topic, Activity, ActivityFile } from './course.model';
+import { Course, Topic, Page } from './course.model';
 import { AuthService } from '../auth/auth.service';
 
 const siteUrl = 'http://santaputra.trueddns.com:46921/moodle';
 const getCoursesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses';
-const getCourseContentWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_contents';
+const coreCourseGetContentsWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_contents';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -26,7 +26,7 @@ export interface CourseData {
   }];
 }
 
-export interface TopicData {
+export interface CoreCourseGetContentsResponseData {
   id: number;
   name: string;
   modules: [{
@@ -47,8 +47,6 @@ export interface TopicData {
 export class CoursesService {
   private _courses = new BehaviorSubject<Course[]>(null);
   private _topics = new BehaviorSubject<Topic[]>(null);
-  private _activities = new BehaviorSubject<Activity[]>(null);
-  private _activityFiles = new BehaviorSubject<ActivityFile[]>(null);
 
   constructor(
     private http: HttpClient,
@@ -90,36 +88,48 @@ export class CoursesService {
 
   getTopicsByCourseId(courseId: number) {
     return this.authService.token.pipe(take(1), switchMap(token => {
-      const form = new FormData();
-      form.append('wstoken', token);
-      form.append('courseid', courseId.toString());
-      return this.http.post<TopicData[]>(getCourseContentWsUrl, form).pipe(map(res => {
-        const topics: Topic[] = res.map(topicData => {
-          const activities = topicData.modules.map(m => {
-            const files = m.contents.map(content => new ActivityFile(content.filename, content.mimetype, content.fileurl));
-            const activity = new Activity(m.id, m.name, m.modname, files);
-            return activity;
-          });
-          return new Topic(topicData.id, topicData.name, activities);
+      return this.coreCourseGetContents(courseId, token);
+    }));
+  }
+
+  private coreCourseGetContents(courseId: number, token: string) {
+    const form = new FormData();
+    form.append('wstoken', token);
+    form.append('courseid', courseId.toString());
+    return this.http.post<CoreCourseGetContentsResponseData[]>(coreCourseGetContentsWsUrl, form).pipe(map(resArr => {
+      const topics: Topic[] = resArr.map(topicData => {
+        const activities = [];
+        topicData.modules.forEach(m => {
+          if (m.modname === 'page') {
+            this.processPageContents(m.contents).pipe(map(htmlStr => {
+              activities.push(new Page(m.id, m.name, htmlStr));
+            }));
+          }
         });
-        this._topics.next(topics);
-        return topics;
-      }));
+        return new Topic(topicData.id, topicData.name, activities);
+      });
+      this._topics.next(topics);
+      return topics;
+    }));
+  }
+
+  private processPageContents(contents: { filename: string; mimetype: string; fileurl: string; }[]) {
+    const resources = contents.filter(content => content.mimetype);
+    const indexHtml = contents.find(content => !content.mimetype);
+    return this.getTextFile(indexHtml.fileurl).pipe(flatMap(htmlStr => {
+      resources.forEach(resource => {
+        this.getBinaryFile(resource.fileurl).pipe(map(resDataUrl => {
+          htmlStr.replace(resource.filename, resDataUrl);
+        }));
+      });
+      return htmlStr;
     }));
   }
 
   getTopicById(topicId: number) {
     return this._topics.asObservable().pipe(map(topics => {
       const topic = topics.find(t => t.id === topicId);
-      this._activities.next(topic.activities);
       return topic;
-    }));
-  }
-
-  getActivityById(activityId: number) {
-    return this._activities.asObservable().pipe(map(activities => {
-      const activity = activities.find(a => a.id === activityId);
-      return activity;
     }));
   }
 
@@ -139,13 +149,42 @@ export class CoursesService {
     }));
   }
 
+  getBinaryFile(url: string) {
+    return this.authService.token.pipe(take(1), switchMap(token => {
+      const params = new HttpParams({
+        fromObject: {
+          token
+        }
+      });
+      return this.http.post(url, params, {
+        headers: new HttpHeaders({
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }), responseType: 'blob'
+      }).pipe(switchMap(data => {
+        return this.blobToDataUrl(data);
+      }));
+    }));
+  }
+
+private blobToDataUrl(data: Blob): Observable<string> {
+  return new Observable((observer) => {
+    const fr = new FileReader();
+    fr.onload = () => {
+      const dataUrl = fr.result.toString();
+      observer.next(dataUrl);
+    };
+    fr.readAsDataURL(data);
+  });
+}
+
   private saveCoursestoStorage(courses: Course[]) {
     const data = JSON.stringify(courses.map(course => course.toObject()));
     Plugins.Storage.set({ key: 'courses', value: data });
   }
 
   private getCoursesFromStorage() {
-    return from(Plugins.Storage.get({ key: 'courses'})).pipe(map(storedData => {
+    return from(Plugins.Storage.get({ key: 'courses' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
         console.log('Courses are not stored locally.');
         return null;

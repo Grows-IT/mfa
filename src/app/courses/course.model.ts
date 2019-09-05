@@ -18,7 +18,7 @@ export class Topic {
   constructor(
     public id: number,
     public name: string,
-    public activities: Activity[]
+    public activities: any[]
   ) {}
 
   toObject() {
@@ -29,28 +29,15 @@ export class Topic {
   }
 }
 
-export class Activity {
+export class Page {
   constructor(
     public id: number,
     public name: string,
-    public type: string,
-    public files: ActivityFile[]
+    public content: string
   ) {}
-
-  toObject() {
-    return {
-      id: this.id,
-      name: this.name,
-      type: this.type,
-    };
-  }
 }
 
-export class ActivityFile {
-  constructor(
-    public name: string,
-    public type: string,
-    public url: string
-  ) {}
-
+export class Quiz {
+  constructor(public id: number) {}
 }
+
