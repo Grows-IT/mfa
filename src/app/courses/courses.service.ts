@@ -4,7 +4,7 @@ import { map, tap, switchMap, catchError, timeout, take, flatMap } from 'rxjs/op
 import { Plugins } from '@capacitor/core';
 import { from, BehaviorSubject, of, Observable } from 'rxjs';
 
-import { Course, Topic, Page } from './course.model';
+import { Course, Topic, Page, Quiz } from './course.model';
 import { AuthService } from '../auth/auth.service';
 
 const siteUrl = 'http://santaputra.trueddns.com:46921/moodle';
@@ -88,22 +88,32 @@ export class CoursesService {
 
   getTopicsByCourseId(courseId: number) {
     return this.authService.token.pipe(take(1), switchMap(token => {
-      return this.coreCourseGetContents(courseId, token);
-    }));
-  }
-
-  private coreCourseGetContents(courseId: number, token: string) {
-    const form = new FormData();
-    form.append('wstoken', token);
-    form.append('courseid', courseId.toString());
-    return this.http.post<CoreCourseGetContentsResponseData[]>(coreCourseGetContentsWsUrl, form).pipe(map(resArr => {
-      const topics: Topic[] = resArr.map(topicData => {
-        const activities = [];
-        topicData.modules.forEach(m => {
-          if (m.modname === 'page') {
-            this.processPageContents(m.contents).pipe(map(htmlStr => {
-              activities.push(new Page(m.id, m.name, htmlStr));
+      const form = new FormData();
+      form.append('wstoken', token);
+      form.append('courseid', courseId.toString());
+      return this.http.post<CoreCourseGetContentsResponseData[]>(coreCourseGetContentsWsUrl, form);
+    }), map(topicsData => {
+      const topics = topicsData.map(topicData => {
+        const activities = topicData.modules.map(module => {
+          if (module.modname === 'page') {
+            const indexHtml = module.contents.find(content => content.filename === 'index.html');
+            return this.authService.token.pipe(take(1), switchMap(token => {
+              const params = new HttpParams({
+                fromObject: {
+                  token
+                }
+              });
+              return this.http.post(indexHtml.fileurl, params, {
+                headers: new HttpHeaders({
+                  Accept: 'application/json',
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                }), responseType: 'text'
+              });
+            }), map(dataUrl => {
+              return new Page(module.id, module.name, dataUrl);
             }));
+          } else if (module.modname === 'quiz') {
+            return new Quiz(module.id);
           }
         });
         return new Topic(topicData.id, topicData.name, activities);
@@ -113,17 +123,39 @@ export class CoursesService {
     }));
   }
 
+  private coreCourseGetContents(courseId: number) {
+    return this.authService.token.pipe(switchMap(token => {
+      const form = new FormData();
+      form.append('wstoken', token);
+      form.append('courseid', courseId.toString());
+      return this.http.post<CoreCourseGetContentsResponseData[]>(coreCourseGetContentsWsUrl, form);
+    }));
+  }
+
   private processPageContents(contents: { filename: string; mimetype: string; fileurl: string; }[]) {
     const resources = contents.filter(content => content.mimetype);
     const indexHtml = contents.find(content => !content.mimetype);
-    return this.getTextFile(indexHtml.fileurl).pipe(flatMap(htmlStr => {
-      resources.forEach(resource => {
-        this.getBinaryFile(resource.fileurl).pipe(map(resDataUrl => {
-          htmlStr.replace(resource.filename, resDataUrl);
-        }));
+    return this.authService.token.pipe(switchMap(token => {
+      const params = new HttpParams({
+        fromObject: {
+          token
+        }
       });
-      return htmlStr;
+      return this.http.post(indexHtml.fileurl, params, {
+        headers: new HttpHeaders({
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }), responseType: 'text'
+      });
     }));
+    // return this.getTextFile(indexHtml.fileurl).pipe(switchMap(htmlStr => {
+    //   resources.forEach(resource => {
+    //     return this.getBinaryFile(resource.fileurl).pipe(map(resDataUrl => {
+    //       htmlStr.replace(resource.filename, resDataUrl);
+    //     }));
+    //   });
+    //   return htmlStr;
+    // }));
   }
 
   getTopicById(topicId: number) {
@@ -134,7 +166,7 @@ export class CoursesService {
   }
 
   getTextFile(url: string) {
-    return this.authService.token.pipe(take(1), switchMap(token => {
+    return this.authService.token.pipe(take(1), flatMap(token => {
       const params = new HttpParams({
         fromObject: {
           token
@@ -167,16 +199,16 @@ export class CoursesService {
     }));
   }
 
-private blobToDataUrl(data: Blob): Observable<string> {
-  return new Observable((observer) => {
-    const fr = new FileReader();
-    fr.onload = () => {
-      const dataUrl = fr.result.toString();
-      observer.next(dataUrl);
-    };
-    fr.readAsDataURL(data);
-  });
-}
+  private blobToDataUrl(data: Blob): Observable<string> {
+    return new Observable((observer) => {
+      const fr = new FileReader();
+      fr.onload = () => {
+        const dataUrl = fr.result.toString();
+        observer.next(dataUrl);
+      };
+      fr.readAsDataURL(data);
+    });
+  }
 
   private saveCoursestoStorage(courses: Course[]) {
     const data = JSON.stringify(courses.map(course => course.toObject()));
