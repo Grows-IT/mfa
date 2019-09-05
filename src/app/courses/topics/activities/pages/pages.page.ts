@@ -1,7 +1,6 @@
 import { Component, OnInit, PipeTransform, Pipe } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Activity } from 'src/app/courses/course.model';
 import { CoursesService } from 'src/app/courses/courses.service';
 
 @Component({
@@ -11,8 +10,7 @@ import { CoursesService } from 'src/app/courses/courses.service';
 })
 export class PagesPage implements OnInit {
   currentActivity;
-  activity: Activity;
-  data: string;
+  html: string;
   activities = [{
     id: '1',
     name: 'ABOUT อ้อย',
@@ -51,13 +49,5 @@ export class PagesPage implements OnInit {
   ngOnInit() {
     const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
     // this.currentActivity = this.activities.find(activity => activity.id === activityId);
-    this.coursesService.getActivityById(activityId).subscribe(activity => {
-      this.activity = activity;
-      const htmlFile = this.activity.files.find(file => !file.type);
-      this.coursesService.getTextFile(htmlFile.url).subscribe(data => {
-        console.log(data);
-        this.data = data;
-      });
-    });
   }
 }
