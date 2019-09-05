@@ -2,6 +2,7 @@ import { Component, OnInit, PipeTransform, Pipe } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { CoursesService } from 'src/app/courses/courses.service';
+import { Page } from 'src/app/courses/course.model';
 
 @Component({
   selector: 'app-pages',
@@ -10,6 +11,7 @@ import { CoursesService } from 'src/app/courses/courses.service';
 })
 export class PagesPage implements OnInit {
   currentActivity;
+  activity: Page;
   html: string;
   activities = [{
     id: '1',
@@ -49,5 +51,8 @@ export class PagesPage implements OnInit {
   ngOnInit() {
     const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
     // this.currentActivity = this.activities.find(activity => activity.id === activityId);
+    this.coursesService.getActivityById(activityId).subscribe(activity => {
+      this.activity = activity as Page;
+    });
   }
 }

@@ -10,10 +10,10 @@
 </ion-header>
 
 <div text-center>
-  <ion-spinner *ngIf="!html"></ion-spinner>
+  <ion-spinner *ngIf="!activity"></ion-spinner>
 </div>
 <ion-content>
-  <div [innerHTML]="html" *ngIf="html"></div>
+  <div [innerHTML]="activity.content" *ngIf="activity"></div>
 </ion-content>
 
 <!-- <ion-header>

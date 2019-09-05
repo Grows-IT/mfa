@@ -47,6 +47,7 @@ export interface CoreCourseGetContentsResponseData {
 export class CoursesService {
   private _courses = new BehaviorSubject<Course[]>(null);
   private _topics = new BehaviorSubject<Topic[]>(null);
+  private _activities = new BehaviorSubject<any[]>(null);
 
   constructor(
     private http: HttpClient,
@@ -96,6 +97,7 @@ export class CoursesService {
           const activities = [];
           topicData.modules.map(module => {
             if (module.modname === 'page') {
+              let htmlString: string;
               const indexHtml = module.contents.find(content => content.filename === 'index.html');
               const params = new HttpParams({
                 fromObject: {
@@ -107,8 +109,25 @@ export class CoursesService {
                   Accept: 'application/json',
                   'Content-Type': 'application/x-www-form-urlencoded'
                 }), responseType: 'text'
-              }).subscribe(dataUrl => {
-                activities.push(new Page(module.id, module.name, dataUrl));
+              }).subscribe(str => {
+                htmlString = str;
+                const resources = module.contents.filter(content => content.mimetype);
+                resources.map(resource => {
+                  this.http.post(resource.fileurl, params, {
+                    headers: new HttpHeaders({
+                      Accept: 'application/json',
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    }), responseType: 'blob'
+                  }).subscribe(data => {
+                    const fr = new FileReader();
+                    fr.onload = () => {
+                      const dataUrl = fr.result.toString();
+                      htmlString = htmlString.replace(resource.filename, dataUrl);
+                      activities.push(new Page(module.id, module.name, htmlString));
+                    };
+                    fr.readAsDataURL(data);
+                  });
+                });
               });
             } else if (module.modname === 'quiz') {
               activities.push(new Quiz(module.id));
@@ -158,9 +177,17 @@ export class CoursesService {
   }
 
   getTopicById(topicId: number) {
-    return this._topics.asObservable().pipe(map(topics => {
+    return this._topics.asObservable().pipe(take(1), map(topics => {
       const topic = topics.find(t => t.id === topicId);
+      this._activities.next(topic.activities);
       return topic;
+    }));
+  }
+
+  getActivityById(activityId: number) {
+    return this._activities.asObservable().pipe(take(1), map(activities => {
+      const activity = activities.find(a => a.id === activityId);
+      return activity;
     }));
   }
 
