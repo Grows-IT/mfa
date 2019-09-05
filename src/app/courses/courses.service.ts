@@ -91,35 +91,34 @@ export class CoursesService {
       const form = new FormData();
       form.append('wstoken', token);
       form.append('courseid', courseId.toString());
-      return this.http.post<CoreCourseGetContentsResponseData[]>(coreCourseGetContentsWsUrl, form);
-    }), map(topicsData => {
-      const topics = topicsData.map(topicData => {
-        const activities = topicData.modules.map(module => {
-          if (module.modname === 'page') {
-            const indexHtml = module.contents.find(content => content.filename === 'index.html');
-            return this.authService.token.pipe(take(1), switchMap(token => {
+      return this.http.post<CoreCourseGetContentsResponseData[]>(coreCourseGetContentsWsUrl, form).pipe(map(topicsData => {
+        const topics = topicsData.map(topicData => {
+          const activities = [];
+          topicData.modules.map(module => {
+            if (module.modname === 'page') {
+              const indexHtml = module.contents.find(content => content.filename === 'index.html');
               const params = new HttpParams({
                 fromObject: {
                   token
                 }
               });
-              return this.http.post(indexHtml.fileurl, params, {
+              this.http.post(indexHtml.fileurl, params, {
                 headers: new HttpHeaders({
                   Accept: 'application/json',
                   'Content-Type': 'application/x-www-form-urlencoded'
                 }), responseType: 'text'
+              }).subscribe(dataUrl => {
+                activities.push(new Page(module.id, module.name, dataUrl));
               });
-            }), map(dataUrl => {
-              return new Page(module.id, module.name, dataUrl);
-            }));
-          } else if (module.modname === 'quiz') {
-            return new Quiz(module.id);
-          }
+            } else if (module.modname === 'quiz') {
+              activities.push(new Quiz(module.id));
+            }
+          });
+          return new Topic(topicData.id, topicData.name, activities);
         });
-        return new Topic(topicData.id, topicData.name, activities);
-      });
-      this._topics.next(topics);
-      return topics;
+        this._topics.next(topics);
+        return topics;
+      }));
     }));
   }
 
