@@ -4,16 +4,20 @@
       <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
       </ion-buttons>
-      <ion-title>{{ activity.name }}</ion-title>
+      <ion-title>{{ page.name }}</ion-title>
     </ion-toolbar>
   </div>
 </ion-header>
 
 <div text-center>
-  <ion-spinner *ngIf="!activity"></ion-spinner>
+  <ion-spinner *ngIf="!page"></ion-spinner>
 </div>
 <ion-content>
-  <div [innerHTML]="activity.content" *ngIf="activity"></div>
+  <ion-slides pager>
+    <ion-slide *ngFor="let content of slideContents">
+      <div text-start [innerHTML]="content"></div>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
 
 <!-- <ion-header>
