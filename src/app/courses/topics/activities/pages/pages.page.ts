@@ -11,8 +11,8 @@ import { Page } from 'src/app/courses/course.model';
 })
 export class PagesPage implements OnInit {
   currentActivity;
-  activity: Page;
-  html: string;
+  page: Page;
+  slideContents: string[];
   activities = [{
     id: '1',
     name: 'ABOUT อ้อย',
@@ -52,7 +52,8 @@ export class PagesPage implements OnInit {
     const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
     // this.currentActivity = this.activities.find(activity => activity.id === activityId);
     this.coursesService.getActivityById(activityId).subscribe(activity => {
-      this.activity = activity as Page;
+      this.page = activity as Page;
+      this.slideContents = this.page.content.split('=====');
     });
   }
 }
