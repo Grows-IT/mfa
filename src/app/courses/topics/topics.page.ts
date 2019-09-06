@@ -60,11 +60,12 @@ export class TopicsPage implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
 
   ngOnInit() {
-    const courseId = this.activatedRoute.snapshot.paramMap.get('courseId');
+    const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     // this.currentCourse = this.courses.find(course => course.id === courseId);
-    this.topicsSub = this.coursesService.getTopicsByCourseId(+courseId).subscribe(topics => {
-      this.topics = topics;
-    });
+    // this.topicsSub = this.coursesService.getTopicsByCourseId(+courseId).subscribe(topics => {
+    //   this.topics = topics;
+    // });
+    this.coursesService.getCourseById(courseId).subscribe(res => console.log(res));
   }
 
   ngOnDestroy() {
