@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, catchError, timeout, take, flatMap } from 'rxjs/operators';
+import { map, tap, switchMap, catchError, timeout, take } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
-import { from, BehaviorSubject, of, Observable } from 'rxjs';
+import { from, BehaviorSubject, of } from 'rxjs';
 
-import { Course, Topic, Page, Quiz } from './course.model';
+import { Course, Topic, Page, Quiz, PageResource } from './course.model';
 import { AuthService } from '../auth/auth.service';
 
 const siteUrl = 'http://santaputra.trueddns.com:46921/moodle';
@@ -26,19 +26,23 @@ export interface CourseData {
   }];
 }
 
-export interface CoreCourseGetContentsResponseData {
+export interface TopicData {
   id: number;
   name: string;
-  modules: [{
-    id: number; // activity
-    name: string;
-    modname: string; // type
-    contents: [{
-      filename: string;
-      mimetype: string;
-      fileurl: string;
-    }]
-  }];
+  modules: Module[];
+}
+
+export interface Module {
+  id: number;
+  name: string;
+  modname: string;
+  contents: ContentData[];
+}
+
+export interface ContentData {
+  filename: string;
+  mimetype: string;
+  fileurl: string;
 }
 
 @Injectable({
@@ -102,60 +106,134 @@ export class CoursesService {
     }));
   }
 
-  getTopicsByCourseId(courseId: number) {
+  // getTopicsByCourseId(courseId: number) {
+  //   return this.authService.token.pipe(take(1), switchMap(token => {
+  //     const form = new FormData();
+  //     form.append('wstoken', token);
+  //     form.append('courseid', courseId.toString());
+  //     return this.http.post<TopicData[]>(coreCourseGetContentsWsUrl, form).pipe(map(topicsData => {
+  //       const topics = topicsData.map(topicData => {
+  //         const activities = [];
+  //         topicData.modules.map(module => {
+  //           if (module.modname === 'page') {
+  //             let htmlString: string;
+  //             const indexHtml = module.contents.find(content => content.filename === 'index.html');
+  //             const params = new HttpParams({
+  //               fromObject: {
+  //                 token
+  //               }
+  //             });
+  //             this.http.post(indexHtml.fileurl, params, {
+  //               headers: new HttpHeaders({
+  //                 Accept: 'application/json',
+  //                 'Content-Type': 'application/x-www-form-urlencoded'
+  //               }), responseType: 'text'
+  //             }).subscribe(str => {
+  //               htmlString = str;
+  //               const resources = module.contents.filter(content => content.mimetype);
+  //               if (resources.length === 0) {
+  //                 activities.push(new Page(module.id, module.name, htmlString));
+  //               }
+  //               resources.map(resource => {
+  //                 this.http.post(resource.fileurl, params, {
+  //                   headers: new HttpHeaders({
+  //                     Accept: 'application/json',
+  //                     'Content-Type': 'application/x-www-form-urlencoded'
+  //                   }), responseType: 'blob'
+  //                 }).subscribe(data => {
+  //                   const fr = new FileReader();
+  //                   fr.onload = () => {
+  //                     const dataUrl = fr.result.toString();
+  //                     htmlString = htmlString.replace(resource.filename, dataUrl);
+  //                     activities.push(new Page(module.id, module.name, htmlString));
+  //                   };
+  //                   fr.readAsDataURL(data);
+  //                 });
+  //               });
+  //             });
+  //           } else if (module.modname === 'quiz') {
+  //             activities.push(new Quiz(module.id));
+  //           }
+  //         });
+  //         return new Topic(topicData.id, topicData.name, activities);
+  //       });
+  //       this._topics.next(topics);
+  //       return topics;
+  //     }));
+  //   }));
+  // }
+
+  getCourseById(courseId: number) {
+    return this.coreCourseGetContents(courseId);
+  }
+
+  private coreCourseGetContents(courseId: number) {
     return this.authService.token.pipe(take(1), switchMap(token => {
       const form = new FormData();
       form.append('wstoken', token);
       form.append('courseid', courseId.toString());
-      return this.http.post<CoreCourseGetContentsResponseData[]>(coreCourseGetContentsWsUrl, form).pipe(map(topicsData => {
-        const topics = topicsData.map(topicData => {
-          const activities = [];
-          topicData.modules.map(module => {
-            if (module.modname === 'page') {
-              let htmlString: string;
-              const indexHtml = module.contents.find(content => content.filename === 'index.html');
-              const params = new HttpParams({
-                fromObject: {
-                  token
-                }
-              });
-              this.http.post(indexHtml.fileurl, params, {
-                headers: new HttpHeaders({
-                  Accept: 'application/json',
-                  'Content-Type': 'application/x-www-form-urlencoded'
-                }), responseType: 'text'
-              }).subscribe(str => {
-                htmlString = str;
-                const resources = module.contents.filter(content => content.mimetype);
-                if (resources.length === 0) {
-                  activities.push(new Page(module.id, module.name, htmlString));
-                }
-                resources.map(resource => {
-                  this.http.post(resource.fileurl, params, {
-                    headers: new HttpHeaders({
-                      Accept: 'application/json',
-                      'Content-Type': 'application/x-www-form-urlencoded'
-                    }), responseType: 'blob'
-                  }).subscribe(data => {
-                    const fr = new FileReader();
-                    fr.onload = () => {
-                      const dataUrl = fr.result.toString();
-                      htmlString = htmlString.replace(resource.filename, dataUrl);
-                      activities.push(new Page(module.id, module.name, htmlString));
-                    };
-                    fr.readAsDataURL(data);
-                  });
-                });
-              });
-            } else if (module.modname === 'quiz') {
-              activities.push(new Quiz(module.id));
-            }
-          });
-          return new Topic(topicData.id, topicData.name, activities);
-        });
-        this._topics.next(topics);
-        return topics;
-      }));
+      const params = new HttpParams({
+        fromObject: {
+          courseid: courseId.toString(),
+          wstoken: token
+        }
+      });
+      return this.http.post<TopicData[]>(coreCourseGetContentsWsUrl, params, httpOptions);
+    }), map(responseArray => {
+      const topics = responseArray.map(response => {
+        return this.parseTopicData(response);
+      });
+      return topics;
+    }));
+  }
+
+  private parseTopicData(topicData: TopicData) {
+    const activities = topicData.modules.map(module => {
+      return this.parseModule(module);
+    });
+    return new Topic(topicData.id, topicData.name, activities);
+  }
+
+  private parseModule(moduleData: Module) {
+    if (moduleData.modname === 'quiz') {
+      return new Quiz(moduleData.id);
+    } else {
+      const pageResources = moduleData.contents.map(moduleContent => {
+        return new PageResource(moduleContent.filename, moduleContent.fileurl, moduleContent.mimetype, null);
+      });
+      return new Page(moduleData.id, moduleData.name, null, pageResources);
+    }
+  }
+
+  private getTextFile(url: string) {
+    return this.authService.token.pipe(take(1), switchMap(token => {
+      const params = new HttpParams({
+        fromObject: {
+          token
+        }
+      });
+      return this.http.post(url, params, {
+        headers: new HttpHeaders({
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }), responseType: 'text'
+      });
+    }));
+  }
+
+  private getBinaryFile(url: string) {
+    return this.authService.token.pipe(take(1), switchMap(token => {
+      const params = new HttpParams({
+        fromObject: {
+          token
+        }
+      });
+      return this.http.post(url, params, {
+        headers: new HttpHeaders({
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }), responseType: 'blob'
+      });
     }));
   }
 
