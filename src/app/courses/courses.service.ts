@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, catchError, timeout, take } from 'rxjs/operators';
+import { map, tap, switchMap, catchError, timeout, take, flatMap, toArray } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { from, BehaviorSubject, of } from 'rxjs';
 
@@ -50,8 +50,6 @@ export interface ContentData {
 })
 export class CoursesService {
   private _courses = new BehaviorSubject<Course[]>(null);
-  private _topics = new BehaviorSubject<Topic[]>(null);
-  private _activities = new BehaviorSubject<any[]>(null);
 
   constructor(
     private http: HttpClient,
@@ -83,19 +81,13 @@ export class CoursesService {
     }));
   }
 
-  getTopicById(topicId: number) {
-    return this._topics.asObservable().pipe(take(1), map(topics => {
-      const topic = topics.find(t => t.id === topicId);
-      this._activities.next(topic.activities);
-      return topic;
-    }));
-  }
-
-  getActivityById(activityId: number) {
-    return this._activities.asObservable().pipe(take(1), map(activities => {
-      const activity = activities.find(a => a.id === activityId);
-      return activity;
-    }));
+  getPageContent(page: Page) {
+    return from(page.resources).pipe(flatMap(resource => {
+      return this.getBinaryFile(resource.url).pipe(map(data => {
+        resource.data = data;
+        return resource;
+      }));
+    }), toArray());
   }
 
   private coreEnrolGetUsersCourses() {
@@ -201,7 +193,7 @@ export class CoursesService {
   private parseModule(module: Module) {
     if (module.modname === 'quiz') {
       return new Quiz(module.id, module.name);
-    } else {
+    } else { // Page
       const resources: PageResource[] = module.contents.map(moduleContent => {
         return new PageResource(moduleContent.filename, moduleContent.fileurl, moduleContent.mimetype, null);
       });
