@@ -3,15 +3,15 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ topic.name }}</ion-title>
+    <ion-title *ngIf="!isLoading">{{ currentTopic.name }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div text-center>
-    <ion-spinner *ngIf="!topic"></ion-spinner>
+    <ion-spinner *ngIf="isLoading"></ion-spinner>
   </div>
-  <ion-list>
+  <ion-list *ngIf="!isLoading">
     <div align="center" *ngFor="let page of pages" [routerLink]="[page.id, 'pages']">
       <ion-item lines="none" button="true" class="ion-padding">
         <ion-label class="ion-padding" class="ion-text-center">
@@ -22,30 +22,3 @@
     <img src="assets/img/icon-quiz.png"/>
   </ion-list>
 </ion-content>
-
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>{{ currentTopic.name }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <ion-text class="ion-text-center" *ngIf="!currentTopic.activities">
-    <h1>Coming soon!</h1>
-  </ion-text>
-  <ion-list>
-    <div align="center" *ngFor="let activity of currentTopic.activities" [routerLink]="[activity.id, 'pages']">
-      <ion-item lines="none" button="true" class="ion-padding" *ngIf="!activity.img; else elseBlock">
-        <ion-label class="ion-padding" class="ion-text-center">
-          <h1>{{ activity.name }}</h1>
-        </ion-label>
-      </ion-item>
-      <ng-template #elseBlock>
-        <img src="{{ activity.img }}" />
-      </ng-template>
-    </div>
-  </ion-list>
-</ion-content> -->

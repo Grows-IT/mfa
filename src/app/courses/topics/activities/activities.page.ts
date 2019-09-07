@@ -11,75 +11,27 @@ import { Topic, Page, Quiz } from '../../course.model';
   styleUrls: ['./activities.page.scss'],
 })
 export class ActivitiesPage implements OnInit, OnDestroy {
-  currentTopic = null;
-  private topicSub: Subscription;
-  topic: Topic;
+  isLoading = false;
+  currentTopic: Topic;
   pages: Page[];
   quiz: Quiz;
-  topics = [{
-    id: '1',
-    name: 'หลักการผลิตอ้อย',
-    activities: [{
-      id: '1',
-      name: 'ABOUT อ้อย'
-    }, {
-      id: '2',
-      name: 'ดิน'
-    }, {
-      id: '3',
-      name: 'พันธุ์อ้อยทางการค้า'
-    }, {
-      id: '4',
-      name: 'การจัดการพันธุ์อ้อย'
-    }, {
-      id: '5',
-      name: 'สภาพแวดล้อมที่เหมาะสมสำหรับปลูกอ้อย'
-    }, {
-      id: '6',
-      name: 'คุณภาพอ้อยและการสะสมน้ำตาล'
-    }, {
-      id: '7',
-      name: 'ทดสอบท้ายบท',
-      img: 'assets/img/icon-quiz.png'
-    }]
-  }, {
-    id: '2',
-    name: 'การเตรียมดินและการจัดการปุ๋ยสำหรับการปลูกอ้อย'
-  }, {
-    id: '3',
-    name: 'ความรู้ทั่วไปเกี่ยวกับเครื่องจักรกลเกษตรและการเก็บเกี่ยว'
-  }, {
-    id: '4',
-    name: 'การอารักขาอ้อย'
-  }, {
-    id: '5',
-    name: 'น้ำและการจัดการน้ำในไร่'
-  }, {
-    id: '6',
-    name: 'Mitr Phol Modern farm'
-  }, {
-    id: '7',
-    name: 'เครื่องจักรกลการเกษตรสำหรับ Modern Farm'
-  }, {
-    id: '7',
-    name: 'Precision Modern Farming'
-  }, {
-    id: '8',
-    name: 'ระบบเก็บเกี่ยวและ Logistic อ้อย'
-  }];
+  private courseSub: Subscription;
+
   constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
 
   ngOnInit() {
+    this.isLoading = true;
+    const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
-    // this.currentTopic = this.topics.find(topic => topic.id === topicId);
-    this.topicSub = this.coursesService.getTopicById(topicId).subscribe(topic => {
-      this.topic = topic;
-      this.pages = this.topic.activities.filter(activity => activity instanceof Page);
-      this.quiz = this.topic.activities.find(activity => activity instanceof Quiz);
+    this.courseSub = this.coursesService.getCourseById(courseId).subscribe(course => {
+      this.currentTopic = course.topics.find(topic => topic.id === topicId);
+      this.pages = this.currentTopic.activities.filter(activity => activity instanceof Page);
+      this.quiz = this.currentTopic.activities.find(activity => activity instanceof Quiz);
+      this.isLoading = false;
     });
   }
 
   ngOnDestroy() {
-    this.topicSub.unsubscribe();
+    this.courseSub.unsubscribe();
   }
 }
