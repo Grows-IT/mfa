@@ -71,8 +71,15 @@ export class CoursesService {
         throw new Error(`Course with id: ${courseId} does not exist.`);
       }
       if (!course.topics) {
-        return this.coreCourseGetContents(courseId).pipe(map(topics => {
+        return this.coreCourseGetContents(courseId).pipe(switchMap(topics => {
           course.topics = topics;
+          return from(topics);
+        }), switchMap(topic => {
+          const pages: Page[] = topic.activities.filter(activity => activity instanceof Page);
+          return from(pages);
+        }), flatMap(page => {
+          return this.downloadPageResources(page);
+        }), toArray(), map(() => {
           this._courses.next(courses);
           return course;
         }));
@@ -81,13 +88,12 @@ export class CoursesService {
     }));
   }
 
-  getPageContent(page: Page) {
+  private downloadPageResources(page: Page) {
     return from(page.resources).pipe(flatMap(resource => {
       return this.getBinaryFile(resource.url).pipe(map(data => {
         resource.data = data;
-        return resource;
       }));
-    }), toArray());
+    }));
   }
 
   private coreEnrolGetUsersCourses() {
@@ -106,62 +112,13 @@ export class CoursesService {
     }));
   }
 
-  // getTopicsByCourseId(courseId: number) {
-  //   return this.authService.token.pipe(take(1), switchMap(token => {
-  //     const form = new FormData();
-  //     form.append('wstoken', token);
-  //     form.append('courseid', courseId.toString());
-  //     return this.http.post<TopicData[]>(coreCourseGetContentsWsUrl, form).pipe(map(topicsData => {
-  //       const topics = topicsData.map(topicData => {
-  //         const activities = [];
-  //         topicData.modules.map(module => {
-  //           if (module.modname === 'page') {
-  //             let htmlString: string;
-  //             const indexHtml = module.contents.find(content => content.filename === 'index.html');
-  //             const params = new HttpParams({
-  //               fromObject: {
-  //                 token
-  //               }
-  //             });
-  //             this.http.post(indexHtml.fileurl, params, {
-  //               headers: new HttpHeaders({
-  //                 Accept: 'application/json',
-  //                 'Content-Type': 'application/x-www-form-urlencoded'
-  //               }), responseType: 'text'
-  //             }).subscribe(str => {
-  //               htmlString = str;
-  //               const resources = module.contents.filter(content => content.mimetype);
-  //               if (resources.length === 0) {
-  //                 activities.push(new Page(module.id, module.name, htmlString));
-  //               }
-  //               resources.map(resource => {
-  //                 this.http.post(resource.fileurl, params, {
-  //                   headers: new HttpHeaders({
-  //                     Accept: 'application/json',
-  //                     'Content-Type': 'application/x-www-form-urlencoded'
-  //                   }), responseType: 'blob'
-  //                 }).subscribe(data => {
-  //                   const fr = new FileReader();
-  //                   fr.onload = () => {
-  //                     const dataUrl = fr.result.toString();
-  //                     htmlString = htmlString.replace(resource.filename, dataUrl);
-  //                     activities.push(new Page(module.id, module.name, htmlString));
-  //                   };
-  //                   fr.readAsDataURL(data);
-  //                 });
-  //               });
-  //             });
-  //           } else if (module.modname === 'quiz') {
-  //             activities.push(new Quiz(module.id));
-  //           }
-  //         });
-  //         return new Topic(topicData.id, topicData.name, activities);
-  //       });
-  //       this._topics.next(topics);
-  //       return topics;
-  //     }));
-  //   }));
-  // }
+  private readFile(data: Blob) {
+    const fr = new FileReader();
+    fr.onload = () => {
+      const dataUrl = fr.result.toString();
+    };
+    fr.readAsDataURL(data);
+  }
 
   private coreCourseGetContents(courseId: number) {
     return this.authService.token.pipe(take(1), switchMap(token => {
@@ -176,10 +133,9 @@ export class CoursesService {
       });
       return this.http.post<TopicData[]>(coreCourseGetContentsWsUrl, params, httpOptions);
     }), map(responseArray => {
-      const topics = responseArray.map(response => {
-        return this.parseTopicData(response);
+      return responseArray.map(topicData => {
+        return this.parseTopicData(topicData);
       });
-      return topics;
     }));
   }
 
@@ -194,27 +150,9 @@ export class CoursesService {
     if (module.modname === 'quiz') {
       return new Quiz(module.id, module.name);
     } else { // Page
-      const resources: PageResource[] = module.contents.map(moduleContent => {
-        return new PageResource(moduleContent.filename, moduleContent.fileurl, moduleContent.mimetype, null);
-      });
+      const resources = module.contents.map(content => new PageResource(content.filename, content.fileurl, content.mimetype));
       return new Page(module.id, module.name, resources);
     }
-  }
-
-  private getTextFile(url: string) {
-    return this.authService.token.pipe(take(1), switchMap(token => {
-      const params = new HttpParams({
-        fromObject: {
-          token
-        }
-      });
-      return this.http.post(url, params, {
-        headers: new HttpHeaders({
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }), responseType: 'text'
-      });
-    }));
   }
 
   private getBinaryFile(url: string) {
