@@ -11,64 +11,25 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./topics.page.scss'],
 })
 export class TopicsPage implements OnInit, OnDestroy {
+  isLoading = false;
   topics: Topic[];
-  topicsSub: Subscription;
-  currentCourse;
-  courses = [{
-    id: '1',
-    name: 'Know Yourself'
-  }, {
-    id: '2',
-    name: 'Empathy'
-  }, {
-    id: '3',
-    name: 'Modern Farm',
-    img: './assets/img/modern-farm-banner.png',
-    topics: [{
-      id: '1',
-      name: 'หลักการผลิตอ้อย'
-    }, {
-      id: '2',
-      name: 'การเตรียมดินและการจัดการปุ๋ยสำหรับการปลูกอ้อย'
-    }, {
-      id: '3',
-      name: 'ความรู้ทั่วไปเกี่ยวกับเครื่องจักรกลเกษตรและการเก็บเกี่ยว'
-    }, {
-      id: '4',
-      name: 'การอารักขาอ้อย'
-    }, {
-      id: '5',
-      name: 'น้ำและการจัดการน้ำในไร่'
-    }, {
-      id: '6',
-      name: 'Mitr Phol Modern farm'
-    }, {
-      id: '7',
-      name: 'เครื่องจักรกลการเกษตรสำหรับ Modern Farm'
-    }, {
-      id: '7',
-      name: 'Precision Modern Farming'
-    }, {
-      id: '8',
-      name: 'ระบบเก็บเกี่ยวและ Logistic อ้อย'
-    }]
-  }, {
-    id: '4',
-    name: 'Specialization'
-  }];
+  private courseSub: Subscription;
 
   constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
 
   ngOnInit() {
+    this.isLoading = true;
     const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
-    // this.currentCourse = this.courses.find(course => course.id === courseId);
-    // this.topicsSub = this.coursesService.getTopicsByCourseId(+courseId).subscribe(topics => {
-    //   this.topics = topics;
-    // });
-    this.coursesService.getCourseById(courseId).subscribe(res => console.log(res));
+    this.courseSub = this.coursesService.getCourseById(courseId).subscribe(course => {
+      this.topics = course.topics;
+      this.isLoading = false;
+    }, error => {
+      console.log(error.message);
+      this.isLoading = false;
+    });
   }
 
   ngOnDestroy() {
-    this.topicsSub.unsubscribe();
+    this.courseSub.unsubscribe();
   }
 }

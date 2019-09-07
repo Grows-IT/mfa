@@ -4,7 +4,8 @@ export class Course {
   constructor(
     public id: number,
     public name: string,
-    public imgUrl: string
+    public imgUrl: string,
+    public topics?: Topic[]
   ) {}
 
   toObject() {
@@ -35,8 +36,8 @@ export class Page {
   constructor(
     public id: number,
     public name: string,
-    public content: string,
-    public resources: PageResource[]
+    public resources: PageResource[],
+    public content?: string,
   ) {}
 }
 
@@ -45,11 +46,14 @@ export class PageResource {
     public name: string,
     public url: string,
     public type: string,
-    public data: string | Blob
+    public data?: string | Blob
   ) {}
 }
 
 export class Quiz {
-  constructor(public id: number) {}
+  constructor(
+    public id: number,
+    public name: string
+  ) {}
 }
 

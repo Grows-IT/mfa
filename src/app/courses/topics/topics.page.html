@@ -15,9 +15,9 @@
 
 <ion-content>
   <div text-center>
-    <ion-spinner *ngIf="!topics"></ion-spinner>
+    <ion-spinner *ngIf="isLoading"></ion-spinner>
   </div>
-  <ion-grid class="topics" *ngIf="topics">
+  <ion-grid class="topics" *ngIf="!isLoading">
     <ion-row>
       <ion-col>
         <ion-button *ngFor="let topic of topics" margin size="large" expand="full" shape="round"
@@ -27,17 +27,4 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <!-- <ion-text class="ion-text-center" *ngIf="!currentCourse.topics">
-    <h1>Coming soon!</h1>
-  </ion-text>
-  <ion-grid class="topics" *ngIf="currentCourse.topics">
-    <ion-row>
-      <ion-col>
-        <ion-button *ngFor="let topic of currentCourse.topics" margin size="large" expand="full" shape="round"
-          [routerLink]="[topic.id, 'activities']">
-          {{ topic.name }}
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid> -->
 </ion-content>
