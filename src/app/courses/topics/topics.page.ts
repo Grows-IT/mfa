@@ -22,6 +22,7 @@ export class TopicsPage implements OnInit, OnDestroy {
     const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.courseSub = this.coursesService.getCourseById(courseId).subscribe(course => {
       this.topics = course.topics;
+      console.log(course.topics);
       this.isLoading = false;
     }, error => {
       console.log(error.message);
