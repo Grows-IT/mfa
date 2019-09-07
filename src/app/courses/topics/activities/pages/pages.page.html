@@ -4,47 +4,18 @@
       <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
       </ion-buttons>
-      <ion-title>{{ page.name }}</ion-title>
+      <ion-title>{{ currentPage.name }}</ion-title>
     </ion-toolbar>
   </div>
 </ion-header>
 
 <div text-center>
-  <ion-spinner *ngIf="!page"></ion-spinner>
+  <ion-spinner *ngIf="isLoading"></ion-spinner>
 </div>
 <ion-content>
-  <ion-slides pager>
+  <ion-slides pager *ngIf="!isLoading">
     <ion-slide *ngFor="let content of slideContents">
       <div text-start [innerHTML]="content"></div>
     </ion-slide>
   </ion-slides>
 </ion-content>
-
-<!-- <ion-header>
-  <div *ngIf="currentActivity.type; else elseBlock">
-    <ion-toolbar color="dark">
-      <ion-buttons slot="start">
-        <ion-back-button></ion-back-button>
-      </ion-buttons>
-      <ion-title>{{ currentActivity.name }}</ion-title>
-    </ion-toolbar>
-  </div>
-  <ng-template #elseBlock>
-    <ion-toolbar color="tertiary">
-      <ion-buttons slot="start">
-        <ion-back-button></ion-back-button>
-      </ion-buttons>
-      <ion-title>{{ currentActivity.name }}</ion-title>
-    </ion-toolbar>
-  </ng-template>
-</ion-header>
-
-<ion-content>
-  <ion-slides pager>
-    <ion-slide *ngFor="let page of currentActivity.pages">
-      <div class="ion-margin">
-        <img src="{{ page }}" />
-      </div>
-    </ion-slide>
-  </ion-slides>
-</ion-content> -->
