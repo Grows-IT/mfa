@@ -60,15 +60,26 @@ export class CoursesService {
 
   get courses() {
     return this._courses.asObservable().pipe(take(1), switchMap(courses => {
-      if (!courses) {
-        return this.getCoursesFromServer().pipe(catchError(err => {
-          console.log(err.message);
-          return this.getCoursesFromStorage();
-        }), tap(cs => {
-          this._courses.next(cs);
-        }));
+      if (!courses) { // No courses stored in memory, fetch new courses.
+        return this.coreEnrolGetUsersCourses();
       }
       return of(courses);
+    }));
+  }
+  getCourseById(courseId: number) {
+    return this._courses.asObservable().pipe(take(1), switchMap(courses => {
+      const course = courses.find(c => c.id === courseId);
+      if (!course) {
+        throw new Error(`Course with id: ${courseId} does not exist.`);
+      }
+      if (!course.topics) {
+        return this.coreCourseGetContents(courseId).pipe(map(topics => {
+          course.topics = topics;
+          this._courses.next(courses);
+          return course;
+        }));
+      }
+      return of(course);
     }));
   }
 
@@ -87,7 +98,7 @@ export class CoursesService {
     }));
   }
 
-  getCoursesFromServer() {
+  private coreEnrolGetUsersCourses() {
     return this.authService.user.pipe(switchMap(user => {
       const params = new HttpParams({
         fromObject: {
@@ -95,12 +106,9 @@ export class CoursesService {
           wstoken: user.token
         }
       });
-      return this.http.post<any>(getCoursesWsUrl, params, httpOptions).pipe(timeout(10000), map(res => {
-        if (res.errorcode) {
-          throw new Error(res.message);
-        }
-        const courses: Course[] = res.map((data: CourseData) => new Course(data.id, data.shortname, data.overviewfiles[0].fileurl));
-        this.saveCoursestoStorage(courses);
+      return this.http.post<CourseData[]>(getCoursesWsUrl, params, httpOptions).pipe(timeout(10000), map(res => {
+        const courses = res.map((data) => new Course(data.id, data.shortname, data.overviewfiles[0].fileurl));
+        this._courses.next(courses);
         return courses;
       }));
     }));
@@ -163,10 +171,6 @@ export class CoursesService {
   //   }));
   // }
 
-  getCourseById(courseId: number) {
-    return this.coreCourseGetContents(courseId);
-  }
-
   private coreCourseGetContents(courseId: number) {
     return this.authService.token.pipe(take(1), switchMap(token => {
       const form = new FormData();
@@ -194,14 +198,14 @@ export class CoursesService {
     return new Topic(topicData.id, topicData.name, activities);
   }
 
-  private parseModule(moduleData: Module) {
-    if (moduleData.modname === 'quiz') {
-      return new Quiz(moduleData.id);
+  private parseModule(module: Module) {
+    if (module.modname === 'quiz') {
+      return new Quiz(module.id, module.name);
     } else {
-      const pageResources = moduleData.contents.map(moduleContent => {
+      const resources: PageResource[] = module.contents.map(moduleContent => {
         return new PageResource(moduleContent.filename, moduleContent.fileurl, moduleContent.mimetype, null);
       });
-      return new Page(moduleData.id, moduleData.name, null, pageResources);
+      return new Page(module.id, module.name, resources);
     }
   }
 
