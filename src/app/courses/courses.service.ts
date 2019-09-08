@@ -90,6 +90,11 @@ export class CoursesService {
 
   private downloadPageResources(page: Page) {
     return from(page.resources).pipe(flatMap(resource => {
+      if (resource.name === 'index.html') {
+        return this.getTextFile(resource.url).pipe(map(data => {
+          resource.data = data;
+        }));
+      }
       return this.getBinaryFile(resource.url).pipe(map(data => {
         resource.data = data;
       }));
@@ -167,6 +172,22 @@ export class CoursesService {
           Accept: 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded'
         }), responseType: 'blob'
+      });
+    }));
+  }
+
+  private getTextFile(url: string) {
+    return this.authService.token.pipe(take(1), switchMap(token => {
+      const params = new HttpParams({
+        fromObject: {
+          token
+        }
+      });
+      return this.http.post(url, params, {
+        headers: new HttpHeaders({
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }), responseType: 'text'
       });
     }));
   }

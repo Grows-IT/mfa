@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { CoursesService } from 'src/app/courses/courses.service';
 import { Page } from 'src/app/courses/course.model';
 import { Subscription } from 'rxjs';
-import { resource } from 'selenium-webdriver/http';
 
 @Component({
   selector: 'app-pages',
@@ -30,7 +29,19 @@ export class PagesPage implements OnInit, OnDestroy {
       const pages: Page[] = currentTopic.activities.filter(activity => activity instanceof Page);
       this.currentPage = pages.find(page => page.id === activityId);
       if (!this.currentPage.content) {
-        
+        const indexHtml = this.currentPage.resources.find(resource => resource.name === 'index.html');
+        this.currentPage.content = indexHtml.data as string;
+        const otherResources = this.currentPage.resources.filter(resource => resource.type);
+        otherResources.map(resource => {
+          const fr = new FileReader();
+          fr.onload = () => {
+            const dataUrl = fr.result.toString();
+            this.currentPage.content = (this.currentPage.content).replace(resource.name, dataUrl);
+          };
+          fr.readAsDataURL(resource.data as Blob);
+        });
+        this.slideContents = this.currentPage.content.split('=====');
+        this.isLoading = false;
       } else {
         this.slideContents = this.currentPage.content.split('=====');
         this.isLoading = false;

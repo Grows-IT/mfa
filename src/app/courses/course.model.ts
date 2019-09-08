@@ -46,7 +46,7 @@ export class PageResource {
     public name: string,
     public url: string,
     public type: string,
-    public data?: Blob
+    public data?: Blob | string
   ) {}
 }
 
