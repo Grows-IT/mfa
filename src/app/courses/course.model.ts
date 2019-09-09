@@ -4,15 +4,13 @@ export class Course {
   constructor(
     public id: number,
     public name: string,
-    public imgUrl: string,
     public topics?: Topic[]
   ) {}
 
   toObject() {
     return {
       id: this.id,
-      name: this.name,
-      imgUrl: this.imgUrl
+      name: this.name
     };
   }
 }

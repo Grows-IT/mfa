@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, catchError, timeout, take, flatMap, toArray, concatMap } from 'rxjs/operators';
+import { map, tap, switchMap, catchError, timeout, take, flatMap, toArray, concatMap, find, filter } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { from, BehaviorSubject, of, pipe, Observable } from 'rxjs';
 
@@ -18,7 +18,7 @@ const httpOptions = {
   })
 };
 
-export interface CourseData {
+export interface CoreEnrolGetUsersCoursesResponse {
   id: number;
   shortname: string;
   overviewfiles: [{
@@ -70,11 +70,11 @@ export class CoursesService {
       if (course.topics) {
         return of(course);
       }
-      return this.coreCourseGetContents(courseId).pipe(flatMap(resArr => {
+      return this.coreCourseGetContents(courseId).pipe(concatMap(resArr => {
         return from(resArr);
-      }), flatMap(res => {
+      }), concatMap(res => {
         return from(res.modules);
-      }), flatMap(mod => {
+      }), concatMap(mod => {
         return this.createActivity(mod);
       }));
     }));
@@ -84,53 +84,27 @@ export class CoursesService {
     if (mod.modname === 'quiz') {
       return of(new Quiz(mod.id, mod.name));
     } else if (mod.modname === 'page') {
-      const courrentMod = mod;
-      let indexHtmlResouce;
-      return from(mod.contents).pipe(flatMap(content => {
-        return this.getBinaryFile(content.fileurl);
-      }), map(blob => {
-        return new PageResource(courrentMod.name, blob);
-      }), toArray(), map(pageResources => {
-        indexHtmlResouce = pageResources.find(resource => resource.name === 'index.html');
-        return pageResources.filter(resource => resource.name !== 'index.html');
-      }), map(otherResources => {
-        otherResources.filter(resource => {
-          console.log(indexHtmlResouce);
-          console.log(otherResources);
-        });
+      const page = new Page(mod.id, mod.name, null);
+      const mainContent = mod.contents.find(content => content.filename === 'index.html');
+      const otherContents = mod.contents.filter(content => content.mimetype);
+      let currentContent: ContentData;
+      return this.getTextFile(mainContent.fileurl).pipe(concatMap(resData => {
+        page.content = resData;
+        if (!otherContents.length) {
+          return of(page);
+        }
+        return from(otherContents).pipe(concatMap(otherContent => {
+          currentContent = otherContent;
+          return this.getBinaryFile(otherContent.fileurl);
+        }), concatMap(blob => {
+          return this.readFile(blob);
+        }), map(dataUrl => {
+          page.content = page.content.replace(currentContent.filename, dataUrl);
+          return page;
+        }));
       }));
     }
   }
-
-  // return from(resArr).pipe(concatMap(res => {
-  //   const topic = new Topic(res.id, res.name, null);
-  //   return from(res.modules).pipe(concatMap(module => {
-  //     if (module.modname === 'quiz') {
-  //       return of(new Quiz(module.id, module.name));
-  //     } else { // Page
-  //       const mainContent = module.contents.find(content => content.filename === 'index.html');
-  //       const otherContents = module.contents.filter(content => content.mimetype);
-  //       return this.getTextFile(mainContent.fileurl).pipe(map(htmlStr => {
-  //         return new Page(module.id, module.name, htmlStr, null);
-  //       }), concatMap(page => {
-  //         return from(otherContents).pipe(concatMap(content => {
-  //           return this.getBinaryFile(content.fileurl).pipe(switchMap(data => {
-  //             return this.readFile(data).pipe(map(dataUrl => {
-  //               page.content = page.content.replace(content.filename, dataUrl);
-  //               return page;
-  //             }));
-  //           }));
-  //         }));
-  //       }));
-  //     }
-  //   }), toArray(), map(activities => {
-  //     topic.activities = activities;
-  //     return topic;
-  //   }));
-  // }), toArray(), map(topics => {
-  //   course.topics = topics;
-  //   return course;
-  // }));
 
   private readFile(blob: Blob): Observable<string> {
     return new Observable(observer => {
@@ -148,8 +122,8 @@ export class CoursesService {
           wstoken: user.token
         }
       });
-      return this.http.post<CourseData[]>(getCoursesWsUrl, params, httpOptions).pipe(timeout(10000), map(res => {
-        const courses = res.map((data) => new Course(data.id, data.shortname, data.overviewfiles[0].fileurl));
+      return this.http.post<CoreEnrolGetUsersCoursesResponse[]>(getCoursesWsUrl, params, httpOptions).pipe(timeout(10000), map(res => {
+        const courses = res.map(data => new Course(data.id, data.shortname));
         this._courses.next(courses);
         return courses;
       }));
@@ -217,9 +191,8 @@ export class CoursesService {
       const parsedData = JSON.parse(storedData.value) as {
         id: number;
         name: string;
-        imgUrl: string;
       }[];
-      const courses = parsedData.map(element => new Course(element.id, element.name, element.imgUrl));
+      const courses = parsedData.map(element => new Course(element.id, element.name));
       return courses;
     }));
   }
