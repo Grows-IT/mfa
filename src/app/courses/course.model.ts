@@ -36,17 +36,15 @@ export class Page {
   constructor(
     public id: number,
     public name: string,
-    public resources: PageResource[],
-    public content?: string,
+    public content: string,
+    public resources?: PageResource[]
   ) {}
 }
 
 export class PageResource {
   constructor(
     public name: string,
-    public url: string,
-    public type: string,
-    public data?: Blob | string
+    public data?: Blob
   ) {}
 }
 

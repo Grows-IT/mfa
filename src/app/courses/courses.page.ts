@@ -13,6 +13,7 @@ import { Course } from './course.model';
 })
 export class CoursesPage implements OnInit, OnDestroy {
   user: User;
+  courses: Course[];
   modernFarm: Course;
   isLoading = false;
   private coursesSub: Subscription;
@@ -28,6 +29,7 @@ export class CoursesPage implements OnInit, OnDestroy {
     this.userSub = this.authService.user.subscribe(user => {
       this.user = user;
       this.coursesSub = this.coursesService.courses.subscribe(courses => {
+        this.courses = courses;
         this.modernFarm = courses.find(course => course.name === 'Modern Farm');
         this.isLoading = false;
       });

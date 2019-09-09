@@ -6,8 +6,7 @@ import { Plugins } from '@capacitor/core';
 
 import { User } from './user.model';
 
-// const siteUrl = 'http://mitrphol-mfa.southeastasia.cloudapp.azure.com/moodle';
-const siteUrl = 'http://santaputra.trueddns.com:46921/moodle';
+const siteUrl = 'http://santaputra.trueddns.com:46921/moodle37';
 const loginWsUrl = siteUrl + '/login/token.php';
 const getSiteInfoWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_webservice_get_site_info';
 const uploadImageWsUrl = siteUrl + '/webservice/upload.php';
