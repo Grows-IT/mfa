@@ -11,7 +11,10 @@
   <div text-center>
     <ion-spinner *ngIf="isLoading"></ion-spinner>
   </div>
-  <ion-grid *ngIf="!isLoading">
+  <ion-text text-center *ngIf="!isLoading && !courses.length">
+    <h1>You are not enrolled in any courses.</h1>
+  </ion-text>
+  <ion-grid *ngIf="!isLoading && courses.length">
     <ion-row>
       <ion-col margin>
         <ion-img src="assets/img/icon-course-banner.png"></ion-img>
