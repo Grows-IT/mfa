@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, catchError, timeout, take, flatMap, toArray, concatMap, find, filter } from 'rxjs/operators';
+import { map, tap, switchMap, catchError, timeout, take, flatMap, toArray, concatMap, find, filter, first } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { from, BehaviorSubject, of, pipe, Observable } from 'rxjs';
 
@@ -57,26 +57,29 @@ export class CoursesService {
   ) { }
 
   get courses() {
-    return this._courses.asObservable().pipe(take(1), switchMap(courses => {
+    return this._courses.asObservable().pipe(first(), switchMap(courses => {
       if (!courses) { // No courses stored in memory, fetch new courses.
         return this.coreEnrolGetUsersCourses();
       }
       return of(courses);
     }));
   }
+
   getCourseById(courseId: number) {
-    return this._courses.asObservable().pipe(take(1), switchMap(courses => {
+    return this._courses.asObservable().pipe(first(), switchMap(courses => {
       const course = courses.find(c => c.id === courseId);
-      if (course.topics) {
+      if (!!course.topics) {
         return of(course);
       }
-      return this.coreCourseGetContents(courseId).pipe(concatMap(resArr => {
-        return from(resArr);
-      }), concatMap(res => {
-        return from(res.modules);
-      }), concatMap(mod => {
-        return this.createActivity(mod);
-      }));
+      let topicData: CoreCourseGetContentsResponse;
+      return this.coreCourseGetContents(courseId).pipe(
+        switchMap(resArr => from(resArr)),
+        tap(res => topicData = res),
+        concatMap(res => from(res.modules)),
+        tap(val => console.log('mod', val)),
+        concatMap(mod => this.createActivity(mod)),
+        tap(activity => console.log(topicData.name, activity))
+      );
     }));
   }
 
@@ -88,27 +91,34 @@ export class CoursesService {
       const mainContent = mod.contents.find(content => content.filename === 'index.html');
       const otherContents = mod.contents.filter(content => content.mimetype);
       let currentContent: ContentData;
-      return this.getTextFile(mainContent.fileurl).pipe(concatMap(resData => {
-        page.content = resData;
-        if (!otherContents.length) {
-          return of(page);
-        }
-        return from(otherContents).pipe(concatMap(otherContent => {
-          currentContent = otherContent;
-          return this.getBinaryFile(otherContent.fileurl);
-        }), concatMap(blob => {
-          return this.readFile(blob);
-        }), map(dataUrl => {
-          page.content = page.content.replace(currentContent.filename, dataUrl);
-          return page;
-        }));
-      }));
+      return this.getTextFile(mainContent.fileurl).pipe(
+        switchMap(resData => {
+          page.content = resData;
+          if (otherContents.length === 0) {
+            return of(page);
+          }
+          return from(otherContents).pipe(
+            concatMap(otherContent => {
+              currentContent = otherContent;
+              return this.getBinaryFile(otherContent.fileurl);
+            }), concatMap(blob => {
+              return this.readFile(blob);
+            }), map(dataUrl => {
+              page.content = page.content.replace(currentContent.filename, dataUrl);
+              return page;
+            })
+          );
+        })
+      );
     }
   }
 
   private readFile(blob: Blob): Observable<string> {
     return new Observable(observer => {
       const fileReader = new FileReader();
+      fileReader.onerror = err => observer.error(err);
+      fileReader.onabort = err => observer.error(err);
+      fileReader.onloadend = () => observer.complete();
       fileReader.onload = () => observer.next(fileReader.result.toString());
       return fileReader.readAsDataURL(blob);
     });
