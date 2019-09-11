@@ -24,9 +24,9 @@ export class ActivitiesPage implements OnInit, OnDestroy {
     const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
     this.courseSub = this.coursesService.getCourseById(courseId).subscribe(course => {
-      // this.currentTopic = course.topics.find(topic => topic.id === topicId);
-      // this.pages = this.currentTopic.activities.filter(activity => activity instanceof Page);
-      // this.quiz = this.currentTopic.activities.find(activity => activity instanceof Quiz);
+      this.currentTopic = course.topics.find(topic => topic.id === topicId);
+      this.pages = this.currentTopic.activities.filter(activity => activity instanceof Page);
+      this.quiz = this.currentTopic.activities.find(activity => activity instanceof Quiz);
       this.isLoading = false;
     });
   }
