@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, catchError, timeout, take, flatMap, toArray, concatMap, find, filter, first } from 'rxjs/operators';
+import { map, tap, switchMap, catchError, timeout, take, flatMap, toArray, concatMap, find, filter, first, takeLast } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { from, BehaviorSubject, of, pipe, Observable } from 'rxjs';
 
 import { Course, Topic, Page, Quiz, PageResource } from './course.model';
 import { AuthService } from '../auth/auth.service';
+import { TopicsPage } from './topics/topics.page';
 
 const siteUrl = 'http://santaputra.trueddns.com:46921/moodle37';
 const getCoursesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses';
@@ -71,14 +72,31 @@ export class CoursesService {
       if (!!course.topics) {
         return of(course);
       }
-      let topicData: CoreCourseGetContentsResponse;
       return this.coreCourseGetContents(courseId).pipe(
-        switchMap(resArr => from(resArr)),
-        tap(res => topicData = res),
-        concatMap(res => from(res.modules)),
-        tap(val => console.log('mod', val)),
-        concatMap(mod => this.createActivity(mod)),
-        tap(activity => console.log(topicData.name, activity))
+        switchMap(resArr => {
+          const topics: Topic[] = [];
+          return from(resArr).pipe(concatMap(res => {
+            if (!res.modules || res.modules.length === 0) {
+              const topic = new Topic(res.id, res.name, null);
+              topics.push(topic);
+              return of(topics);
+            }
+            const activities = [];
+            return from(res.modules).pipe(concatMap(mod => {
+              return this.createActivity(mod).pipe(map(activity => {
+                activities.push(activity);
+                return activities;
+              }));
+            }), takeLast(1), map(a => {
+              const topic = new Topic(res.id, res.name, a);
+              topics.push(topic);
+              return topics;
+            }));
+          }), takeLast(1), map(t => {
+            course.topics = t;
+            return course;
+          }), tap(c => console.log(c)));
+        })
       );
     }));
   }

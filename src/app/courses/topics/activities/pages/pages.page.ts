@@ -25,10 +25,10 @@ export class PagesPage implements OnInit, OnDestroy {
     const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
     const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
     this.coursesSub = this.coursesService.getCourseById(courseId).subscribe(currentCourse => {
-      // const currentTopic = currentCourse.topics.find(topic => topic.id === topicId);
-      // const pages: Page[] = currentTopic.activities.filter(activity => activity instanceof Page);
-      // this.currentPage = pages.find(page => page.id === activityId);
-      // this.slideContents = this.currentPage.content.split('=====');
+      const currentTopic = currentCourse.topics.find(topic => topic.id === topicId);
+      const pages: Page[] = currentTopic.activities.filter(activity => activity instanceof Page);
+      this.currentPage = pages.find(page => page.id === activityId);
+      this.slideContents = this.currentPage.content.split('=====');
       this.isLoading = false;
     });
   }
