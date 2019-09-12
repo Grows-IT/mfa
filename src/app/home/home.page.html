@@ -15,60 +15,102 @@
 </ion-header>
 
 <ion-content>
-  <div>
-    <ion-title class="ion-margin">NEWS UPDATES</ion-title>
-  </div>
-  <ion-slides pager>
-    <ion-slide>
-      <ion-card class="card">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/6eNckyUQ670" frameborder="0"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <ion-card-content>
-          <p>มิตรผล เคล็ดลับความสุข..ส่งจากไร่ : "Farmสุข..โมเดิร์น"</p>
-        </ion-card-content>
-      </ion-card>
-    </ion-slide>
-    <ion-slide>
-      <ion-card class="card">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/FNn5DB1Zen4" frameborder="0"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <ion-card-content>
-          <p>Modern Technology Agriculture Huge Machines</p>
-        </ion-card-content>
-      </ion-card>
-    </ion-slide>
-    <ion-slide>
-      <ion-card class="card">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/v8PCeMkn0kI" frameborder="0"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <ion-card-content>
-          <p>ต้นแบบเกษตรสมัยใหม่</p>
-        </ion-card-content>
-      </ion-card>
-    </ion-slide>
-    <ion-slide>
-      <ion-card class="card">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/mlvfGBdA4B4" frameborder="0"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <ion-card-content>
-          <p>เปลี่ยนนาดอนเป็นไร่อ้อย</p>
-        </ion-card-content>
-      </ion-card>
-    </ion-slide>
-  </ion-slides>
-  <ion-grid>
+  <ion-grid no-padding>
     <ion-row>
-      <ion-title class="ion-margin">KNOWLEDGE ROOM</ion-title>
+      <ion-col no-padding>
+        <ion-button size="large" color="black" no-margin expand="full">
+          <ion-thumbnail slot="start">
+            <img src="assets/home/favorite-icon.png" />
+          </ion-thumbnail>
+          FAVORITE
+        </ion-button>
+      </ion-col>
+      <ion-col no-padding>
+        <ion-button size="large" no-margin color="black" expand="full">
+          <ion-thumbnail slot="start">
+            <img src="assets/home/note-icon.png" />
+          </ion-thumbnail>
+          NOTE
+        </ion-button>
+      </ion-col>
+      <ion-col no-padding>
+        <ion-button size="large" no-margin color="black" expand="full">
+          <ion-thumbnail slot="start">
+            <img src="assets/home/qr-code-icon.png" />
+          </ion-thumbnail>
+          QR CODE
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col margin-start>
+        <ion-text>
+          <h1>NEWS UPDATES</h1>
+        </ion-text>
+      </ion-col>
+      <ion-col class="see-more" margin-end text-end>
+        <ion-text color="medium">
+          <p>SEE MORE</p>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-slides pager>
+        <ion-slide>
+          <ion-card class="card">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/6eNckyUQ670" frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <ion-card-content>
+              <p>มิตรผล เคล็ดลับความสุข..ส่งจากไร่ : "Farmสุข..โมเดิร์น"</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-slide>
+        <ion-slide>
+          <ion-card class="card">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/FNn5DB1Zen4" frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <ion-card-content>
+              <p>Modern Technology Agriculture Huge Machines</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-slide>
+        <ion-slide>
+          <ion-card class="card">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/v8PCeMkn0kI" frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <ion-card-content>
+              <p>ต้นแบบเกษตรสมัยใหม่</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-slide>
+      </ion-slides>
+    </ion-row>
+    <ion-row>
+      <ion-col margin-start>
+          <ion-text>
+              <h1>KNOWLEDGE ROOM</h1>
+            </ion-text>
+      </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
         <div align="center">
-          <img src="assets/img/icon-dashboard-modern-farm.png" routerLink="/courses" />
+          <img src="assets/home/knowledge-room-icon.png" routerLink="/courses" />
         </div>
       </ion-col>
       <ion-col>
         <div align="center">
-          <img src="assets/img/icon-dashboard-calculator.png" routerLink="/calculators" />
+          <img src="assets/home/calculator-icon.png" routerLink="/calculators" />
+        </div>
+      </ion-col>
+      <ion-col>
+        <div align="center">
+          <img src="assets/home/sugar-price-icon.png" />
+        </div>
+      </ion-col>
+      <ion-col>
+        <div align="center">
+          <img src="assets/home/weather-icon.png" />
         </div>
       </ion-col>
     </ion-row>
