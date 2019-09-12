@@ -6,3 +6,9 @@ ion-item {
     --background-hover: var(--ion-color-danger);
     --background-activated: var(--ion-color-danger);
 }
+
+ion-tabs {
+    --ion-tab-bar-background: var(--ion-color-primary);
+    --ion-tab-bar-color-activated: var(--ion-color-light);
+
+}
