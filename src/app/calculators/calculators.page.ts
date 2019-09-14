@@ -8,15 +8,15 @@ import { Component, OnInit } from '@angular/core';
 export class CalculatorsPage implements OnInit {
   calculators = [{
     id: '1',
-    img: 'assets/img/icon-calculator-farm-modernfarm.png',
+    img: 'assets/calculators/modernfarm.png',
     url: '/calculators/farm-vs-modern-farm'
   }, {
     id: '2',
-    img: 'assets/img/icon-calculator-human-machine.png',
+    img: 'assets/calculators/machine.png',
     url: '/calculators/human-vs-machine'
   }, {
     id: '3',
-    img: 'assets/img/icon-calculator-sugarcane.png',
+    img: 'assets/calculators/sugarcane.png',
     url: '/calculators/assess-sugar'
   }];
 

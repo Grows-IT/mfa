@@ -14,19 +14,19 @@ import { AuthService } from './auth/auth.service';
 export class AppComponent {
   public appPages = [{
     title: 'Home',
-    url: '/home'
+    url: '/tabs/home'
   }, {
     title: 'My Account',
     url: '/static/2'
   }, {
     title: 'Knowledge Room',
-    url: '/courses'
+    url: '/tabs/knowledge-room'
   }, {
     title: 'Modern Farm',
-    url: '/courses/3/topics'
+    url: '/tabs/knowledge-room/1/courses/3/topics'
   }, {
     title: 'Calculators',
-    url: '/calculators'
+    url: '/tabs/calculators'
   }, {
     title: 'Question - Answer',
     url: '/static/3'

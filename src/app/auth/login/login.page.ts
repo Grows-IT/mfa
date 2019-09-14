@@ -56,7 +56,7 @@ export class LoginPage implements OnInit, OnDestroy {
       this.loginForm.value.username = null;
       this.loginForm.value.password = null;
       this.menuCtrl.enable(true);
-      this.router.navigateByUrl('/home');
+      this.router.navigateByUrl('/tabs/home');
       loadingEl.dismiss();
     }, error => {
       this.errorMessage = error.message;

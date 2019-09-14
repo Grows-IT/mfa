@@ -5,7 +5,7 @@ import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'tabs',
     component: TabsPage,
     children: [
       {
@@ -44,12 +44,22 @@ const routes: Routes = [
             ]
           },
         ]
-      }, {
+      },
+      {
+        path: 'calculators',
+        loadChildren: '../calculators/calculators.module#CalculatorsPageModule'
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full'
       }
     ]
+  },
+  {
+    path: '',
+    redirectTo: '/tabs/home',
+    pathMatch: 'full'
   }
 ];
 

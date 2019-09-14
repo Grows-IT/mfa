@@ -1,22 +1,25 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar text-center>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref=""></ion-back-button>
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Calculators</ion-title>
+    <ion-img padding src="assets/calculators/banner.png"></ion-img>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div align="center" class="banner">
-      <img src="assets/img/icon-calculator-banner.png"/>
-  </div>
-  <div class="title">
-    <ion-text color="light">
-        <h1 class="ion-text-center ion-padding">เครื่องมือช่วยคำนวณการทำเกษตรสมัยใหม่</h1>
-    </ion-text>
-  </div>
-  <div align="center" *ngFor="let calculator of calculators">
-    <img src="{{ calculator.img }}" [routerLink]="calculator.url"/>
-  </div>
+  <ion-grid no-padding>
+    <ion-row margin-bottom>
+      <ion-col class="title">
+        <ion-text text-center padding color="light">
+          <h1>เครื่องมือช่วยคำนวณการทำเกษตรสมัยใหม่</h1>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row margin-top *ngFor="let calculator of calculators">
+      <ion-col size="10" offset="1">
+        <ion-img [src]="calculator.img" [routerLink]="calculator.url"></ion-img>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
