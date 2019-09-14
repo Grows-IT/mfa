@@ -1,8 +1,8 @@
-import { Component, OnInit, PipeTransform, Pipe, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { CoursesService } from 'src/app/courses/courses.service';
-import { Page } from 'src/app/courses/course.model';
+import { CoursesService } from '../../../courses.service';
+import { Page } from '../../../course.model';
 import { Subscription } from 'rxjs';
 
 @Component({

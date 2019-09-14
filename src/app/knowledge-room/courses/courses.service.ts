@@ -5,7 +5,7 @@ import { Plugins } from '@capacitor/core';
 import { from, BehaviorSubject, of, pipe, Observable } from 'rxjs';
 
 import { Course, Topic, Page, Quiz, PageResource } from './course.model';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { TopicsPage } from './topics/topics.page';
 
 const siteUrl = 'http://santaputra.trueddns.com:46921/moodle37';
@@ -151,7 +151,7 @@ export class CoursesService {
         }
       });
       return this.http.post<CoreEnrolGetUsersCoursesResponse[]>(getCoursesWsUrl, params, httpOptions).pipe(timeout(10000), map(res => {
-        const courses = res.map(data => new Course(data.id, data.shortname));
+        const courses = res.map(data => new Course(data.id, data.shortname, null));
         this._courses.next(courses);
         return courses;
       }));
