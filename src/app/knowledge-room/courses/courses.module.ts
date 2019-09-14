@@ -4,13 +4,13 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 
 import { CoursesPage } from './courses.page';
-// import { CoursesRoutingModule } from './courses-routing.module';
+import { CoursesRoutingModule } from './courses-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    // CoursesRoutingModule
+    CoursesRoutingModule
   ],
   declarations: [CoursesPage]
 })
