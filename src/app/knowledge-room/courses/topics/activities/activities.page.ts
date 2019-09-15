@@ -15,6 +15,7 @@ export class ActivitiesPage implements OnInit, OnDestroy {
   currentTopic: Topic;
   pages: Page[];
   quiz: Quiz;
+  errorMessage: string;
   private courseSub: Subscription;
 
   constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
@@ -25,6 +26,11 @@ export class ActivitiesPage implements OnInit, OnDestroy {
     const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
     this.courseSub = this.coursesService.getCourseById(courseId).subscribe(course => {
       this.currentTopic = course.topics.find(topic => topic.id === topicId);
+      if (!this.currentTopic.activities) {
+        this.isLoading = false;
+        this.errorMessage = 'Coming Soon';
+        return;
+      }
       this.pages = this.currentTopic.activities.filter(activity => activity instanceof Page);
       this.quiz = this.currentTopic.activities.find(activity => activity instanceof Quiz);
       this.isLoading = false;

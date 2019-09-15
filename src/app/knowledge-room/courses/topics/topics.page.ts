@@ -21,8 +21,8 @@ export class TopicsPage implements OnInit, OnDestroy {
     this.isLoading = true;
     const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.courseSub = this.coursesService.getCourseById(courseId).subscribe(course => {
-    this.topics = course.topics;
-    this.isLoading = false;
+      this.topics = course.topics;
+      this.isLoading = false;
     }, error => {
       console.log(error.message);
       this.isLoading = false;

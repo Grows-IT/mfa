@@ -3,15 +3,18 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title *ngIf="!isLoading">{{ currentTopic.name }}</ion-title>
+    <ion-title>{{ currentTopic.name }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div text-center>
-    <ion-spinner *ngIf="isLoading"></ion-spinner>
+  <div text-center *ngIf="isLoading">
+    <ion-spinner></ion-spinner>
   </div>
-  <ion-list *ngIf="!isLoading">
+  <ion-text text-center>
+    <h1>{{ errorMessage }}</h1>
+  </ion-text>
+  <ion-list *ngIf="!isLoading && !errorMessage">
     <div align="center" *ngFor="let page of pages" [routerLink]="[page.id, 'pages']">
       <ion-item lines="none" button="true" class="ion-padding">
         <ion-label class="ion-padding" class="ion-text-center">
@@ -19,6 +22,8 @@
         </ion-label>
       </ion-item>
     </div>
-    <img src="assets/img/icon-quiz.png"/>
+    <div align="center">
+      <img src="assets/img/icon-quiz.png"/>
+    </div>
   </ion-list>
 </ion-content>

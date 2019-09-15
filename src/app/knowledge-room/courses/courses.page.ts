@@ -24,6 +24,7 @@ export class CoursesPage implements OnInit, OnDestroy {
   ];
   category: Category;
   modernFarm: Course;
+  errorMessage: string;
   isLoading = false;
   private coursesSub: Subscription;
 
@@ -39,6 +40,11 @@ export class CoursesPage implements OnInit, OnDestroy {
     // TODO: call get courses by category
     this.category = new Category(categoryId, 'Modern Farm', 'assets/courses/modern-farm/banner.png');
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
+      if (!courses || courses.length === 0) {
+        this.errorMessage = 'You are not enrolled in this course.';
+        this.isLoading = false;
+        return;
+      }
       const moderFarm = courses.find(course => course.name === 'Modern Farm');
       const index = this.courses.findIndex(course => course.name === 'Modern Farm');
       this.courses[index].id = moderFarm.id;
