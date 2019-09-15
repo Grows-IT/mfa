@@ -4,9 +4,10 @@ import { from, BehaviorSubject } from 'rxjs';
 import { timeout, tap, map, flatMap, switchMap, take } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
+import { environment } from '../../environments/environment';
 import { User } from './user.model';
 
-const siteUrl = 'http://santaputra.trueddns.com:46921/moodle37';
+const siteUrl = environment.siteUrl;
 const loginWsUrl = siteUrl + '/login/token.php';
 const getSiteInfoWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_webservice_get_site_info';
 const uploadImageWsUrl = siteUrl + '/webservice/upload.php';

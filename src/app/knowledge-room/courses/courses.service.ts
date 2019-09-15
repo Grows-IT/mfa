@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, catchError, timeout, take, flatMap, toArray, concatMap, find, filter, first, takeLast } from 'rxjs/operators';
+import { map, tap, switchMap, timeout, take, concatMap, first, takeLast } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
-import { from, BehaviorSubject, of, pipe, Observable } from 'rxjs';
+import { from, BehaviorSubject, of, Observable } from 'rxjs';
 
-import { Course, Topic, Page, Quiz, PageResource } from './course.model';
+import { environment } from '../../../environments/environment';
+import { Course, Topic, Page, Quiz } from './course.model';
 import { AuthService } from '../../auth/auth.service';
-import { TopicsPage } from './topics/topics.page';
 
-const siteUrl = 'http://santaputra.trueddns.com:46921/moodle37';
+const siteUrl = environment.siteUrl;
 const getCoursesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses';
 const coreCourseGetContentsWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_contents';
 
