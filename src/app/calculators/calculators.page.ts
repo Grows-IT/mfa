@@ -9,15 +9,15 @@ export class CalculatorsPage implements OnInit {
   calculators = [{
     id: '1',
     img: 'assets/calculators/modernfarm.png',
-    url: '/calculators/farm-vs-modern-farm'
+    url: 'farm-vs-modern-farm'
   }, {
     id: '2',
     img: 'assets/calculators/machine.png',
-    url: '/calculators/human-vs-machine'
+    url: 'human-vs-machine'
   }, {
     id: '3',
     img: 'assets/calculators/sugarcane.png',
-    url: '/calculators/assess-sugar'
+    url: 'assess-sugar'
   }];
 
   constructor() { }

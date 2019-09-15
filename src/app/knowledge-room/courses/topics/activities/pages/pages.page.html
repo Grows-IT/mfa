@@ -9,11 +9,14 @@
   </div>
 </ion-header>
 
-<div text-center>
-  <ion-spinner *ngIf="isLoading"></ion-spinner>
-</div>
 <ion-content>
-  <ion-slides pager *ngIf="!isLoading">
+  <div text-center *ngIf="isLoading">
+    <ion-spinner></ion-spinner>
+  </div>
+  <ion-text *ngIf="errorMessage">
+    <h1>{{ this.errorMessage }}</h1>
+  </ion-text>
+  <ion-slides pager *ngIf="!isLoading && !errorMessage">
     <ion-slide *ngFor="let content of slideContents">
       <div text-start [innerHTML]="content"></div>
     </ion-slide>
