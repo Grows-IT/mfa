@@ -95,7 +95,7 @@ export class CoursesService {
           }), takeLast(1), map(t => {
             course.topics = t;
             return course;
-          }), tap(c => console.log(c)));
+          }));
         })
       );
     }));
@@ -108,13 +108,13 @@ export class CoursesService {
       const page = new Page(mod.id, mod.name, null);
       const mainContent = mod.contents.find(content => content.filename === 'index.html');
       const otherContents = mod.contents.filter(content => content.mimetype);
-      let currentContent: ContentData;
       return this.getTextFile(mainContent.fileurl).pipe(
         switchMap(resData => {
           page.content = resData;
           if (otherContents.length === 0) {
             return of(page);
           }
+          let currentContent: ContentData;
           return from(otherContents).pipe(
             concatMap(otherContent => {
               currentContent = otherContent;
