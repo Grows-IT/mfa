@@ -32,10 +32,26 @@ export class PagesPage implements OnInit, OnDestroy {
         this.isLoading = false;
         return;
       }
-      const pages: Page[] = currentTopic.activities.filter(activity => activity instanceof Page);
-      this.currentPage = pages.find(page => page.id === activityId);
-      this.slideContents = this.currentPage.content.split('<p><\/p>');
-      this.isLoading = false;
+      this.currentPage = currentTopic.activities.find(page => page.id === activityId);
+      this.loadSlides(this.currentPage);
+    });
+  }
+
+  loadSlides(page: Page) {
+    let i = 0;
+    page.resources.forEach(resource => {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        const data = fileReader.result.toString();
+        page.content = page.content.replace(resource.name, data);
+        i += 1;
+        if (i >= page.resources.length) {
+          this.slideContents = page.content.split('<br><br>');
+          this.isLoading = false;
+          return;
+        }
+      };
+      fileReader.readAsDataURL(resource.data);
     });
   }
 
