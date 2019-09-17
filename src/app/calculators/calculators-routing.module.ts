@@ -10,7 +10,16 @@ const routes: Routes = [
   },
   {
     path: 'farm-vs-modern-farm',
-    loadChildren: './farm-vs-modern-farm/farm-vs-modern-farm.module#FarmVsModernFarmPageModule'
+    children: [
+      {
+        path: '',
+        loadChildren: './farm-vs-modern-farm/farm-vs-modern-farm.module#FarmVsModernFarmPageModule'
+      },
+      {
+        path: 'modern-farm-calc-report',
+        loadChildren: './farm-vs-modern-farm/modern-farm-calc-report/modern-farm-calc-report.module#ModernFarmCalcReportPageModule'
+      }
+    ]
   },
   {
     path: 'human-vs-machine',
@@ -19,7 +28,7 @@ const routes: Routes = [
   {
     path: 'assess-sugar',
     loadChildren: './assess-sugar/assess-sugar.module#AssessSugarPageModule'
-  }
+  },
 ];
 
 @NgModule({
