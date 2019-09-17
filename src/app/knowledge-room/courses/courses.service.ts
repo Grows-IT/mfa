@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, timeout, take, concatMap, first, takeLast } from 'rxjs/operators';
+import { map, tap, switchMap, timeout, take, concatMap, first, takeLast, withLatestFrom, toArray } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { from, BehaviorSubject, of, Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { Course, Topic, Page, Quiz } from './course.model';
+import { Course, Topic, Page, Quiz, PageResource } from './course.model';
 import { AuthService } from '../../auth/auth.service';
 
 const siteUrl = environment.siteUrl;
@@ -75,27 +75,37 @@ export class CoursesService {
       return this.coreCourseGetContents(courseId).pipe(
         switchMap(resArr => {
           const topics: Topic[] = [];
-          return from(resArr).pipe(concatMap(res => {
-            if (!res.modules || res.modules.length === 0) {
-              const topic = new Topic(res.id, res.name, null);
-              topics.push(topic);
-              return of(topics);
-            }
-            const activities = [];
-            return from(res.modules).pipe(concatMap(mod => {
-              return this.createActivity(mod).pipe(map(activity => {
-                activities.push(activity);
-                return activities;
-              }));
-            }), takeLast(1), map(a => {
-              const topic = new Topic(res.id, res.name, a);
-              topics.push(topic);
-              return topics;
-            }));
-          }), takeLast(1), map(t => {
-            course.topics = t;
-            return course;
-          }));
+          return from(resArr).pipe(
+            concatMap(res => {
+              if (!res.modules || res.modules.length === 0) {
+                const topic = new Topic(res.id, res.name, null);
+                topics.push(topic);
+                return of(topics);
+              }
+              const activities = [];
+              return from(res.modules).pipe(
+                concatMap(mod => {
+                  return this.createActivity(mod).pipe(
+                    map(activity => {
+                      activities.push(activity);
+                      return activities;
+                    }));
+                }),
+                takeLast(1),
+                map(a => {
+                  const topic = new Topic(res.id, res.name, a);
+                  topics.push(topic);
+                  return topics;
+                })
+              );
+            }),
+            takeLast(1),
+            map(t => {
+              course.topics = t;
+              console.log(course);
+              return course;
+            })
+          );
         })
       );
     }));
@@ -119,10 +129,13 @@ export class CoursesService {
             concatMap(otherContent => {
               currentContent = otherContent;
               return this.getBinaryFile(otherContent.fileurl);
-            }), concatMap(blob => {
-              return this.readFile(blob);
-            }), map(dataUrl => {
-              page.content = page.content.replace(currentContent.filename, dataUrl);
+            }),
+            map(data => {
+              return new PageResource(currentContent.filename, data);
+            }),
+            toArray(),
+            map(pageResources => {
+              page.resources = pageResources;
               return page;
             })
           );
