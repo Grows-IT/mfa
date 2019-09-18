@@ -50,6 +50,10 @@ const routes: Routes = [
         loadChildren: '../calculators/calculators.module#CalculatorsPageModule'
       },
       {
+        path: 'news',
+        loadChildren: './news/news.module#NewsPageModule'
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full'
