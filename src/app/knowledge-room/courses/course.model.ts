@@ -12,6 +12,7 @@ export class Course {
   constructor(
     public id: number,
     public name: string,
+    public identifier: string,
     public img?: string,
     public topics?: Topic[]
   ) {}
@@ -44,7 +45,8 @@ export class Page {
     public id: number,
     public name: string,
     public content: string,
-    public resources?: PageResource[]
+    public resources?: PageResource[],
+    public img?: string
   ) {}
 }
 

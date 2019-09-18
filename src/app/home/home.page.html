@@ -56,30 +56,11 @@
     </ion-row>
     <ion-row>
       <ion-slides pager>
-        <ion-slide>
+        <ion-slide *ngFor="let newsPage of newsPages">
           <ion-card class="card">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/6eNckyUQ670" frameborder="0"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <img [src]="newsPage.img" />
             <ion-card-content>
-              <p>มิตรผล เคล็ดลับความสุข..ส่งจากไร่ : "Farmสุข..โมเดิร์น"</p>
-            </ion-card-content>
-          </ion-card>
-        </ion-slide>
-        <ion-slide>
-          <ion-card class="card">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/FNn5DB1Zen4" frameborder="0"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            <ion-card-content>
-              <p>Modern Technology Agriculture Huge Machines</p>
-            </ion-card-content>
-          </ion-card>
-        </ion-slide>
-        <ion-slide>
-          <ion-card class="card">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/v8PCeMkn0kI" frameborder="0"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            <ion-card-content>
-              <p>ต้นแบบเกษตรสมัยใหม่</p>
+              <p>{{ newsPage.name }}</p>
             </ion-card-content>
           </ion-card>
         </ion-slide>

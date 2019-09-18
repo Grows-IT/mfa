@@ -12,15 +12,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class CoursesPage implements OnInit, OnDestroy {
   courses: Course[] = [
-    new Course(1 , 'อ้อย', 'assets/courses/modern-farm/1-sugar.png'),
-    new Course(2 , 'อารักขาอ้อย', 'assets/courses/modern-farm/2-guard.png'),
-    new Course(3 , 'ดินและปุ๋ย', 'assets/courses/modern-farm/3-soil.png'),
-    new Course(4 , 'AE', 'assets/courses/modern-farm/4-ae.png'),
-    new Course(5 , 'น้ำ', 'assets/courses/modern-farm/5-water.png'),
-    new Course(6 , 'Modern Farm', 'assets/courses/modern-farm/6-modern.png'),
-    new Course(7 , 'AE - MDF', 'assets/courses/modern-farm/7-mdf.png'),
-    new Course(8 , 'Precision Farming', 'assets/courses/modern-farm/8-precision.png'),
-    new Course(9 , 'Logistic', 'assets/courses/modern-farm/9-logistic.png'),
+    new Course(1 , 'อ้อย', 'อ้อย', 'assets/courses/modern-farm/1-sugar.png'),
+    new Course(2 , 'อารักขาอ้อย', 'อารักขาอ้อย', 'assets/courses/modern-farm/2-guard.png'),
+    new Course(3 , 'ดินและปุ๋ย', 'ดินและปุ๋ย', 'assets/courses/modern-farm/3-soil.png'),
+    new Course(4 , 'AE', 'AE', 'assets/courses/modern-farm/4-ae.png'),
+    new Course(5 , 'น้ำ', 'น้ำ', 'assets/courses/modern-farm/5-water.png'),
+    new Course(6 , 'Modern Farm', 'Modern Farm', 'assets/courses/modern-farm/6-modern.png'),
+    new Course(7 , 'AE - MDF', 'AE - MDF', 'assets/courses/modern-farm/7-mdf.png'),
+    new Course(8 , 'Precision Farming', 'Precision Farming', 'assets/courses/modern-farm/8-precision.png'),
+    new Course(9 , 'Logistic', 'Logistic', 'assets/courses/modern-farm/9-logistic.png'),
   ];
   category: Category;
   modernFarm: Course;

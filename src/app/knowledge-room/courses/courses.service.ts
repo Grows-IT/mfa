@@ -22,6 +22,7 @@ const httpOptions = {
 export interface CoreEnrolGetUsersCoursesResponse {
   id: number;
   shortname: string;
+  idnumber: string;
   overviewfiles: [{
     fileurl: string;
   }];
@@ -167,6 +168,31 @@ export class CoursesService {
     );
   }
 
+  downloadResources(page: Page) {
+    const indexHtmlResource = page.resources.find(resource => resource.name === 'index.html');
+    const otherResources = page.resources.filter(resource => resource.type);
+    let otherResource: PageResource;
+    return this.getTextFile(indexHtmlResource.url).pipe(
+      switchMap(content => {
+        page.content = content;
+        return from(otherResources);
+      }),
+      concatMap(resource => {
+        otherResource = resource;
+        return this.getBinaryFile(resource.url);
+      }),
+      map(data => {
+        otherResource.data = data;
+        return otherResource;
+      }),
+      toArray(),
+      map(resources => {
+        page.resources = resources;
+        return page;
+      })
+    );
+  }
+
   private coreEnrolGetUsersCourses() {
     return this.authService.user.pipe(switchMap(user => {
       const params = new HttpParams({
@@ -176,7 +202,7 @@ export class CoursesService {
         }
       });
       return this.http.post<CoreEnrolGetUsersCoursesResponse[]>(getCoursesWsUrl, params, httpOptions).pipe(timeout(10000), map(res => {
-        const courses = res.map(data => new Course(data.id, data.shortname, null));
+        const courses = res.map(data => new Course(data.id, data.shortname, data.idnumber));
         this._courses.next(courses);
         return courses;
       }));
@@ -230,23 +256,23 @@ export class CoursesService {
     }));
   }
 
-  private saveCoursestoStorage(courses: Course[]) {
-    const data = JSON.stringify(courses.map(course => course.toObject()));
-    Plugins.Storage.set({ key: 'courses', value: data });
-  }
+  // private saveCoursestoStorage(courses: Course[]) {
+  //   const data = JSON.stringify(courses.map(course => course.toObject()));
+  //   Plugins.Storage.set({ key: 'courses', value: data });
+  // }
 
-  private getCoursesFromStorage() {
-    return from(Plugins.Storage.get({ key: 'courses' })).pipe(map(storedData => {
-      if (!storedData || !storedData.value) {
-        console.log('Courses are not stored locally.');
-        return null;
-      }
-      const parsedData = JSON.parse(storedData.value) as {
-        id: number;
-        name: string;
-      }[];
-      const courses = parsedData.map(element => new Course(element.id, element.name));
-      return courses;
-    }));
-  }
+  // private getCoursesFromStorage() {
+  //   return from(Plugins.Storage.get({ key: 'courses' })).pipe(map(storedData => {
+  //     if (!storedData || !storedData.value) {
+  //       console.log('Courses are not stored locally.');
+  //       return null;
+  //     }
+  //     const parsedData = JSON.parse(storedData.value) as {
+  //       id: number;
+  //       name: string;
+  //     }[];
+  //     const courses = parsedData.map(element => new Course(element.id, element.name));
+  //     return courses;
+  //   }));
+  // }
 }
