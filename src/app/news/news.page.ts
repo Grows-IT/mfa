@@ -21,8 +21,8 @@ export class NewsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.newsSub = this.newsService.pages.subscribe(pages => {
-      console.log(pages);
       this.pages = pages;
+      this.isLoading = false;
       // let i = 0;
       // pages.forEach(page => {
       //   const imgResource = page.resources.find(resource => resource.type.includes('image'));

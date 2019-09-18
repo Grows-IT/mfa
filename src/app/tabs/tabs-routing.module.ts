@@ -51,7 +51,7 @@ const routes: Routes = [
       },
       {
         path: 'news',
-        loadChildren: './news/news.module#NewsPageModule'
+        loadChildren: '../news/news.module#NewsPageModule'
       },
       {
         path: '',
