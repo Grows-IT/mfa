@@ -22,6 +22,7 @@ export class PagesPage implements OnInit, OnDestroy {
     this.isLoading = true;
     const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
     this.activitySub = this.coursesService.getActivityById(activityId).subscribe((page) => {
+      page.content = decodeURI(page.content);
       this.currentPage = page;
       this.processResources(this.currentPage);
     });
@@ -36,9 +37,10 @@ export class PagesPage implements OnInit, OnDestroy {
       const fileReader = new FileReader();
       fileReader.onload = () => {
         const data = fileReader.result.toString();
-        console.log('fileName', resource.name);
-        console.log('pageContent', page.content);
+        console.log('Name', resource.name);
+        console.log('Content', page.content);
         page.content = page.content.replace(resource.name, data);
+
         i += 1;
         if (i >= page.resources.length) {
           return this.populateSlides(page.content);
