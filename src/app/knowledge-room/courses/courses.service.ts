@@ -59,7 +59,7 @@ export class CoursesService {
 
   get courses() {
     return this._courses.asObservable().pipe(first(), switchMap(courses => {
-      if (!courses) { // No courses stored in memory, fetch new courses.
+      if (!courses) {
         return this.coreEnrolGetUsersCourses();
       }
       return of(courses);
@@ -67,39 +67,33 @@ export class CoursesService {
   }
 
   getCourseById(courseId: number) {
-    let updatedCourses: Course[];
-    return this._courses.asObservable().pipe(
-      first(),
+    return this.courses.pipe(
       switchMap(courses => {
-        updatedCourses = courses;
         const course = courses.find(c => c.id === courseId);
         if (!!course.topics) {
           return of(course);
         }
         return this.coreCourseGetContents(courseId).pipe(
-          switchMap(resArr => from(resArr)),
-          concatMap(res => {
-            if (!res.modules || res.modules.length === 0) {
-              const topic = new Topic(res.id, res.name, null);
-              return of(topic);
-            }
-            return from(res.modules).pipe(
-              concatMap(mod => this.createActivity(mod)),
-              toArray(),
-              map(activities => new Topic(res.id, res.name, activities))
-            );
-          }),
-          toArray(),
-          map(topics => {
+          map(resArr => {
+            const topics = resArr.map(res => {
+              const activities = res.modules.map(mod => {
+                if (mod.modname === 'quiz') {
+                  return new Quiz(mod.id, mod.name);
+                } else if (mod.modname === 'page') {
+                  const pageResources = mod.contents.map(content => {
+                    return new PageResource(content.filename, content.mimetype, content.fileurl);
+                  });
+                  return new Page(mod.id, mod.name, null, pageResources);
+                }
+              });
+              return new Topic(res.id, res.name, activities);
+            });
             course.topics = topics;
+            this._courses.next(courses);
             return course;
           })
         );
-      }), tap(course => {
-        const index = updatedCourses.findIndex(c => c.id === courseId);
-        updatedCourses[index] = course;
-        this._courses.next(updatedCourses);
-      })
+      }),
     );
   }
 
@@ -137,37 +131,40 @@ export class CoursesService {
     );
   }
 
-  private createActivity(mod: Module) {
-    if (mod.modname === 'quiz') {
-      return of(new Quiz(mod.id, mod.name));
-    } else if (mod.modname === 'page') {
-      const page = new Page(mod.id, mod.name, null);
-      const mainContent = mod.contents.find(content => content.filename === 'index.html');
-      const otherContents = mod.contents.filter(content => content.mimetype);
-      return this.getTextFile(mainContent.fileurl).pipe(
-        switchMap(resData => {
-          page.content = resData;
-          if (otherContents.length === 0) {
-            return of(page);
-          }
-          let currentContent: ContentData;
-          return from(otherContents).pipe(
-            concatMap(otherContent => {
-              currentContent = otherContent;
-              return this.getBinaryFile(otherContent.fileurl);
-            }),
-            map(data => {
-              return new PageResource(currentContent.filename, data);
-            }),
-            toArray(),
-            map(pageResources => {
-              page.resources = pageResources;
-              return page;
-            })
-          );
-        })
-      );
-    }
+  getPageById(pageId: number): Observable<Page> {
+    return this.getActivityById(pageId).pipe(
+      switchMap(activity => {
+        if (!(activity instanceof Page)) {
+          return of(null);
+        }
+        const page = activity as Page;
+        if (page.content) {
+          return of(page);
+        }
+        const indexHtmlResource = page.resources.find(resource => resource.name === 'index.html');
+        const otherResources = page.resources.filter(resource => resource.type);
+        let otherResource: PageResource;
+        return this.getTextFile(indexHtmlResource.url).pipe(
+          switchMap(content => {
+            page.content = content;
+            return from(otherResources);
+          }),
+          concatMap(resource => {
+            otherResource = resource;
+            return this.getBinaryFile(resource.url);
+          }),
+          map(data => {
+            otherResource.data = data;
+            return otherResource;
+          }),
+          toArray(),
+          map(resources => {
+            page.resources = resources;
+            return page;
+          })
+        );
+      })
+    );
   }
 
   private coreEnrolGetUsersCourses() {
