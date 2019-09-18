@@ -4,7 +4,7 @@
       <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
       </ion-buttons>
-      <ion-title>{{ currentPage.name }}</ion-title>
+      <ion-title *ngIf="!isLoading">{{ currentPage.name }}</ion-title>
     </ion-toolbar>
   </div>
 </ion-header>
@@ -13,10 +13,7 @@
   <div text-center *ngIf="isLoading">
     <ion-spinner></ion-spinner>
   </div>
-  <ion-text *ngIf="errorMessage">
-    <h1>{{ this.errorMessage }}</h1>
-  </ion-text>
-  <ion-slides pager *ngIf="!isLoading && !errorMessage">
+  <ion-slides pager *ngIf="!isLoading">
     <ion-slide *ngFor="let content of slideContents">
       <div text-start [innerHTML]="content"></div>
     </ion-slide>

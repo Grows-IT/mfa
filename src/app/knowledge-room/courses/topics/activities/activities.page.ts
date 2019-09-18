@@ -16,16 +16,15 @@ export class ActivitiesPage implements OnInit, OnDestroy {
   pages: Page[];
   quiz: Quiz;
   errorMessage: string;
-  private courseSub: Subscription;
+  private topicSub: Subscription;
 
   constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
 
   ngOnInit() {
     this.isLoading = true;
-    const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
-    this.courseSub = this.coursesService.getCourseById(courseId).subscribe(course => {
-      this.currentTopic = course.topics.find(topic => topic.id === topicId);
+    this.topicSub = this.coursesService.getTopicById(topicId).subscribe(topic => {
+      this.currentTopic = topic;
       if (!this.currentTopic.activities) {
         this.isLoading = false;
         this.errorMessage = 'Coming Soon';
@@ -38,6 +37,6 @@ export class ActivitiesPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.courseSub.unsubscribe();
+    this.topicSub.unsubscribe();
   }
 }
