@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, timeout, take, concatMap, first, takeLast, withLatestFrom, toArray } from 'rxjs/operators';
+import { map, tap, switchMap, timeout, take, concatMap, first, takeLast, withLatestFrom, toArray, find } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { from, BehaviorSubject, of, Observable } from 'rxjs';
 
@@ -67,48 +67,74 @@ export class CoursesService {
   }
 
   getCourseById(courseId: number) {
-    return this._courses.asObservable().pipe(first(), switchMap(courses => {
-      const course = courses.find(c => c.id === courseId);
-      if (!!course.topics) {
-        return of(course);
-      }
-      return this.coreCourseGetContents(courseId).pipe(
-        switchMap(resArr => {
-          const topics: Topic[] = [];
-          return from(resArr).pipe(
-            concatMap(res => {
-              if (!res.modules || res.modules.length === 0) {
-                const topic = new Topic(res.id, res.name, null);
-                topics.push(topic);
-                return of(topics);
+    let updatedCourses: Course[];
+    return this._courses.asObservable().pipe(
+      first(),
+      switchMap(courses => {
+        updatedCourses = courses;
+        const course = courses.find(c => c.id === courseId);
+        if (!!course.topics) {
+          return of(course);
+        }
+        return this.coreCourseGetContents(courseId).pipe(
+          switchMap(resArr => from(resArr)),
+          concatMap(res => {
+            if (!res.modules || res.modules.length === 0) {
+              const topic = new Topic(res.id, res.name, null);
+              return of(topic);
+            }
+            return from(res.modules).pipe(
+              concatMap(mod => this.createActivity(mod)),
+              toArray(),
+              map(activities => new Topic(res.id, res.name, activities))
+            );
+          }),
+          toArray(),
+          map(topics => {
+            course.topics = topics;
+            return course;
+          })
+        );
+      }), tap(course => {
+        const index = updatedCourses.findIndex(c => c.id === courseId);
+        updatedCourses[index] = course;
+        this._courses.next(updatedCourses);
+      })
+    );
+  }
+
+  getTopicById(topicId: number) {
+    return this.courses.pipe(
+      map(courses => {
+        let topic: Topic = null;
+        courses.forEach(course => {
+          if (!topic && course.topics) {
+            topic = course.topics.find(t => t.id === topicId);
+            return;
+          }
+        });
+        return topic;
+      })
+    );
+  }
+
+  getActivityById(activityId: number) {
+    return this.courses.pipe(
+      map(courses => {
+        let activity = null;
+        courses.forEach(course => {
+          if (course.topics) {
+            course.topics.forEach(topic => {
+              if (!activity && topic.activities) {
+                activity = topic.activities.find(a => a.id === activityId);
+                return;
               }
-              const activities = [];
-              return from(res.modules).pipe(
-                concatMap(mod => {
-                  return this.createActivity(mod).pipe(
-                    map(activity => {
-                      activities.push(activity);
-                      return activities;
-                    }));
-                }),
-                takeLast(1),
-                map(a => {
-                  const topic = new Topic(res.id, res.name, a);
-                  topics.push(topic);
-                  return topics;
-                })
-              );
-            }),
-            takeLast(1),
-            map(t => {
-              course.topics = t;
-              console.log(course);
-              return course;
-            })
-          );
-        })
-      );
-    }));
+            });
+          }
+        });
+        return activity;
+      })
+    );
   }
 
   private createActivity(mod: Module) {
@@ -142,17 +168,6 @@ export class CoursesService {
         })
       );
     }
-  }
-
-  private readFile(blob: Blob): Observable<string> {
-    return new Observable(observer => {
-      const fileReader = new FileReader();
-      fileReader.onerror = err => observer.error(err);
-      fileReader.onabort = err => observer.error(err);
-      fileReader.onloadend = () => observer.complete();
-      fileReader.onload = () => observer.next(fileReader.result.toString());
-      return fileReader.readAsDataURL(blob);
-    });
   }
 
   private coreEnrolGetUsersCourses() {

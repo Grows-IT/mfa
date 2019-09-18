@@ -14,51 +14,46 @@ export class PagesPage implements OnInit, OnDestroy {
   isLoading = false;
   currentPage: Page;
   slideContents: string[];
-  errorMessage: string;
-  private coursesSub: Subscription;
-  private pageContentSub: Subscription;
+  private activitySub: Subscription;
 
   constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
 
   ngOnInit() {
     this.isLoading = true;
-    const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
-    const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
     const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
-    this.coursesSub = this.coursesService.getCourseById(courseId).subscribe(currentCourse => {
-      const currentTopic = currentCourse.topics.find(topic => topic.id === topicId);
-      if (!currentTopic.activities) {
-        this.errorMessage = 'Coming Soon.';
-        this.isLoading = false;
-        return;
-      }
-      this.currentPage = currentTopic.activities.find(page => page.id === activityId);
-      this.loadSlides(this.currentPage);
+    this.activitySub = this.coursesService.getActivityById(activityId).subscribe((page) => {
+      this.currentPage = page;
+      this.processResources(this.currentPage);
     });
   }
 
-  loadSlides(page: Page) {
+  processResources(page: Page) {
+    if (!page.resources) {
+      return this.populateSlides(page.content);
+    }
     let i = 0;
     page.resources.forEach(resource => {
       const fileReader = new FileReader();
       fileReader.onload = () => {
         const data = fileReader.result.toString();
+        console.log('fileName', resource.name);
+        console.log('pageContent', page.content);
         page.content = page.content.replace(resource.name, data);
         i += 1;
         if (i >= page.resources.length) {
-          this.slideContents = page.content.split('<br><br>');
-          this.isLoading = false;
-          return;
+          return this.populateSlides(page.content);
         }
       };
       fileReader.readAsDataURL(resource.data);
     });
   }
 
+  populateSlides(content: string) {
+    this.slideContents = content.split('<br><br>');
+    this.isLoading = false;
+  }
+
   ngOnDestroy() {
-    this.coursesSub.unsubscribe();
-    if (this.pageContentSub) {
-      this.pageContentSub.unsubscribe();
-    }
+    this.activitySub.unsubscribe();
   }
 }
