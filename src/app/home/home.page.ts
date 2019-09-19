@@ -35,6 +35,16 @@ export class HomePage implements OnInit, OnDestroy {
     });
     this.newsSub = this.newsService.pages.subscribe(pages => {
       this.newsPages = pages;
+      let i = 0;
+      pages.forEach(page => {
+        const imgResource = page.resources.find(resource => resource.type.includes('image'));
+        const fr = new FileReader();
+        fr.onload = () => {
+          page.img = fr.result.toString();
+          i += 1;
+        };
+        fr.readAsDataURL(imgResource.data);
+      });
     });
   }
 
