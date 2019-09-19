@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 export class TopicsPage implements OnInit, OnDestroy {
   isLoading = false;
   topics: Topic[];
+  errorMessage: string;
   private courseSub: Subscription;
 
   constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
@@ -25,6 +26,7 @@ export class TopicsPage implements OnInit, OnDestroy {
       this.isLoading = false;
     }, error => {
       console.log(error.message);
+      this.errorMessage = 'Error getting course';
       this.isLoading = false;
     });
   }

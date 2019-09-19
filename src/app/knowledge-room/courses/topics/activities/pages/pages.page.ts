@@ -49,7 +49,7 @@ export class PagesPage implements OnInit, OnDestroy {
   }
 
   populateSlides(content: string) {
-    this.slideContents = content.split('<br><br>');
+    this.slideContents = content.split('<p></p>');
     this.isLoading = false;
   }
 
