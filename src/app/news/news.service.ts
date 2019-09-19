@@ -28,7 +28,6 @@ export class NewsService {
           return of(pages);
         }
         let pageNum: number;
-        let i = 0;
         return this.coursesService.courses.pipe(
           switchMap(courses => {
             const newsCourse = courses.find(course => course.identifier === 'news');
