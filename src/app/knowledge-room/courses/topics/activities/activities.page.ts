@@ -25,7 +25,7 @@ export class ActivitiesPage implements OnInit, OnDestroy {
     const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
     this.topicSub = this.coursesService.getTopicById(topicId).subscribe(topic => {
       this.currentTopic = topic;
-      if (!this.currentTopic.activities) {
+      if (!this.currentTopic.activities || this.currentTopic.activities.length === 0) {
         this.isLoading = false;
         this.errorMessage = 'Coming Soon';
         return;
