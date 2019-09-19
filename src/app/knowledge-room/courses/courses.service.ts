@@ -210,66 +210,77 @@ export class CoursesService {
   }
 
   private coreEnrolGetUsersCourses() {
-    return this.authService.user.pipe(switchMap(user => {
-      const params = new HttpParams({
-        fromObject: {
-          userid: user.id.toString(),
-          wstoken: user.token
-        }
-      });
-      return this.http.post<CoreEnrolGetUsersCoursesResponse[]>(getCoursesWsUrl, params, httpOptions).pipe(timeout(10000), map(res => {
+    return this.authService.token.pipe(
+      withLatestFrom(this.authService.userId),
+      switchMap(([token, userId]) => {
+        const params = new HttpParams({
+          fromObject: {
+            userid: userId.toString(),
+            wstoken: token
+          }
+        });
+        return this.http.post<CoreEnrolGetUsersCoursesResponse[]>(getCoursesWsUrl, params, httpOptions);
+      }),
+      timeout(10000),
+      map(res => {
         const courses = res.map(data => new Course(data.id, data.shortname, data.idnumber));
         this._courses.next(courses);
         return courses;
-      }));
-    }));
+      })
+    );
   }
 
   private coreCourseGetContents(courseId: number) {
-    return this.authService.token.pipe(take(1), switchMap(token => {
-      const form = new FormData();
-      form.append('wstoken', token);
-      form.append('courseid', courseId.toString());
-      const params = new HttpParams({
-        fromObject: {
-          courseid: courseId.toString(),
-          wstoken: token
-        }
-      });
-      return this.http.post<CoreCourseGetContentsResponse[]>(coreCourseGetContentsWsUrl, params, httpOptions);
-    }));
+    return this.authService.token.pipe(
+      switchMap(token => {
+        const form = new FormData();
+        form.append('wstoken', token);
+        form.append('courseid', courseId.toString());
+        const params = new HttpParams({
+          fromObject: {
+            courseid: courseId.toString(),
+            wstoken: token
+          }
+        });
+        return this.http.post<CoreCourseGetContentsResponse[]>(coreCourseGetContentsWsUrl, params, httpOptions);
+      })
+    );
   }
 
   private getBinaryFile(url: string) {
-    return this.authService.token.pipe(take(1), switchMap(token => {
-      const params = new HttpParams({
-        fromObject: {
-          token
-        }
-      });
-      return this.http.post(url, params, {
-        headers: new HttpHeaders({
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }), responseType: 'blob'
-      });
-    }));
+    return this.authService.token.pipe(
+      switchMap(token => {
+        const params = new HttpParams({
+          fromObject: {
+            token
+          }
+        });
+        return this.http.post(url, params, {
+          headers: new HttpHeaders({
+            Accept: 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }), responseType: 'blob'
+        });
+      })
+    );
   }
 
   private getTextFile(url: string) {
-    return this.authService.token.pipe(take(1), switchMap(token => {
-      const params = new HttpParams({
-        fromObject: {
-          token
-        }
-      });
-      return this.http.post(url, params, {
-        headers: new HttpHeaders({
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }), responseType: 'text'
-      });
-    }));
+    return this.authService.token.pipe(
+      switchMap(token => {
+        const params = new HttpParams({
+          fromObject: {
+            token
+          }
+        });
+        return this.http.post(url, params, {
+          headers: new HttpHeaders({
+            Accept: 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }), responseType: 'text'
+        });
+      })
+    );
   }
 
   // private saveCoursestoStorage(courses: Course[]) {
