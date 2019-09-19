@@ -52,6 +52,8 @@ export interface ContentData {
 })
 export class CoursesService {
   private _courses = new BehaviorSubject<Course[]>(null);
+  private _topics = new BehaviorSubject<Topic[]>(null);
+  private _activities = new BehaviorSubject<any>(null);
 
   constructor(
     private http: HttpClient,
@@ -59,21 +61,23 @@ export class CoursesService {
   ) { }
 
   get courses() {
-    return this._courses.asObservable().pipe(first(), switchMap(courses => {
-      if (!courses) {
-        return this.coreEnrolGetUsersCourses();
-      }
-      return of(courses);
-    }));
+    // return this._courses.asObservable().pipe(first(), switchMap(courses => {
+    //   if (!courses) {
+    //     return this.coreEnrolGetUsersCourses();
+    //   }
+    //   return of(courses);
+    // }));
+    return this.coreEnrolGetUsersCourses();
   }
 
   getCourseById(courseId: number) {
     return this.courses.pipe(
       switchMap(courses => {
         const course = courses.find(c => c.id === courseId);
-        if (!!course.topics) {
-          return of(course);
-        }
+        // if (!!course.topics) {
+        //   this._topics.next(course.topics);
+        //   return of(course);
+        // }
         return this.coreCourseGetContents(courseId).pipe(
           map(resArr => {
             const topics = resArr.map(res => {
@@ -90,6 +94,7 @@ export class CoursesService {
               return new Topic(res.id, res.name, activities);
             });
             course.topics = topics;
+            this._topics.next(topics);
             this._courses.next(courses);
             return course;
           })
@@ -99,37 +104,48 @@ export class CoursesService {
   }
 
   getTopicById(topicId: number) {
-    return this.courses.pipe(
-      map(courses => {
-        let topic: Topic = null;
-        courses.forEach(course => {
-          if (!topic && course.topics) {
-            topic = course.topics.find(t => t.id === topicId);
-            return;
-          }
-        });
-        return topic;
-      })
-    );
+    // return this.courses.pipe(
+    //   map(courses => {
+    //     let topic: Topic = null;
+    //     courses.forEach(course => {
+    //       if (!topic && course.topics) {
+    //         topic = course.topics.find(t => t.id === topicId);
+    //         return;
+    //       }
+    //     });
+    //     return topic;
+    //   })
+    // );
+    return this._topics.asObservable().pipe(map(topics => {
+      const topic = topics.find(t => t.id === topicId);
+      if (topic && topic.activities) {
+        this._activities.next(topic.activities);
+      }
+      return topic;
+    }));
   }
 
   getActivityById(activityId: number) {
-    return this.courses.pipe(
-      map(courses => {
-        let activity = null;
-        courses.forEach(course => {
-          if (course.topics) {
-            course.topics.forEach(topic => {
-              if (!activity && topic.activities) {
-                activity = topic.activities.find(a => a.id === activityId);
-                return;
-              }
-            });
-          }
-        });
-        return activity;
-      })
-    );
+    // return this.courses.pipe(
+    //   map(courses => {
+    //     let activity = null;
+    //     courses.forEach(course => {
+    //       if (course.topics) {
+    //         course.topics.forEach(topic => {
+    //           if (!activity && topic.activities) {
+    //             activity = topic.activities.find(a => a.id === activityId);
+    //             return;
+    //           }
+    //         });
+    //       }
+    //     });
+    //     return activity;
+    //   })
+    // );
+    return this._activities.asObservable().pipe(map(activities => {
+      const activity = activities.find(a => a.id === activityId);
+      return activity;
+    }));
   }
 
   getPageById(pageId: number): Observable<Page> {

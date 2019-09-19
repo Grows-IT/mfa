@@ -18,6 +18,7 @@ export class HomePage implements OnInit, OnDestroy {
   private userSub: Subscription;
   private backButtonSub: Subscription;
   private newsSub: Subscription;
+  isLoading = false;
 
   constructor(
     private authService: AuthService,
@@ -26,31 +27,38 @@ export class HomePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.userSub = this.authService.user.subscribe(user => {
       this.user = user;
-    });
-    this.backButtonSub = this.platform.backButton.subscribe(() => {
-      const app = 'app';
-      navigator[app].exitApp();
-    });
-    this.newsSub = this.newsService.pages.subscribe(pages => {
-      this.newsPages = pages;
-      let i = 0;
-      pages.forEach(page => {
-        const imgResource = page.resources.find(resource => resource.type.includes('image'));
-        const fr = new FileReader();
-        fr.onload = () => {
-          page.img = fr.result.toString();
-          i += 1;
-        };
-        fr.readAsDataURL(imgResource.data);
+
+      this.newsSub = this.newsService.pages.subscribe(pages => {
+        this.newsPages = pages;
+        let i = 0;
+        pages.forEach(page => {
+          const imgResource = page.resources.find(resource => resource.type.includes('image'));
+          const fr = new FileReader();
+          fr.onload = () => {
+            page.img = fr.result.toString();
+            i += 1;
+            if (i >= pages.length) {
+              this.isLoading = false;
+            }
+          };
+          fr.readAsDataURL(imgResource.data);
+        });
       });
     });
+    // this.backButtonSub = this.platform.backButton.subscribe(() => {
+    //   const app = 'app';
+    //   navigator[app].exitApp();
+    // });
   }
 
   ngOnDestroy() {
     this.userSub.unsubscribe();
-    this.newsSub.unsubscribe();
+    if (this.newsSub) {
+      this.newsSub.unsubscribe();
+    }
     this.backButtonSub.unsubscribe();
   }
 }
