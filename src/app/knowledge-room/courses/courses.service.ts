@@ -73,10 +73,10 @@ export class CoursesService {
     return this.courses.pipe(
       switchMap(courses => {
         const course = courses.find(c => c.id === courseId);
-        if (!!course.topics) {
-          this._topics.next(course.topics);
-          return of(course);
-        }
+        // if (!!course.topics) {
+        //   this._topics.next(course.topics);
+        //   return of(course);
+        // }
         return this.coreCourseGetContents(courseId).pipe(
           map(resArr => {
             const topics = resArr.map(res => {

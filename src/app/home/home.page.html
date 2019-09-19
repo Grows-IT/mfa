@@ -15,7 +15,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid no-padding>
+  <div text-center>
+    <ion-spinner *ngIf="isLoading"></ion-spinner>
+  </div>
+  <ion-grid no-padding *ngIf="!isLoading">
     <ion-row>
       <ion-col no-padding>
         <ion-button size="large" color="black" no-margin expand="full">
@@ -68,9 +71,9 @@
     </ion-row>
     <ion-row>
       <ion-col margin-start>
-          <ion-text>
-              <h1>DIRECTORY</h1>
-            </ion-text>
+        <ion-text>
+          <h1>DIRECTORY</h1>
+        </ion-text>
       </ion-col>
     </ion-row>
     <ion-row>
