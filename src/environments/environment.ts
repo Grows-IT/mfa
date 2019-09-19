@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  // siteUrl: 'http://santaputra.trueddns.com:46921/moodle37'
-  siteUrl: 'http://203.150.199.148'
+  siteUrl: 'http://santaputra.trueddns.com:46921/moodle37'
+  // siteUrl: 'http://203.150.199.148'
 };
 
 /*

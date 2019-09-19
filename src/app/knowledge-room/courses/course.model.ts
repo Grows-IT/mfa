@@ -14,7 +14,7 @@ export class Course {
     public name: string,
     public identifier: string,
     public img?: string,
-    public topics?: Topic[]
+    public topics?: Topic[],
   ) {}
 
   toObject() {
