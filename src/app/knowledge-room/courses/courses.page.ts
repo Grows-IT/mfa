@@ -12,15 +12,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class CoursesPage implements OnInit, OnDestroy {
   courses: Course[] = [
-    new Course(1 , 'อ้อย', 'อ้อย', 'assets/courses/modern-farm/1-sugar.png'),
-    new Course(2 , 'อารักขาอ้อย', 'อารักขาอ้อย', 'assets/courses/modern-farm/2-guard.png'),
-    new Course(3 , 'ดินและปุ๋ย', 'ดินและปุ๋ย', 'assets/courses/modern-farm/3-soil.png'),
-    new Course(4 , 'AE', 'AE', 'assets/courses/modern-farm/4-ae.png'),
-    new Course(5 , 'น้ำ', 'น้ำ', 'assets/courses/modern-farm/5-water.png'),
-    new Course(6 , 'Modern Farm', 'Modern Farm', 'assets/courses/modern-farm/6-modern.png'),
-    new Course(7 , 'AE - MDF', 'AE - MDF', 'assets/courses/modern-farm/7-mdf.png'),
-    new Course(8 , 'Precision Farming', 'Precision Farming', 'assets/courses/modern-farm/8-precision.png'),
-    new Course(9 , 'Logistic', 'Logistic', 'assets/courses/modern-farm/9-logistic.png'),
+    new Course(null, 'อ้อย', 'อ้อย', 'assets/courses/modern-farm/1-sugar.png'),
+    new Course(null, 'อารักขาอ้อย', 'อารักขาอ้อย', 'assets/courses/modern-farm/2-guard.png'),
+    new Course(null, 'ดินและปุ๋ย', 'ดินและปุ๋ย', 'assets/courses/modern-farm/3-soil.png'),
+    new Course(null, 'AE', 'AE', 'assets/courses/modern-farm/4-ae.png'),
+    new Course(null, 'น้ำ', 'น้ำ', 'assets/courses/modern-farm/5-water.png'),
+    new Course(null, 'Modern Farm', 'Modern Farm', 'assets/courses/modern-farm/6-modern.png'),
+    new Course(null, 'AE - MDF', 'AE - MDF', 'assets/courses/modern-farm/7-mdf.png', ),
+    new Course(null, 'Precision Farming', 'Precision Farming', 'assets/courses/modern-farm/8-precision.png'),
+    new Course(null, 'Logistic', 'Logistic', 'assets/courses/modern-farm/9-logistic.png'),
   ];
   category: Category;
   modernFarm: Course;
@@ -45,16 +45,26 @@ export class CoursesPage implements OnInit, OnDestroy {
         this.isLoading = false;
         return;
       }
-      const moderFarm = courses.find(course => course.name === 'Modern Farm');
-      const index = this.courses.findIndex(course => course.name === 'Modern Farm');
-      this.courses[index].id = moderFarm.id;
+      courses.forEach(course => {
+        this.updateCourseId(courses, course.name);
+      });
       this.isLoading = false;
     });
   }
 
   onClick(course: Course) {
-    if (course.name === 'Modern Farm') {
-      this.router.navigate([course.id, 'topics'], {relativeTo: this.activatedRoute});
+    if (course.id) {
+      this.router.navigate([course.id, 'topics'], { relativeTo: this.activatedRoute });
+    }
+  }
+
+  updateCourseId(courses: Course[], courseName: string) {
+    const course = courses.find(c => c.name === courseName);
+    if (course) {
+      const index = this.courses.findIndex(c => c.name === courseName);
+      if (index >= 0) {
+        this.courses[index].id = course.id;
+      }
     }
   }
 

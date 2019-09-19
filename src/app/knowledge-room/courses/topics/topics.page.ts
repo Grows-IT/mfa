@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { CoursesService } from '../courses.service';
-import { Topic } from '../course.model';
+import { Topic, Course } from '../course.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 export class TopicsPage implements OnInit, OnDestroy {
   isLoading = false;
   topics: Topic[];
+  course: Course;
   errorMessage: string;
   private courseSub: Subscription;
 
@@ -22,6 +23,7 @@ export class TopicsPage implements OnInit, OnDestroy {
     this.isLoading = true;
     const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.courseSub = this.coursesService.getCourseById(courseId).subscribe(course => {
+      this.course = course;
       this.topics = course.topics;
       this.isLoading = false;
     }, error => {
