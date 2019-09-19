@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { Platform } from '@ionic/angular';
 
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { Page } from '../knowledge-room/courses/course.model';
+import { switchMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -28,30 +29,35 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.userSub = this.authService.user.subscribe(user => {
-      this.user = user;
-
-      this.newsSub = this.newsService.pages.subscribe(pages => {
-        this.newsPages = pages;
+    this.userSub = this.authService.user.pipe(
+      switchMap(user => {
+        if (user) {
+          return of(user);
+        }
+        return this.authService.getSiteInfo();
+      }),
+      switchMap(user => {
+        this.user = user;
+        console.log('IMAGE', user.imgUrl);
+        return this.newsService.pages;
+      }),
+      map(newsPages => {
+        this.newsPages = newsPages;
         let i = 0;
-        pages.forEach(page => {
+        newsPages.forEach(page => {
           const imgResource = page.resources.find(resource => resource.type.includes('image'));
           const fr = new FileReader();
           fr.onload = () => {
             page.img = fr.result.toString();
             i += 1;
-            if (i >= pages.length) {
+            if (i >= newsPages.length) {
               this.isLoading = false;
             }
           };
           fr.readAsDataURL(imgResource.data);
         });
-      });
-    });
-    // this.backButtonSub = this.platform.backButton.subscribe(() => {
-    //   const app = 'app';
-    //   navigator[app].exitApp();
-    // });
+      })
+    ).subscribe();
   }
 
   ngOnDestroy() {
@@ -59,6 +65,8 @@ export class HomePage implements OnInit, OnDestroy {
     if (this.newsSub) {
       this.newsSub.unsubscribe();
     }
-    this.backButtonSub.unsubscribe();
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 }
