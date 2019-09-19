@@ -61,12 +61,13 @@ export class CoursesService {
   ) { }
 
   get courses() {
-    return this._courses.asObservable().pipe(first(), switchMap(courses => {
-      if (!courses) {
-        return this.coreEnrolGetUsersCourses();
-      }
-      return of(courses);
-    }));
+    // return this._courses.asObservable().pipe(first(), switchMap(courses => {
+    //   if (!courses) {
+    //     return this.coreEnrolGetUsersCourses();
+    //   }
+    //   return of(courses);
+    // }));
+    return this.coreEnrolGetUsersCourses();
   }
 
   getCourseById(courseId: number) {
