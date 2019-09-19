@@ -29,7 +29,7 @@ export class PagesPage implements OnInit, OnDestroy {
   }
 
   processResources(page: Page) {
-    if (!page.resources) {
+    if (!page.resources || page.resources.length === 0) {
       return this.populateSlides(page.content);
     }
     let i = 0;
