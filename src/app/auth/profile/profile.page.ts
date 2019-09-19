@@ -77,7 +77,9 @@ export class ProfilePage implements OnInit, OnDestroy {
     });
     const fixed = await fixOrientation(image);
     const blob = base64toBlob(fixed.replace('data:image/jpeg;base64,', ''), 'image/jpeg');
-    this.imgUpdateSub = this.authService.updateProfilePicture(blob).subscribe();
+    this.imgUpdateSub = this.authService.updateProfilePicture(blob).subscribe(user => {
+      this.user = user;
+    });
   }
 
   onFileChosen(event: Event) {
@@ -85,6 +87,8 @@ export class ProfilePage implements OnInit, OnDestroy {
     if (!pickedFile) {
       return;
     }
-    this.imgUpdateSub = this.authService.updateProfilePicture(pickedFile).subscribe();
+    this.imgUpdateSub = this.authService.updateProfilePicture(pickedFile).subscribe(user => {
+      this.user = user;
+    });
   }
 }

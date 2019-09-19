@@ -156,7 +156,7 @@ export class AuthService {
       }));
   }
 
-  private getSiteInfo() {
+  getSiteInfo() {
     let token: string;
     return this.token.pipe(
       switchMap(t => {
