@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { from, BehaviorSubject } from 'rxjs';
-import { timeout, tap, map, flatMap, switchMap, take } from 'rxjs/operators';
+import { timeout, tap, map, flatMap, switchMap, take, first, withLatestFrom } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
 import { environment } from '../../environments/environment';
@@ -40,81 +40,100 @@ export interface GetTokenResponseData {
 })
 export class AuthService {
   private _user = new BehaviorSubject<User>(null);
+  private _token = new BehaviorSubject<string>(null);
 
   constructor(
     private http: HttpClient,
   ) { }
 
   get user() {
-    return this._user.asObservable();
+    return this._user.asObservable().pipe(first());
   }
+
   get token() {
-    return this._user.asObservable().pipe(map(user => user ? user.token : null));
+    return this._token.asObservable().pipe(first());
+  }
+
+  get userId() {
+    return this.user.pipe(map(user => user ? user.id : null));
   }
 
   get isLoggedIn() {
-    return this._user.asObservable().pipe(map(user => user ? !!user.token : false));
+    return this.token.pipe(map(token => token ? !!token : false));
   }
 
   login(username: string, password: string) {
-    return this.getToken(username, password).pipe(flatMap(token => {
-      return this.getSiteInfo(token).pipe(tap(user => {
-        this._user.next(user);
-        this.saveUserToStorage(user);
-      }));
-    }));
+    return this.getToken(username, password).pipe(
+      switchMap(() => {
+        return this.getSiteInfo();
+      })
+    );
   }
 
   logout() {
     this._user.next(null);
+    this._token.next(null);
     Plugins.Storage.clear();
   }
 
   autoLogin() {
-    return this.getUserFromStorage().pipe(map(user => {
-      this._user.next(user);
-      return !!user;
-    }));
+    return this.getTokenFromStorage().pipe(
+      map(token => {
+        this._token.next(token);
+        return !!token;
+      })
+    );
   }
 
   updateProfilePicture(imageData: Blob | File) {
-    return this.user.pipe(take(1), switchMap(user => {
-      return this.uploadWs(user.token, imageData).pipe(switchMap(itemId => {
-        return this.coreUserUpdatePictureWs(user.token, user.id, itemId).pipe(switchMap(() => {
-          return this.getSiteInfo(user.token).pipe(tap(u => {
-            this._user.next(u);
-            this.saveUserToStorage(u);
-          }));
-        }));
-      }));
-    }));
+    return this.uploadWs(imageData).pipe(
+      switchMap(itemId => {
+        return this.coreUserUpdatePictureWs(itemId);
+      }),
+      switchMap(() => {
+        return this.getSiteInfo();
+      })
+    );
   }
 
-  private uploadWs(token: string, file: File | Blob) {
-    const uploadData = new FormData();
-    uploadData.append('token', token);
-    uploadData.append('filearea', 'draft');
-    uploadData.append('itemid', '0');
-    uploadData.append('file', file);
-    return this.http.post<{ itemid: string }[]>(uploadImageWsUrl, uploadData).pipe(timeout(10000), map(res => {
-      if (!res[0]) {
-        throw new Error('Cannot upload image.');
-      }
-      return res[0].itemid;
-    }));
+  private uploadWs(file: File | Blob) {
+    return this.token.pipe(
+      switchMap(token => {
+        const uploadData = new FormData();
+        uploadData.append('token', token);
+        uploadData.append('filearea', 'draft');
+        uploadData.append('itemid', '0');
+        uploadData.append('file', file);
+        return this.http.post<{ itemid: string }[]>(uploadImageWsUrl, uploadData);
+      }),
+      timeout(10000),
+      map(res => {
+        if (!res[0]) {
+          throw new Error('Cannot upload image.');
+        }
+        return res[0].itemid;
+      })
+    );
   }
 
-  private coreUserUpdatePictureWs(token: string, userId: number, itemId: string) {
-    const formData = new FormData();
-    formData.append('wstoken', token);
-    formData.append('userid', userId.toString());
-    formData.append('draftitemid', itemId);
-    return this.http.post<{ profileimageurl: string }>(coreUserUpdatePictureWsUrl, formData).pipe(timeout(10000), map(res => {
-      if (!res.profileimageurl) {
-        throw new Error('Cannot update profile picture.');
-      }
-      return res.profileimageurl;
-    }));
+  private coreUserUpdatePictureWs(itemId: string) {
+    return this.token.pipe(
+      withLatestFrom(this.userId),
+      switchMap(([token, userId]) => {
+        const formData = new FormData();
+        formData.append('wstoken', token);
+        formData.append('userid', userId.toString());
+        formData.append('draftitemid', itemId);
+        return this.http.post<{ profileimageurl: string }>(coreUserUpdatePictureWsUrl, formData);
+      }),
+      timeout(10000),
+      map(res => {
+        if (!res.profileimageurl) {
+          throw new Error('Cannot update profile picture.');
+        }
+        return res.profileimageurl;
+      })
+    );
   }
 
   private getToken(username: string, password: string) {
@@ -125,24 +144,33 @@ export class AuthService {
         service: 'moodle_mobile_app'
       }
     });
-    return this.http.post<GetTokenResponseData>(loginWsUrl, params, httpOptions).pipe(timeout(10000), map(res => {
-      if (res.error) {
-        throw new Error(res.error);
-      }
-      return res.token;
-    }));
+    return this.http.post<GetTokenResponseData>(loginWsUrl, params, httpOptions).pipe(
+      timeout(10000),
+      map(res => {
+        if (res.error) {
+          throw new Error(res.error);
+        }
+        this._token.next(res.token);
+        this.saveTokenToStorage(res.token);
+        return res.token;
+      }));
   }
 
-  private getSiteInfo(token: string) {
-    const params = new HttpParams({
-      fromObject: {
-        wsfunction: 'core_webservice_get_site_info',
-        moodlewssettingfilter: 'true',
-        moodlewssettingfileurl: 'true',
-        wstoken: token
-      }
-    });
-    return this.http.post<GetSiteInfoResponseData>(getSiteInfoWsUrl, params, httpOptions).pipe(
+  private getSiteInfo() {
+    let token: string;
+    return this.token.pipe(
+      switchMap(t => {
+        token = t;
+        const params = new HttpParams({
+          fromObject: {
+            wsfunction: 'core_webservice_get_site_info',
+            moodlewssettingfilter: 'true',
+            moodlewssettingfileurl: 'true',
+            wstoken: token
+          }
+        });
+        return this.http.post<GetSiteInfoResponseData>(getSiteInfoWsUrl, params, httpOptions);
+      }),
       timeout(10000),
       map(res => {
         if (res.errorcode) {
@@ -153,10 +181,29 @@ export class AuthService {
           res.username,
           res.firstname,
           res.lastname,
-          res.userpictureurl,
-          token
+          res.userpictureurl
         );
         return user;
+      }),
+      tap(user => {
+        this._user.next(user);
+        this.saveUserToStorage(user);
+      })
+    );
+  }
+
+  private saveTokenToStorage(token: string) {
+    Plugins.Storage.set({ key: 'token', value: token });
+  }
+
+  private getTokenFromStorage() {
+    return from(Plugins.Storage.get({ key: 'token' })).pipe(
+      map(storedToken => {
+        if (!storedToken || !storedToken.value) {
+          return null;
+        }
+        this._token.next(storedToken.value);
+        return storedToken.value;
       })
     );
   }
@@ -167,8 +214,7 @@ export class AuthService {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
-      imgUrl: user.imgUrl,
-      token: user.token
+      imgUrl: user.imgUrl
     });
     Plugins.Storage.set({ key: 'user', value: data });
   }
@@ -184,15 +230,13 @@ export class AuthService {
         firstName: string;
         lastName: string;
         imgUrl: string;
-        token: string;
       };
       const user = new User(
         parsedData.id,
         parsedData.username,
         parsedData.firstName,
         parsedData.lastName,
-        parsedData.imgUrl,
-        parsedData.token
+        parsedData.imgUrl
       );
       return user;
     }));
