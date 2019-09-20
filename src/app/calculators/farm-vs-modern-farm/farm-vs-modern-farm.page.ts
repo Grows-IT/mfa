@@ -28,7 +28,7 @@ export class FarmVsModernFarmPage implements OnInit {
     if (data.sugarcaneArea <= 0) {
       return;
     }
-    this.calcData = this.calculatorsService.modernFarmCalc(data.sugarcaneArea);
+    this.calcData = this.calculatorsService.calculateModernfarm(data.sugarcaneArea);
     this.showResult = true;
   }
 }
