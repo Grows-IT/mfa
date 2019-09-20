@@ -17,7 +17,17 @@ const routes: Routes = [
       },
       {
         path: 'modern-farm-calc-report',
-        loadChildren: './farm-vs-modern-farm/modern-farm-calc-report/modern-farm-calc-report.module#ModernFarmCalcReportPageModule'
+        children: [
+          {
+            path: ':id',
+            loadChildren: './farm-vs-modern-farm/modern-farm-calc-report/modern-farm-calc-report.module#ModernFarmCalcReportPageModule'
+          },
+          {
+            path: '',
+            redirectTo: '1',
+            pathMatch: 'full'
+          }
+        ]
       }
     ]
   },
