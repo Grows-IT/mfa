@@ -6,7 +6,7 @@ import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { Page } from '../knowledge-room/courses/course.model';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -29,16 +29,9 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.userSub = this.authService.user.pipe(
-      switchMap(user => {
-        if (user) {
-          return of(user);
-        }
-        return this.authService.getSiteInfo();
-      }),
+    this.userSub = this.authService.fetchUser().pipe(
       switchMap(user => {
         this.user = user;
-        console.log('IMAGE', user.imgUrl);
         return this.newsService.pages;
       }),
       map(newsPages => {
