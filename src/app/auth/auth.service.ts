@@ -64,8 +64,10 @@ export class AuthService {
 
   login(username: string, password: string) {
     return this.getToken(username, password).pipe(
-      switchMap(() => {
-        return this.getSiteInfo();
+      map(token => {
+        this._token.next(token);
+        this.saveTokenToStorage(token);
+        return !!token;
       })
     );
   }
@@ -85,13 +87,22 @@ export class AuthService {
     );
   }
 
+  fetchUser() {
+    return this.coreWebserviceGetSiteInfo().pipe(
+      tap(user => {
+        this._user.next(user);
+        this.saveUserToStorage(user);
+      })
+    );
+  }
+
   updateProfilePicture(imageData: Blob | File) {
     return this.uploadWs(imageData).pipe(
       switchMap(itemId => {
         return this.coreUserUpdatePictureWs(itemId);
       }),
       switchMap(() => {
-        return this.getSiteInfo();
+        return this.fetchUser();
       })
     );
   }
@@ -156,16 +167,13 @@ export class AuthService {
       }));
   }
 
-  getSiteInfo() {
+  private coreWebserviceGetSiteInfo() {
     let token: string;
     return this.token.pipe(
       switchMap(t => {
         token = t;
         const params = new HttpParams({
           fromObject: {
-            wsfunction: 'core_webservice_get_site_info',
-            moodlewssettingfilter: 'true',
-            moodlewssettingfileurl: 'true',
             wstoken: token
           }
         });
@@ -176,18 +184,17 @@ export class AuthService {
         if (res.errorcode) {
           throw new Error(res.message);
         }
+        const regex = /(\w+:\/\/[\w\d\.]+)(\S+)/g;
+        const match = regex.exec(res.userpictureurl);
+        const imgUrl = `${match[1]}/webservice${match[2]}&token=${token}&offline=1#moodlemobile-embedded`;
         const user = new User(
           res.userid,
           res.username,
           res.firstname,
           res.lastname,
-          res.userpictureurl
+          imgUrl
         );
         return user;
-      }),
-      tap(user => {
-        this._user.next(user);
-        this.saveUserToStorage(user);
       })
     );
   }
