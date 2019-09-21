@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="/tabs/calculators"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="primary">
-      <ion-button routerLink="/static/1">
+      <ion-button routerLink="machine-calc-report">
         <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -156,11 +156,11 @@
         </text>
         <text id="_108_วัน" data-name="108 วัน" transform="translate(156.294 229.551) rotate(-90)" fill="#fff"
           font-size="18" font-family="Kanit-SemiBold, Kanit" font-weight="600">
-          <tspan x="0" y="0">{{ totalDayManPowerBurned }} วัน</tspan>
+          <tspan x="0" y="0">{{ result.totalDayManPowerBurned }} วัน</tspan>
         </text>
         <text id="_7_วัน" data-name="7 วัน" transform="translate(286.416 262.73) rotate(-90)" fill="#fff" font-size="18"
           font-family="Kanit-SemiBold, Kanit" font-weight="600">
-          <tspan x="0" y="0">{{ totalDayCartPower}} วัน</tspan>
+          <tspan x="0" y="0">{{ result.totalDayCartPower}} วัน</tspan>
         </text>
         <text id="_1_คัน" data-name="1 คัน" transform="translate(216.491 240.278)" fill="#ed5015" font-size="16"
           font-family="Kanit-SemiBold, Kanit" font-weight="600">
@@ -176,209 +176,18 @@
         <ion-col size="10">
           <ion-text color="tertiary">
             <p class="result-text">ใช้คนตัดจ่ายเงิน</p>
-            <h1 class="result-text">{{ totalPriceManPowerBurned| number }} บาท</h1>
+            <h1 class="result-text">{{ result.totalPriceManPowerBurned| number }} บาท</h1>
           </ion-text>
           <ion-text color="warning">
             <p class="result-text">ใช้รถตัดจ่ายเงิน</p>
-            <h1 class="result-text">{{ totalPriceCartPower| number }} บาท</h1>
+            <h1 class="result-text">{{ result.totalPriceCartPower| number }} บาท</h1>
           </ion-text>
           <ion-text color="primary">
             <p class="result-text">ประหยัดเงิน</p>
-            <h1 class="result-text" style="font-size: 2.2em">{{ priceBurnedCart| number }} บาท</h1>
+            <h1 class="result-text" style="font-size: 2.2em">{{ result.priceBurnedCart| number }} บาท</h1>
           </ion-text>
         </ion-col>
       </ion-row>
     </ion-grid>
-
-    <!-- Caluation Table-->
-    <table class="compare-price">
-      <tr>
-        <td style="padding-left: 8%;">ค่าใช้จ่าย ต่อ 1 ตัน</td>
-        <td style="padding-left: 8%;">ค่าใช้จ่าย ต่อ {{quantity| number }} ตัน</td>
-      </tr>
-      <tr>
-        <td>
-          <div class="pricing-box-container">
-            <div class="pricing-box text-center">
-              <h5>ใช้คนตัด<BR>อ้อยไฟไหม้</h5>
-              <p class="price">380 บาท</p>
-              <div *ngIf="hide1">
-                <ul class="features-list">
-                  <li>ค่าตัดอ้อย <strong>100</strong> บาท</li>
-                  <li>ค่าคีบอ้อย <strong>100</strong> บาท</li>
-                  <li>ค่าบรรทุก <strong>150</strong> บาท</li>
-                  <li>ค่าหักอ้อยไฟไหม้ <strong>30</strong> บาท</li>
-                </ul>
-              </div>
-              <button ion-button full round (click)="showDiv('hide1')">
-                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide1"></ion-icon>
-                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide1"></ion-icon>
-              </button>
-            </div>
-          </div>
-        </td>
-        <td>
-          <div class="pricing-box-container">
-            <div class="pricing-box text-center">
-              <h5>ใช้คนตัด<BR>อ้อยไฟไหม้</h5>
-              <p class="price">{{ totalPriceManPowerBurned| number }} บาท</p>
-              <div *ngIf="hide1">
-                <ul class="features-list">
-                  <li>ค่าตัดอ้อย <strong>{{calsugarcaneCutPriceManPowerBurned| number }}</strong> บาท</li>
-                  <li>ค่าคีบอ้อย <strong>{{calsugarcaneGetPriceManPowerBurned| number }}</strong> บาท</li>
-                  <li>ค่าบรรทุก <strong>{{calsugarcaneLoadPriceManPowerBurned| number }}</strong> บาท</li>
-                  <li>ค่าหักอ้อยไฟไหม้ <strong>{{calclearBurned| number }}</strong> บาท</li>
-                </ul>
-              </div>
-              <button (click)="showDiv('hide1')">
-                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide1"></ion-icon>
-                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide1"></ion-icon>
-              </button>
-            </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="pricing-box-container">
-            <div class="pricing-box text-center">
-              <h5>ใช้คนตัด<BR>อ้อยสด </h5>
-              <p class="price">350 บาท</p>
-              <div *ngIf="hide2">
-                <ul class="features-list">
-                  <li>ค่าตัดอ้อย <strong>100</strong> บาท</li>
-                  <li>ค่าคีบอ้อย <strong>100</strong> บาท</li>
-                  <li>ค่าบรรทุก <strong>150</strong> บาท</li>
-                  <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
-                </ul>
-              </div>
-              <button ion-button full round (click)="showDiv('hide2')">
-                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide2"></ion-icon>
-                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide2"></ion-icon>
-              </button>
-            </div>
-          </div>
-        </td>
-        <td>
-          <div class="pricing-box-container">
-            <div class="pricing-box text-center">
-              <h5>ใช้คนตัด<BR>อ้อยสด </h5>
-              <p class="price">{{ totalPriceManPowerFresh| number }} บาท</p>
-              <div *ngIf="hide2">
-                <ul class="features-list">
-                  <li>ค่าตัดอ้อย <strong>{{calsugarcaneCutPriceManPowerFresh| number }}</strong> บาท</li>
-                  <li>ค่าคีบอ้อย <strong>{{calsugarcaneGetPriceManPowerFresh| number }}</strong> บาท</li>
-                  <li>ค่าบรรทุก <strong>{{calsugarcaneLoadPriceManPowerFresh| number }}</strong> บาท</li>
-                  <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
-                </ul>
-              </div>
-              <button ion-button full round (click)="showDiv('hide2')">
-                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide2"></ion-icon>
-                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide2"></ion-icon>
-              </button>
-            </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="pricing-box-container">
-            <div class="pricing-box text-center">
-              <h5>ใช้รถตัด<BR>อ้อยสด</h5>
-              <p class="price">340 บาท</p>
-              <div *ngIf="hide3">
-                <ul class="features-list">
-                  <li>ค่าตัดอ้อย <strong>190</strong> บาท</li>
-                  <li>ค่าคีบอ้อย <strong>-</strong> บาท</li>
-                  <li>ค่าบรรทุก <strong>150</strong> บาท</li>
-                  <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
-                </ul>
-              </div>
-              <button (click)="showDiv('hide3')">
-                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide3"></ion-icon>
-                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide3"></ion-icon>
-              </button>
-            </div>
-          </div>
-        </td>
-        <td>
-          <div class="pricing-box-container">
-            <div class="pricing-box text-center">
-              <h5>ใช้รถตัด<BR>อ้อยสด</h5>
-              <p class="price">{{ totalPriceCartPower| number }} บาท</p>
-              <div *ngIf="hide3">
-                <ul class="features-list">
-                  <li>ค่าตัดอ้อย <strong>{{calsugarcaneCutPriceCartPower| number }}</strong> บาท</li>
-                  <li>ค่าคีบอ้อย <strong>-</strong> บาท</li>
-                  <li>ค่าบรรทุก <strong>{{calsugarcaneLoadPriceCartPower| number }}</strong> บาท</li>
-                  <li>ค่าหักอ้อยไฟไหม้ <strong>-</strong> บาท</li>
-                </ul>
-              </div>
-              <button (click)="showDiv('hide3')">
-                <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle" *ngIf="!hide3"></ion-icon>
-                <ion-icon ios="ios-arrow-dropup-circle" md="md-arrow-dropup-circle" *ngIf="hide3"></ion-icon>
-              </button>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </table>
-    <div style="width:100%; text-align: left;">
-      <table class="cutTable">
-        <thead tyle="border: 1px solid #000;">
-          <tr>
-            <th colspan="4" style="text-align: center;">
-              ความสามารถในการตัดอ้อย
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              รถ 1 คัน ตัด อ้อยสด ได้
-            </td>
-            <td style="text-align: right;">
-              400
-            </td>
-            <td>
-              ตันต่อวัน ใช้เวลาตัด
-            </td>
-            <td style="text-align: right;">
-              {{totalDayCartPower| number }} วัน
-            </td>
-          </tr>
-          <tr>
-            <td>
-              คน 1 คน ตัด อ้อยไฟไหม้ ได้
-            </td>
-            <td style="text-align: right;">
-              12
-            </td>
-            <td>
-              ตันต่อวัน ใช้เวลาตัด
-            </td>
-            <td style="text-align: right;">
-              {{totalDayManPowerBurned| number }} วัน
-            </td>
-          </tr>
-          <tr>
-            <td>
-              คน 1 คน ตัด อ้อยสด ได้
-            </td>
-            <td style="text-align: right;">
-              4
-            </td>
-            <td>
-              ตันต่อวัน ใช้เวลาตัด
-            </td>
-            <td style="text-align: right;">
-              {{totalDayManPowerFresh| number }} วัน
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
-
-
 </ion-content>
