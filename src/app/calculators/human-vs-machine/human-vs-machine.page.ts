@@ -28,6 +28,7 @@ export class HumanVsMachinePage implements OnInit {
     if (data.quantity <= 0) {
       return;
     }
+    this.calculatorsService.machineCalcReport1Rai = this.calculatorsService.calculateMachine(1);
     this.result = this.calculatorsService.calculateMachine(data.quantity);
     this.showResult = true;
   }

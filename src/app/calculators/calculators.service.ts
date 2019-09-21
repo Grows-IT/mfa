@@ -60,6 +60,7 @@ export class MachineCalcData {
   public totalPerTonManPowerBurned: number;
   public totalPerTonManPowerFresh: number;
   public totalPerTonCartPower: number;
+  public clearBurned = 30;
 }
 
 @Injectable({
@@ -154,12 +155,11 @@ export class CalculatorsService {
     const manPowerBurned = 12;
     const manPowerFresh = 4;
     const numberManPower = 10;
-    const clearBurned = 30;
 
     this.machineCalcData = new MachineCalcData();
     this.machineCalcData.quantity = quantity;
     this.machineCalcData.totalPerTonManPowerBurned = sugarcaneCutPriceManPowerBurned + sugarcaneGetPriceManPowerBurned +
-      sugarcaneLoadPriceManPowerBurned + clearBurned;
+      sugarcaneLoadPriceManPowerBurned + this.machineCalcData.clearBurned;
     this.machineCalcData.totalPerTonManPowerFresh = sugarcaneCutPriceManPowerFresh + sugarcaneGetPriceManPowerFresh +
       sugarcaneLoadPriceManPowerFresh;
     this.machineCalcData.totalPerTonCartPower = sugarcaneCutPriceCartPower + sugarcaneGetPriceCartPower + sugarcaneLoadPriceCartPower;
@@ -182,7 +182,10 @@ export class CalculatorsService {
     this.machineCalcData.calsugarcaneLoadPriceManPowerBurned = this.machineCalcData.quantity * sugarcaneLoadPriceManPowerBurned;
     this.machineCalcData.calsugarcaneLoadPriceManPowerFresh = this.machineCalcData.quantity * sugarcaneLoadPriceManPowerFresh;
     this.machineCalcData.calsugarcaneLoadPriceCartPower = this.machineCalcData.quantity * sugarcaneLoadPriceCartPower;
-    this.machineCalcData.calclearBurned = this.machineCalcData.quantity * clearBurned;
+    this.machineCalcData.calclearBurned = this.machineCalcData.quantity * this.machineCalcData.clearBurned;
+    this.machineCalcData.totalPerTonManPowerBurned = this.machineCalcData.totalPerTonManPowerBurned * this.machineCalcData.quantity;
+    this.machineCalcData.totalPerTonManPowerFresh = this.machineCalcData.totalPerTonManPowerFresh * this.machineCalcData.quantity;
+    this.machineCalcData.totalPerTonCartPower = this.machineCalcData.totalPerTonCartPower * this.machineCalcData.quantity;
     return this.machineCalcData;
   }
 }
