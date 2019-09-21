@@ -156,11 +156,11 @@
         </text>
         <text id="_108_วัน" data-name="108 วัน" transform="translate(156.294 229.551) rotate(-90)" fill="#fff"
           font-size="18" font-family="Kanit-SemiBold, Kanit" font-weight="600">
-          <tspan x="0" y="0">{{ result.totalDayManPowerBurned }} วัน</tspan>
+          <tspan x="0" y="0">{{ result.burnedSugarCutTime | number:'1.0-0' }} วัน</tspan>
         </text>
         <text id="_7_วัน" data-name="7 วัน" transform="translate(286.416 262.73) rotate(-90)" fill="#fff" font-size="18"
           font-family="Kanit-SemiBold, Kanit" font-weight="600">
-          <tspan x="0" y="0">{{ result.totalDayCartPower}} วัน</tspan>
+          <tspan x="0" y="0">{{ result.machineCutTime | number:'1.0-0' }} วัน</tspan>
         </text>
         <text id="_1_คัน" data-name="1 คัน" transform="translate(216.491 240.278)" fill="#ed5015" font-size="16"
           font-family="Kanit-SemiBold, Kanit" font-weight="600">
@@ -171,20 +171,27 @@
     <!-- Output results -->
     <ion-grid fixed>
       <ion-row>
-        <ion-col size="2">
-        </ion-col>
-        <ion-col size="10">
+        <ion-col size="8" offset="2">
           <ion-text color="tertiary">
             <p class="result-text">ใช้คนตัดจ่ายเงิน</p>
-            <h1 class="result-text">{{ result.totalPriceManPowerBurned| number }} บาท</h1>
+            <h1 class="result-text">{{ result.burnedSugarTotalCost | number }} บาท</h1>
           </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="8" offset="2">
           <ion-text color="warning">
             <p class="result-text">ใช้รถตัดจ่ายเงิน</p>
-            <h1 class="result-text">{{ result.totalPriceCartPower| number }} บาท</h1>
+            <h1 class="result-text">{{ result.machineTotalCost | number }} บาท</h1>
           </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="8" offset="2">
           <ion-text color="primary">
             <p class="result-text">ประหยัดเงิน</p>
-            <h1 class="result-text" style="font-size: 2.2em">{{ result.priceBurnedCart| number }} บาท</h1>
+            <h1 class="result-text" style="font-size: 2.2em">
+              {{ (result.burnedSugarTotalCost - result.machineTotalCost) | number }} บาท</h1>
           </ion-text>
         </ion-col>
       </ion-row>
