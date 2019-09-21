@@ -8,12 +8,14 @@ import { CalculatorsService, MachineCalcData } from '../../calculators.service';
 })
 export class MachineCalcReportPage implements OnInit {
   result: MachineCalcData;
+  result1Rai: MachineCalcData;
 
   constructor(
     private calculatorsService: CalculatorsService
   ) { }
 
   ngOnInit() {
+    this.result1Rai = this.calculatorsService.machineCalcReport1Rai;
     this.result = this.calculatorsService.machineCalcData;
   }
 

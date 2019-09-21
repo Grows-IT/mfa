@@ -1,14 +1,25 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>machine-calc-report</ion-title>
+  <ion-toolbar color="warning">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/calculators"></ion-back-button>
+    </ion-buttons>
+    <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-text text-center color="light">
+              <h1 class="header">ตารางค่าใช้จ่าย : {{ result1Rai.quantity }} ตัน</h1>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <table style="width:100%">
-    <tr>
-      <td  class="tdhead" colspan="3">ตารางค่าใช้จ่าย : 1 ตัน</td>
-    </tr>
+    <!-- <tr>
+      <td  class="tdhead" colspan="3">ตารางค่าใช้จ่าย : {{ result1Rai.quantity }} ตัน</td>
+    </tr> -->
     <tr >
       <td rowspan=2 class="tdtopic" style="font-size:29px; height:100px;">รายละเอียดกิจกรรม</td>
       <td class="tdtopic">ใช้คนตัด</td>
@@ -22,34 +33,34 @@
     </tr>
     <tr>
       <td class="tdbody">ค่าตัด</td>
-      <td class="tdbody1">{{ result.calsugarcaneCutPriceManPowerBurned }}</td>
-      <td class="tdbody1">{{ result.calsugarcaneCutPriceManPowerFresh }}</td>
-      <td class="tdbody1">{{ result.calsugarcaneCutPriceCartPower }}</td>
+      <td class="tdbody1">{{  result1Rai.calsugarcaneCutPriceManPowerBurned }}</td>
+      <td class="tdbody1">{{ result1Rai.calsugarcaneCutPriceManPowerFresh }}</td>
+      <td class="tdbody1">{{ result1Rai.calsugarcaneCutPriceCartPower }}</td>
     </tr>
     <tr>
       <td class="tdbody">ค่าคีบ</td>
-      <td class="tdbody1">{{ result.calsugarcaneGetPriceManPowerBurned }}</td>
-      <td class="tdbody1">{{ result.calsugarcaneGetPriceManPowerFresh }}</td>
+      <td class="tdbody1">{{ result1Rai.calsugarcaneGetPriceManPowerBurned }}</td>
+      <td class="tdbody1">{{ result1Rai.calsugarcaneGetPriceManPowerFresh }}</td>
       <td class="tdbody1">-</td>
     </tr>
     <tr>
       <td class="tdbody">ค่าบรรทุก</td>
-      <td class="tdbody1">{{ result.calsugarcaneLoadPriceManPowerBurned }}</td>
-      <td class="tdbody1">{{ result.calsugarcaneLoadPriceManPowerFresh }}</td>
-      <td class="tdbody1">{{ result.calsugarcaneLoadPriceCartPower }}</td>
+      <td class="tdbody1">{{ result1Rai.calsugarcaneLoadPriceManPowerBurned }}</td>
+      <td class="tdbody1">{{ result1Rai.calsugarcaneLoadPriceManPowerFresh }}</td>
+      <td class="tdbody1">{{ result1Rai.calsugarcaneLoadPriceCartPower }}</td>
     </tr>
     <tr>
       <td class="tdbody">หักค่าอ้อยไฟไหม้</td>
-      <td class="tdbody1">clearBurned</td>
+      <td class="tdbody1">{{ result1Rai.clearBurned }}</td>
       <td class="tdbody1">-</td>
       <td class="tdbody1">-</td>
     </tr>
     
     <tr class="tdresult">
       <td class="tdtopicendtext">ค่าใช้จ่ายรวม</td>
-      <td class="tdtopicendtext center">{{ result.totalPerTonManPowerBurned }}</td>
-      <td class="tdtopicendtext center">{{ result.totalPerTonManPowerFresh }}</td>
-      <td class="tdtopicendtext center">{{ result.totalPerTonCartPower }}</td>
+      <td class="tdtopicendtext center">{{ result1Rai.totalPerTonManPowerBurned }}</td>
+      <td class="tdtopicendtext center">{{ result1Rai.totalPerTonManPowerFresh }}</td>
+      <td class="tdtopicendtext center">{{ result1Rai.totalPerTonCartPower }}</td>
     </tr>
   </table> 
   <table style="width:100%">
@@ -87,7 +98,7 @@
     </tr>
     <tr>
       <td class="tdbody">หักค่าอ้อยไฟไหม้</td>
-      <td class="tdbody1">clearBurned</td>
+      <td class="tdbody1">{{ result.calclearBurned }}</td>
       <td class="tdbody1">-</td>
       <td class="tdbody1">-</td>
     </tr>
