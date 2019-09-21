@@ -38,6 +38,30 @@ export class ModernFarmCalcData {
   public modernResultPerRai = 18.0;
 }
 
+export class MachineCalcData {
+  public quantity: number;
+  public totalPriceManPowerBurned: number;
+  public totalPriceManPowerFresh: number;
+  public totalPriceCartPower: number;
+  public priceBurnedCart: number;
+  public totalDayCartPower: number;
+  public totalDayManPowerBurned: number;
+  public totalDayManPowerFresh: number;
+  public calsugarcaneCutPriceManPowerBurned: number;
+  public calsugarcaneCutPriceManPowerFresh: number;
+  public calsugarcaneCutPriceCartPower: number;
+  public calsugarcaneGetPriceManPowerBurned: number;
+  public calsugarcaneGetPriceManPowerFresh: number;
+  public calsugarcaneGetPriceCartPower: number;
+  public calsugarcaneLoadPriceManPowerBurned: number;
+  public calsugarcaneLoadPriceManPowerFresh: number;
+  public calsugarcaneLoadPriceCartPower: number;
+  public calclearBurned: number;
+  public totalPerTonManPowerBurned: number;
+  public totalPerTonManPowerFresh: number;
+  public totalPerTonCartPower: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -45,6 +69,8 @@ export class CalculatorsService {
   modernFarmCalcData: ModernFarmCalcData = new ModernFarmCalcData();
   modernFarmReport: ModernFarmCalcData = new ModernFarmCalcData();
   modernFarmReport1Rai: ModernFarmCalcData = new ModernFarmCalcData();
+  machineCalcData: MachineCalcData;
+  machineCalcReport1Rai: MachineCalcData;
 
   constructor() { }
 
@@ -81,30 +107,26 @@ export class CalculatorsService {
   }
 
   calculateModernfarm(sugarcaneArea: number) {
-    this.modernFarmCalcData.sugarcaneArea = sugarcaneArea;
-    this.buildModernFarmReport(sugarcaneArea);
-
     const SugarCanePrice = 700;
     const modernHavestGet = 0;
     const modernHavestBurned = 0;
     const oldPrepareLandRipper = 0;
 
+    this.modernFarmCalcData.sugarcaneArea = sugarcaneArea;
+    this.buildModernFarmReport(sugarcaneArea);
     const oldTotalCostCal = this.modernFarmCalcData.oldPrepareLandPlant + oldPrepareLandRipper +
       this.modernFarmCalcData.oldPrepareLandTaida + this.modernFarmCalcData.oldSugarcaneDoubleHead +
       this.modernFarmCalcData.oldSugarcaneFertilise + this.modernFarmCalcData.oldSugarcaneRoot +
       this.modernFarmCalcData.oldMaintainFertiliser + this.modernFarmCalcData.oldMaintainWeedKill +
       this.modernFarmCalcData.oldHavestCut + this.modernFarmCalcData.oldHavestGet + this.modernFarmCalcData.oldHavestLoad +
       this.modernFarmCalcData.oldHavestBurned;
-
     this.modernFarmCalcData.oldIncome = (this.modernFarmCalcData.oldResultperRai * SugarCanePrice) +
       ((this.modernFarmCalcData.oldCCS - 10) * SugarCanePrice * 6 / 100);
-
     const modernTotalCost = this.modernFarmCalcData.modernPrepareLandPlant + this.modernFarmCalcData.modernPrepareLandRipper +
       this.modernFarmCalcData.modernPrepareLandTaida + this.modernFarmCalcData.modernSugarcaneDoubleHead +
       this.modernFarmCalcData.modernSugarcaneFertilise + this.modernFarmCalcData.modernSugarcaneRoot +
       this.modernFarmCalcData.modernMaintainFertiliser + this.modernFarmCalcData.modernMaintainWeedKill +
       this.modernFarmCalcData.modernHavestCut + modernHavestGet + this.modernFarmCalcData.modernHavestLoad + modernHavestBurned;
-
     this.modernFarmCalcData.modernIncome = (this.modernFarmCalcData.modernResultPerRai * SugarCanePrice) +
       ((this.modernFarmCalcData.modernCCS - 10) * SugarCanePrice * 6 / 100);
     this.modernFarmCalcData.oldTotalCost = Math.ceil(this.modernFarmCalcData.sugarcaneArea * oldTotalCostCal);
@@ -116,5 +138,51 @@ export class CalculatorsService {
       this.modernFarmCalcData.oldIncome));
     this.modernFarmCalcData.totalIncrease = Math.floor(this.modernFarmCalcData.reduceCost + increaseIncomeByArea);
     return this.modernFarmCalcData;
+  }
+
+  calculateMachine(quantity: number) {
+    const sugarcaneCutPriceManPowerBurned = 100;
+    const sugarcaneCutPriceManPowerFresh = 100;
+    const sugarcaneCutPriceCartPower = 190;
+    const sugarcaneGetPriceManPowerBurned = 100;
+    const sugarcaneGetPriceManPowerFresh = 100;
+    const sugarcaneGetPriceCartPower = 0;
+    const sugarcaneLoadPriceManPowerBurned = 150;
+    const sugarcaneLoadPriceManPowerFresh = 150;
+    const sugarcaneLoadPriceCartPower = 150;
+    const cartPower = 400;
+    const manPowerBurned = 12;
+    const manPowerFresh = 4;
+    const numberManPower = 10;
+    const clearBurned = 30;
+
+    this.machineCalcData = new MachineCalcData();
+    this.machineCalcData.quantity = quantity;
+    this.machineCalcData.totalPerTonManPowerBurned = sugarcaneCutPriceManPowerBurned + sugarcaneGetPriceManPowerBurned +
+      sugarcaneLoadPriceManPowerBurned + clearBurned;
+    this.machineCalcData.totalPerTonManPowerFresh = sugarcaneCutPriceManPowerFresh + sugarcaneGetPriceManPowerFresh +
+      sugarcaneLoadPriceManPowerFresh;
+    this.machineCalcData.totalPerTonCartPower = sugarcaneCutPriceCartPower + sugarcaneGetPriceCartPower + sugarcaneLoadPriceCartPower;
+    this.machineCalcData.totalDayCartPower = Math.ceil(this.machineCalcData.quantity / cartPower);
+    this.machineCalcData.totalDayManPowerBurned = Math.ceil(this.machineCalcData.quantity / numberManPower / manPowerBurned);
+    this.machineCalcData.totalDayManPowerFresh = Math.ceil(this.machineCalcData.quantity / numberManPower / manPowerFresh);
+    this.machineCalcData.totalPriceCartPower = Math.floor(this.machineCalcData.quantity * this.machineCalcData.totalPerTonCartPower);
+    this.machineCalcData.totalPriceManPowerBurned = Math.floor(this.machineCalcData.quantity *
+      this.machineCalcData.totalPerTonManPowerBurned);
+    this.machineCalcData.totalPriceManPowerFresh = Math.floor(this.machineCalcData.quantity *
+      this.machineCalcData.totalPerTonManPowerFresh);
+    this.machineCalcData.priceBurnedCart = Math.floor(this.machineCalcData.totalPriceManPowerBurned -
+      this.machineCalcData.totalPriceCartPower);
+    this.machineCalcData.calsugarcaneCutPriceManPowerBurned = this.machineCalcData.quantity * sugarcaneCutPriceManPowerBurned;
+    this.machineCalcData.calsugarcaneCutPriceManPowerFresh = this.machineCalcData.quantity * sugarcaneCutPriceManPowerFresh;
+    this.machineCalcData.calsugarcaneCutPriceCartPower = this.machineCalcData.quantity * sugarcaneCutPriceCartPower;
+    this.machineCalcData.calsugarcaneGetPriceManPowerBurned = this.machineCalcData.quantity * sugarcaneGetPriceManPowerBurned;
+    this.machineCalcData.calsugarcaneGetPriceManPowerFresh = this.machineCalcData.quantity * sugarcaneGetPriceManPowerFresh;
+    this.machineCalcData.calsugarcaneGetPriceCartPower = this.machineCalcData.quantity * sugarcaneGetPriceCartPower;
+    this.machineCalcData.calsugarcaneLoadPriceManPowerBurned = this.machineCalcData.quantity * sugarcaneLoadPriceManPowerBurned;
+    this.machineCalcData.calsugarcaneLoadPriceManPowerFresh = this.machineCalcData.quantity * sugarcaneLoadPriceManPowerFresh;
+    this.machineCalcData.calsugarcaneLoadPriceCartPower = this.machineCalcData.quantity * sugarcaneLoadPriceCartPower;
+    this.machineCalcData.calclearBurned = this.machineCalcData.quantity * clearBurned;
+    return this.machineCalcData;
   }
 }

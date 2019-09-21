@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CalculatorsService, MachineCalcData } from '../../calculators.service';
 
 @Component({
   selector: 'app-machine-calc-report',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./machine-calc-report.page.scss'],
 })
 export class MachineCalcReportPage implements OnInit {
+  result: MachineCalcData;
 
-  constructor() { }
+  constructor(
+    private calculatorsService: CalculatorsService
+  ) { }
 
   ngOnInit() {
+    this.result = this.calculatorsService.machineCalcData;
   }
 
 }

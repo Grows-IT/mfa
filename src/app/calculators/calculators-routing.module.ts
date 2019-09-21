@@ -33,7 +33,21 @@ const routes: Routes = [
   },
   {
     path: 'human-vs-machine',
-    loadChildren: './human-vs-machine/human-vs-machine.module#HumanVsMachinePageModule'
+    children: [
+      {
+        path: '',
+        loadChildren: './human-vs-machine/human-vs-machine.module#HumanVsMachinePageModule'
+      },
+      {
+        path: 'machine-calc-report',
+        children: [
+          {
+            path: '',
+            loadChildren: './human-vs-machine/machine-calc-report/machine-calc-report.module#MachineCalcReportPageModule'
+          }
+        ]
+      }
+    ]
   },
   {
     path: 'assess-sugar',

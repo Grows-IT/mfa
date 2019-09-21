@@ -22,21 +22,21 @@
     </tr>
     <tr>
       <td class="tdbody">ค่าตัด</td>
-      <td class="tdbody1">sugarcaneCutPriceManPowerBurned</td>
-      <td class="tdbody1">sugarcaneCutPriceManPowerFresh</td>
-      <td class="tdbody1">sugarcaneCutPriceCartPower</td>
+      <td class="tdbody1">{{ result.calsugarcaneCutPriceManPowerBurned }}</td>
+      <td class="tdbody1">{{ result.calsugarcaneCutPriceManPowerFresh }}</td>
+      <td class="tdbody1">{{ result.calsugarcaneCutPriceCartPower }}</td>
     </tr>
     <tr>
       <td class="tdbody">ค่าคีบ</td>
-      <td class="tdbody1">sugarcaneGetPriceManPowerBurned</td>
-      <td class="tdbody1">sugarcaneGetPriceManPowerFresh</td>
+      <td class="tdbody1">{{ result.calsugarcaneGetPriceManPowerBurned }}</td>
+      <td class="tdbody1">{{ result.calsugarcaneGetPriceManPowerFresh }}</td>
       <td class="tdbody1">-</td>
     </tr>
     <tr>
       <td class="tdbody">ค่าบรรทุก</td>
-      <td class="tdbody1">sugarcaneLoadPriceManPowerBurned</td>
-      <td class="tdbody1">sugarcaneLoadPriceManPowerFresh</td>
-      <td class="tdbody1">sugarcaneLoadPriceCartPower</td>
+      <td class="tdbody1">{{ result.calsugarcaneLoadPriceManPowerBurned }}</td>
+      <td class="tdbody1">{{ result.calsugarcaneLoadPriceManPowerFresh }}</td>
+      <td class="tdbody1">{{ result.calsugarcaneLoadPriceCartPower }}</td>
     </tr>
     <tr>
       <td class="tdbody">หักค่าอ้อยไฟไหม้</td>
@@ -47,14 +47,14 @@
     
     <tr class="tdresult">
       <td class="tdtopicendtext">ค่าใช้จ่ายรวม</td>
-      <td class="tdtopicendtext center">totalPerTonManPowerBurned</td>
-      <td class="tdtopicendtext center">totalPerTonManPowerFresh</td>
-      <td class="tdtopicendtext center">totalPerTonCartPower</td>
+      <td class="tdtopicendtext center">{{ result.totalPerTonManPowerBurned }}</td>
+      <td class="tdtopicendtext center">{{ result.totalPerTonManPowerFresh }}</td>
+      <td class="tdtopicendtext center">{{ result.totalPerTonCartPower }}</td>
     </tr>
   </table> 
   <table style="width:100%">
     <tr>
-      <td  class="tdhead" colspan="3">ตารางค่าใช้จ่าย : TONS ตัน</td>
+      <td  class="tdhead" colspan="3">ตารางค่าใช้จ่าย : {{ result.quantity }} ตัน</td>
     </tr>
     <tr >
       <td rowspan=2 class="tdtopic" style="font-size:29px; height:100px;">รายละเอียดกิจกรรม</td>
@@ -69,21 +69,21 @@
     </tr>
     <tr>
       <td class="tdbody">ค่าตัด</td>
-      <td class="tdbody1">sugarcaneCutPriceManPowerBurned</td>
-      <td class="tdbody1">sugarcaneCutPriceManPowerFresh</td>
-      <td class="tdbody1">sugarcaneCutPriceCartPower</td>
+      <td class="tdbody1">{{ result.calsugarcaneCutPriceManPowerBurned }}</td>
+      <td class="tdbody1">{{ result.calsugarcaneCutPriceManPowerFresh }}</td>
+      <td class="tdbody1">{{ result.calsugarcaneCutPriceCartPower }}</td>
     </tr>
     <tr>
       <td class="tdbody">ค่าคีบ</td>
-      <td class="tdbody1">sugarcaneGetPriceManPowerBurned</td>
-      <td class="tdbody1">sugarcaneGetPriceManPowerFresh</td>
+      <td class="tdbody1">{{ result.calsugarcaneGetPriceManPowerBurned }}</td>
+      <td class="tdbody1">{{ result.calsugarcaneGetPriceManPowerFresh }}</td>
       <td class="tdbody1">-</td>
     </tr>
     <tr>
       <td class="tdbody">ค่าบรรทุก</td>
-      <td class="tdbody1">sugarcaneLoadPriceManPowerBurned</td>
-      <td class="tdbody1">sugarcaneLoadPriceManPowerFresh</td>
-      <td class="tdbody1">sugarcaneLoadPriceCartPower</td>
+      <td class="tdbody1">{{ result.calsugarcaneLoadPriceManPowerBurned }}</td>
+      <td class="tdbody1">{{ result.calsugarcaneLoadPriceManPowerFresh }}</td>
+      <td class="tdbody1">{{ result.calsugarcaneLoadPriceCartPower }}</td>
     </tr>
     <tr>
       <td class="tdbody">หักค่าอ้อยไฟไหม้</td>
@@ -94,9 +94,9 @@
     
     <tr class="tdresult">
       <td class="tdtopicendtext">ค่าใช้จ่ายรวม</td>
-      <td class="tdtopicendtext center">totalPerTonManPowerBurned</td>
-      <td class="tdtopicendtext center">totalPerTonManPowerFresh</td>
-      <td class="tdtopicendtext center">totalPerTonCartPower</td>
+      <td class="tdtopicendtext center">{{ result.totalPerTonManPowerBurned }}</td>
+      <td class="tdtopicendtext center">{{ result.totalPerTonManPowerFresh }}</td>
+      <td class="tdtopicendtext center">{{ result.totalPerTonCartPower }}</td>
     </tr>
   </table> 
   <table>
@@ -107,17 +107,17 @@
     <tr>
       <td class="caneMargin">รถ 1 คัน ตัด อ้อยสด ได้</td>
       <td class="caneCenter">400</td>
-      <td class="caneCenter">totalDayCartPower  วัน</td>
+      <td class="caneCenter">{{ result.totalDayCartPower }}  วัน</td>
     </tr>
     <tr>
       <td class="caneMargin">คน 1 คน ตัด อ้อยไฟไหม้ ได้</td>
       <td class="caneCenter">12</td>
-      <td class="caneCenter">totalDayManPowerBurned  วัน</td>
+      <td class="caneCenter">{{ result.totalDayManPowerBurned }}  วัน</td>
     </tr>
     <tr>
       <td class="caneMargin">คน 1 คน ตัด อ้อยสด ได้</td>
       <td class="caneCenter">4</td>
-      <td class="caneCenter">totalDayManPowerFresh  วัน</td>
+      <td class="caneCenter">{{ result.totalDayManPowerFresh }}  วัน</td>
     </tr>
   </table>
 </ion-content>
