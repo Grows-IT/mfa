@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CalculatorsService, MachineCalcData } from '../../calculators.service';
+import { CalculatorsService, MachineCalcData, HumanMachineData } from '../../calculators.service';
 
 @Component({
   selector: 'app-machine-calc-report',
@@ -7,16 +7,16 @@ import { CalculatorsService, MachineCalcData } from '../../calculators.service';
   styleUrls: ['./machine-calc-report.page.scss'],
 })
 export class MachineCalcReportPage implements OnInit {
-  result: MachineCalcData;
-  result1Rai: MachineCalcData;
+  result: HumanMachineData;
+  result1Rai: HumanMachineData;
 
   constructor(
     private calculatorsService: CalculatorsService
   ) { }
 
   ngOnInit() {
-    this.result1Rai = this.calculatorsService.machineCalcReport1Rai;
-    this.result = this.calculatorsService.machineCalcData;
+    this.result1Rai = this.calculatorsService.humanMachineData1Rai;
+    this.result = this.calculatorsService.humanMachineData;
   }
 
 }

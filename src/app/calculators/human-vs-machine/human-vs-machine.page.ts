@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { CalculatorsService, MachineCalcData } from '../calculators.service';
+import { CalculatorsService, MachineCalcData, HumanMachineData } from '../calculators.service';
 
 @Component({
   selector: 'app-human-vs-machine',
@@ -10,7 +10,7 @@ import { CalculatorsService, MachineCalcData } from '../calculators.service';
 export class HumanVsMachinePage implements OnInit {
   showResult = false;
   inputForm: FormGroup;
-  result: MachineCalcData;
+  result: HumanMachineData;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -28,8 +28,7 @@ export class HumanVsMachinePage implements OnInit {
     if (data.quantity <= 0) {
       return;
     }
-    this.calculatorsService.machineCalcReport1Rai = this.calculatorsService.calculateMachine(1);
-    this.result = this.calculatorsService.calculateMachine(data.quantity);
+    this.result = this.calculatorsService.calculateHumanMachine(data.quantity);
     this.showResult = true;
   }
 }
