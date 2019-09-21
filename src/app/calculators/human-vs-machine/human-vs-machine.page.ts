@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { CalculatorsService, MachineCalcData, HumanMachineData } from '../calculators.service';
+import { CalculatorsService, HumanMachineData } from '../calculators.service';
 
 @Component({
   selector: 'app-human-vs-machine',
