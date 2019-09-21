@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CalculatorsService, MachineCalcData, HumanMachineData } from '../../calculators.service';
+import { CalculatorsService, HumanMachineData } from '../../calculators.service';
 
 @Component({
   selector: 'app-machine-calc-report',

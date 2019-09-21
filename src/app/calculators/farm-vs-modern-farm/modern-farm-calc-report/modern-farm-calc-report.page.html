@@ -7,7 +7,7 @@
       <ion-row>
         <ion-col>
           <ion-text text-center color="light">
-            <h1 class="header">ตารางค่าใช้จ่าย : {{ result.sugarcaneArea | number }} ไร่</h1>
+            <h1 class="header">ตารางค่าใช้จ่าย : {{ result.landSize | number }} ไร่</h1>
           </ion-text>
         </ion-col>
       </ion-row>
@@ -22,9 +22,6 @@
 
 <ion-content>
   <table style="width:100%">
-    <!-- <tr>
-      <td  class="tdhead" colspan="3">ตารางค่าใช้จ่าย : {{ result.sugarcaneArea | number }} ไร่</td>
-    </tr> -->
     <tr>
       <td rowspan=2 class="tdtopic" style="font-size:29px; height:100px;">รายละเอียดกิจกรรม</td>
       <td class="tdtopic">แปลงปกติ</td>
@@ -41,18 +38,18 @@
     </tr>
     <tr>
       <td class="tdbody">- ไถพรวนด้วยผาล 3,5,22 จาน<BR><span style="padding-left: 12px">(พืชบำรุงดิน)</span></td>
-      <td class="tdbody1">{{ result.oldPrepareLandPlant | number }} 250</td>
-      <td class="tdbody1">{{ result.modernPrepareLandPlant | number }} 250</td>
+      <td class="tdbody1">{{ result.prepareCost1 | number }}</td>
+      <td class="tdbody1">{{ result.prepareCost1 | number }}</td>
     </tr>
     <tr>
       <td class="tdbody">- ลงริเปอร์ระเบิดดินดาน</td>
       <td class="tdbody1">-</td>
-      <td class="tdbody1">{{ result.modernPrepareLandRipper | number }} 450</td>
+      <td class="tdbody1">{{ result.moderFarmPrepareCost2 | number }}</td>
     </tr>
     <tr>
       <td class="tdbody">- ไถดะ</td>
-      <td class="tdbody1">{{ result.oldPrepareLandTaida | number }} 400</td>
-      <td class="tdbody1">{{ result.modernPrepareLandTaida | number }} 400</td>
+      <td class="tdbody1">{{ result.prepareCost3 | number }}</td>
+      <td class="tdbody1">{{ result.prepareCost3 | number }}</td>
     </tr>
     <tr>
       <td class="tdbody tdbodytopic">2. การปลูกอ้อย</td>
@@ -62,18 +59,18 @@
     <tr>
       <td class="tdbody">- ใช้เครื่องปลูกหัวปลูกร่องคู่
         30 - 50 cm</td>
-      <td class="tdbody1">{{ result.oldSugarcaneDoubleHead | number }} 750</td>
-      <td class="tdbody1">{{ result.modernSugarcaneDoubleHead | number }} 750</td>
+      <td class="tdbody1">{{ result.plantCost1 | number }}</td>
+      <td class="tdbody1">{{ result.plantCost1 | number }}</td>
     </tr>
     <tr>
       <td class="tdbody">- ปุ๋ยรองพื้น 1 สอบ/ไร่</td>
-      <td class="tdbody1">{{ result.oldSugarcaneFertilise | number }} 800</td>
-      <td class="tdbody1">{{ result.modernSugarcaneFertilise | number }} 800</td>
+      <td class="tdbody1">{{ result.plantCost2 | number }}</td>
+      <td class="tdbody1">{{ result.plantCost2 | number }}</td>
     </tr>
     <tr>
       <td class="tdbody">- การใช้ท่อนพันธุ์ (ตัน : 870บาท)</td>
-      <td class="tdbody1">{{ result.oldSugarcaneRoot | number }} 1305</td>
-      <td class="tdbody1">{{ result.modernSugarcaneRoot | number }} 870</td>
+      <td class="tdbody1">{{ result.plantCost3 | number }}</td>
+      <td class="tdbody1">{{ result.modernFarmPlantCost3 | number }}</td>
     </tr>
     <tr>
       <td class="tdbody tdbodytopic">3. การดูแลรักษา ใส่ปุ๋ย<BR><span style="padding-left: 35px">และ กำจัดวัชพืช</span>
@@ -88,13 +85,13 @@
     </tr>
     <tr>
       <td class="tdbody">- ใช้คนใส่ปุ๋ย + รถไถกลบร่อง</td>
-      <td class="tdbody1">{{ result.oldMaintainFertiliser | number }} 300</td>
+      <td class="tdbody1">{{ result.maintenanceCost1 | number }}</td>
       <td class="tdbody1">-</td>
     </tr>
     <tr>
       <td class="tdbody">- ใช้รถไถ 24 - 27 แรงม้า</td>
       <td class="tdbody1">-</td>
-      <td class="tdbody1">{{ result.modernMaintainFertiliser | number }} 200</td>
+      <td class="tdbody1">{{ result.modernFarmMaintenanceCost2 | number }}</td>
     </tr>
     <tr>
       <td class="tdbodytopic">การกำจัดวัชพืช</td>
@@ -104,13 +101,13 @@
 
     <tr>
       <td class="tdbody">- ใช้คนฉีด</td>
-      <td class="tdbody1">{{ result.oldMaintainWeedKill | number }} 200</td>
+      <td class="tdbody1">{{ result.maintenanceCost3 | number }}</td>
       <td class="tdbody1">-</td>
     </tr>
     <tr>
       <td class="tdbody">- ใช้รถแทรกเตอร์เล็กฉีดยา<BR><span style="padding-left: 12px">กำจัดวัชพืช</span></td>
       <td class="tdbody1">-</td>
-      <td class="tdbody1">{{ result.modernMaintainWeedKill | number }} 100</td>
+      <td class="tdbody1">{{ result.modernFarmMaintenanceCost4 | number }}</td>
     </tr>
     <tr>
       <td class="tdbody tdbodytopic">4. การเก็บเกี่ยว</td>
@@ -119,48 +116,48 @@
     </tr>
     <tr>
       <td class="tdbody">- ค่าตัด</td>
-      <td class="tdbody1">{{ result.oldHavestCut | number }} 100</td>
-      <td class="tdbody1">{{ result.modernHavestCut | number }} 190</td>
+      <td class="tdbody1">{{ result.harvestCost | number }}</td>
+      <td class="tdbody1">{{ result.modernFarmHarvestCost | number }}</td>
     </tr>
     <tr>
       <td class="tdbody">- ค่าคีบ</td>
-      <td class="tdbody1">{{ result.oldHavestGet | number }} 100</td>
+      <td class="tdbody1">{{ result.harvestCost | number }}</td>
       <td class="tdbody1">-</td>
     </tr>
     <tr>
       <td class="tdbody">- ค่าบรรทุก</td>
-      <td class="tdbody1">{{ result.oldHavestLoad | number }} 150</td>
-      <td class="tdbody1">{{ result.modernHavestLoad | number }} 150</td>
+      <td class="tdbody1">{{ result.harvestCost3 | number }}</td>
+      <td class="tdbody1">{{ result.harvestCost3 | number }}</td>
     </tr>
     <tr>
       <td class="tdbody">- หักค่าอ้อยไฟไหม้</td>
-      <td class="tdbody1">{{ result.oldHavestBurned | number }} 30</td>
+      <td class="tdbody1">{{ result.harvestCost4 | number }}</td>
       <td class="tdbody1">-</td>
     </tr>
     <tr class="tdtopicend">
       <td class="tdtopicendtext">ค่าใช้จ่ายทั้งหมด</td>
-      <td class="tdtopicendtext center">{{ result.oldTotalCost | number }} 4,385</td>
-      <td class="tdtopicendtext center">{{ result.modernTotalCost | number }} 4,160</td>
+      <td class="tdtopicendtext center">{{ result.totalExpense | number }}</td>
+      <td class="tdtopicendtext center">{{ result.modernFarmTotalExpense | number }}</td>
     </tr>
     <tr class="tdend">
       <td>ผลผลิตตัน / 1 ไร่</td>
-      <td>{{ result.oldResultperRai | number }} 13.0 ตัน</td>
-      <td>{{ result.modernResultPerRai | number }} 18.0 ตัน</td>
+      <td>{{ result.totalWeight | number }} ตัน</td>
+      <td>{{ result.modernFarmTotalWeight | number }} ตัน</td>
     </tr>
     <tr class="tdend">
       <td>CCS เฉลี่ย</td>
-      <td class="tdendtext">{{ result.oldCCS | number }} 13 CCS</td>
-      <td class="tdendtext">{{ result.modernCCS | number }} 13 CCS</td>
+      <td class="tdendtext">{{ result.ccs | number }} CCS</td>
+      <td class="tdendtext">{{ result.ccs | number }} CCS</td>
     </tr>
     <tr class="tdend">
       <td>รายได้ค่าอ้อย</td>
-      <td>{{ result.oldIncome | number }} 9,226 บาท</td>
-      <td>{{ result.modernIncome | number }} 12,726 บาท</td>
+      <td>{{ result.totalIncome | number }} บาท</td>
+      <td>{{ result.modernFarmTotalIncome | number }} บาท</td>
     </tr>
     <tr class="tdresult">
       <td>เงินเหลือ</td>
-      <td class="tdresulttext">{{ result.oldMoneyLeft | number }} 4,841 บาท</td>
-      <td class="tdresulttext">{{ result.modernMoneyLeft | number }} 8,566 บาท</td>
+      <td class="tdresulttext">{{ result.totalProfit | number }} บาท</td>
+      <td class="tdresulttext">{{ result.modernFarmTotalProfit | number }} บาท</td>
     </tr>
   </table>
 </ion-content>

@@ -1,5 +1,5 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
-import { CalculatorsService, ModernFarmCalcData } from '../../calculators.service';
+import { Component, OnInit } from '@angular/core';
+import { CalculatorsService, FarmModernFarmData } from '../../calculators.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./modern-farm-calc-report.page.scss'],
 })
 export class ModernFarmCalcReportPage implements OnInit {
-  result: ModernFarmCalcData;
+  result: FarmModernFarmData;
   lastPage = false;
 
   constructor(
@@ -19,9 +19,9 @@ export class ModernFarmCalcReportPage implements OnInit {
   ngOnInit() {
     const id = +this.activatedRoute.snapshot.paramMap.get('id');
     if (id === 1) {
-      this.result = this.calculatorsService.modernFarmReport1Rai;
+      this.result = this.calculatorsService.farmModernFarmData1Rai;
     } else {
-      this.result = this.calculatorsService.modernFarmReport;
+      this.result = this.calculatorsService.farmModernFarmData;
       this.lastPage = true;
     }
   }

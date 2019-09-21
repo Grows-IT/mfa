@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { CalculatorsService, ModernFarmCalcData } from '../calculators.service';
+import { CalculatorsService, FarmModernFarmData } from '../calculators.service';
 
 @Component({
   selector: 'app-farm-vs-modern-farm',
@@ -8,7 +8,7 @@ import { CalculatorsService, ModernFarmCalcData } from '../calculators.service';
   styleUrls: ['./farm-vs-modern-farm.page.scss'],
 })
 export class FarmVsModernFarmPage implements OnInit {
-  calcData: ModernFarmCalcData;
+  result: FarmModernFarmData;
   showResult = false;
   inputForm: FormGroup;
 
@@ -28,7 +28,7 @@ export class FarmVsModernFarmPage implements OnInit {
     if (data.sugarcaneArea <= 0) {
       return;
     }
-    this.calcData = this.calculatorsService.calculateModernfarm(data.sugarcaneArea);
+    this.result = this.calculatorsService.calculateFarmModernFarm(data.sugarcaneArea);
     this.showResult = true;
   }
 }
