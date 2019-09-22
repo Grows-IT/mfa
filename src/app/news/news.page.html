@@ -8,13 +8,16 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-grid>
-    <ion-row *ngFor="let page of pages">
+    <ion-row *ngFor="let newsArticle of newsArticles">
       <ion-col size="10" offset="1">
         <ion-card>
-          <img [src]="page.img" />
+          <img [src]="newsArticle.coverImg" />
           <ion-card-header>
-            <ion-card-title>{{ page.name }}</ion-card-title>
+            <ion-card-title>{{ newsArticle.title }}</ion-card-title>
           </ion-card-header>
         </ion-card>
       </ion-col>

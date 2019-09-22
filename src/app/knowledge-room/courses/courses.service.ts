@@ -204,6 +204,7 @@ export class CoursesService {
 
   private coreEnrolGetUsersCourses() {
     return this.authService.token.pipe(
+      first(),
       withLatestFrom(this.authService.userId),
       switchMap(([token, userId]) => {
         const params = new HttpParams({
@@ -220,6 +221,7 @@ export class CoursesService {
 
   private coreCourseGetContents(courseId: number) {
     return this.authService.token.pipe(
+      first(),
       switchMap(token => {
         const form = new FormData();
         form.append('wstoken', token);
@@ -237,6 +239,7 @@ export class CoursesService {
 
   private getBinaryFile(url: string) {
     return this.authService.token.pipe(
+      first(),
       switchMap(token => {
         const params = new HttpParams({
           fromObject: {
@@ -255,6 +258,7 @@ export class CoursesService {
 
   private getTextFile(url: string) {
     return this.authService.token.pipe(
+      first(),
       switchMap(token => {
         const params = new HttpParams({
           fromObject: {

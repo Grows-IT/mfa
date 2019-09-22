@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { NewsService } from './news.service';
-import { Page, PageResource } from '../knowledge-room/courses/course.model';
-import { Subscription } from 'rxjs';
+import { NewsArticle } from './news-article.model';
 
 @Component({
   selector: 'app-news',
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./news.page.scss'],
 })
 export class NewsPage implements OnInit, OnDestroy {
-  pages: Page[] = [];
+  newsArticles: NewsArticle[];
   isLoading = false;
   private newsSub: Subscription;
 
@@ -20,27 +20,25 @@ export class NewsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.newsSub = this.newsService.pages.subscribe(pages => {
-      this.pages = pages;
+    this.newsSub = this.newsService.fetchNewsArticles().subscribe(newsArticles => {
+      this.newsArticles = newsArticles;
       this.isLoading = false;
-      let i = 0;
-      pages.forEach(page => {
-        const imgResource = page.resources.find(resource => resource.type.includes('image'));
-        const fr = new FileReader();
-        fr.onload = () => {
-          page.img = fr.result.toString();
-          i += 1;
-          if (i >= pages.length) {
-            this.isLoading = false;
-          }
-        };
-        fr.readAsDataURL(imgResource.data);
-      });
     });
   }
 
   ngOnDestroy() {
-    this.newsSub.unsubscribe();
+    if (this.newsSub) {
+      this.newsSub.unsubscribe();
+    }
   }
 
+  doRefresh(event: any) {
+    if (this.newsSub) {
+      this.newsSub.unsubscribe();
+    }
+    this.newsSub = this.newsService.fetchNewsArticles().subscribe(newsArticles => {
+      this.newsArticles = newsArticles;
+      event.target.complete();
+    });
+  }
 }

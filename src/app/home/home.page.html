@@ -59,11 +59,11 @@
     </ion-row>
     <ion-row>
       <ion-slides pager>
-        <ion-slide *ngFor="let newsPage of newsPages">
+        <ion-slide *ngFor="let newsArticle of newsArticles">
           <ion-card class="card">
-            <img [src]="newsPage.img" />
+            <img [src]="newsArticle.coverImg" />
             <ion-card-content>
-              <p>{{ newsPage.name }}</p>
+              <p>{{ newsArticle.title }}</p>
             </ion-card-content>
           </ion-card>
         </ion-slide>
