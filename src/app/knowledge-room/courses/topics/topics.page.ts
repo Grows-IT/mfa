@@ -13,27 +13,25 @@ import { Subscription } from 'rxjs';
 export class TopicsPage implements OnInit, OnDestroy {
   isLoading = false;
   topics: Topic[];
-  course: Course;
   errorMessage: string;
-  private courseSub: Subscription;
+  private topicsSub: Subscription;
 
   constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
 
   ngOnInit() {
     this.isLoading = true;
     const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
-    this.courseSub = this.coursesService.getCourseById(courseId).subscribe(course => {
-      this.course = course;
-      this.topics = course.topics;
+    this.topicsSub = this.coursesService.fetchTopics(courseId).subscribe(topics => {
+      this.topics = topics;
       this.isLoading = false;
     }, error => {
       console.log(error.message);
-      this.errorMessage = 'Error getting course';
+      this.errorMessage = 'Error getting topics';
       this.isLoading = false;
     });
   }
 
   ngOnDestroy() {
-    this.courseSub.unsubscribe();
+    this.topicsSub.unsubscribe();
   }
 }

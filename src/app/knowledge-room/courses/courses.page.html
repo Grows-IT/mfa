@@ -25,10 +25,9 @@
   <ion-grid *ngIf="!isLoading && !errorMessage">
     <ion-row>
       <ion-col text-center size="4" *ngFor="let course of courses" (click)="onClick(course)">
-        <ion-img [src]="course.img"></ion-img>
+        <img [src]="course.img"/>
         <ion-text><h2>{{ course.name }}</h2></ion-text>
       </ion-col>
     </ion-row>
   </ion-grid>
-
 </ion-content>

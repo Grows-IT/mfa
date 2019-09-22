@@ -61,45 +61,38 @@ export class CoursesService {
   ) { }
 
   get courses() {
-    // return this._courses.asObservable().pipe(first(), switchMap(courses => {
-    //   if (!courses) {
-    //     return this.coreEnrolGetUsersCourses();
-    //   }
-    //   return of(courses);
-    // }));
-    return this.coreEnrolGetUsersCourses();
+    return this._courses.asObservable().pipe(map(courses => courses ? courses : null));
   }
 
-  getCourseById(courseId: number) {
-    return this.courses.pipe(
-      switchMap(courses => {
-        const course = courses.find(c => c.id === courseId);
-        // if (!!course.topics) {
-        //   this._topics.next(course.topics);
-        //   return of(course);
-        // }
-        return this.coreCourseGetContents(courseId).pipe(
-          map(resArr => {
-            const topics = resArr.map(res => {
-              const activities = res.modules.map(mod => {
-                if (mod.modname === 'quiz') {
-                  return new Quiz(mod.id, mod.name);
-                } else if (mod.modname === 'page') {
-                  const pageResources = mod.contents.map(content => {
-                    return new PageResource(content.filename, content.mimetype, content.fileurl);
-                  });
-                  return new Page(mod.id, mod.name, null, pageResources);
-                }
+  fetchCourses() {
+    return this.coreEnrolGetUsersCourses().pipe(
+      map(res => {
+        const courses = res.map(data => new Course(data.id, data.shortname, data.idnumber));
+        this._courses.next(courses);
+        return courses;
+      })
+    );
+  }
+
+  fetchTopics(courseId: number) {
+    return this.coreCourseGetContents(courseId).pipe(
+      map(resArr => {
+        const topics = resArr.map(res => {
+          const activities = res.modules.map(mod => {
+            if (mod.modname === 'quiz') {
+              return new Quiz(mod.id, mod.name);
+            } else if (mod.modname === 'page') {
+              const pageResources = mod.contents.map(content => {
+                return new PageResource(content.filename, content.mimetype, content.fileurl);
               });
-              return new Topic(res.id, res.name, activities);
-            });
-            course.topics = topics;
-            this._topics.next(topics);
-            this._courses.next(courses);
-            return course;
-          })
-        );
-      }),
+              return new Page(mod.id, mod.name, null, pageResources);
+            }
+          });
+          return new Topic(res.id, res.name, activities);
+        });
+        this._topics.next(topics);
+        return topics;
+      })
     );
   }
 
@@ -221,12 +214,7 @@ export class CoursesService {
         });
         return this.http.post<CoreEnrolGetUsersCoursesResponse[]>(getCoursesWsUrl, params, httpOptions);
       }),
-      timeout(10000),
-      map(res => {
-        const courses = res.map(data => new Course(data.id, data.shortname, data.idnumber));
-        this._courses.next(courses);
-        return courses;
-      })
+      timeout(10000)
     );
   }
 

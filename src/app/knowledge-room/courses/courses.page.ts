@@ -39,7 +39,7 @@ export class CoursesPage implements OnInit, OnDestroy {
     const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
     // TODO: call get courses by category
     this.category = new Category(categoryId, 'Modern Farm', 'assets/courses/modern-farm/banner.png');
-    this.coursesSub = this.coursesService.courses.subscribe(courses => {
+    this.coursesSub = this.coursesService.fetchCourses().subscribe(courses => {
       if (!courses || courses.length === 0) {
         this.errorMessage = 'You are not enrolled in this course.';
         this.isLoading = false;
@@ -48,6 +48,10 @@ export class CoursesPage implements OnInit, OnDestroy {
       courses.forEach(course => {
         this.updateCourseId(courses, course.name);
       });
+      this.isLoading = false;
+    }, error => {
+      console.log(error.message);
+      this.errorMessage = 'Error getting courses';
       this.isLoading = false;
     });
   }
