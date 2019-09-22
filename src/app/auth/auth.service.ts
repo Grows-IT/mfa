@@ -47,11 +47,11 @@ export class AuthService {
   ) { }
 
   get user() {
-    return this._user.asObservable().pipe(first());
+    return this._user.asObservable();
   }
 
   get token() {
-    return this._token.asObservable().pipe(first());
+    return this._token.asObservable();
   }
 
   get userId() {
@@ -59,7 +59,9 @@ export class AuthService {
   }
 
   get isLoggedIn() {
-    return this.token.pipe(map(token => token ? !!token : false));
+    return this.token.pipe(
+      first(),
+      map(token => token ? !!token : false));
   }
 
   login(username: string, password: string) {
@@ -170,6 +172,7 @@ export class AuthService {
   private coreWebserviceGetSiteInfo() {
     let token: string;
     return this.token.pipe(
+      first(),
       switchMap(t => {
         token = t;
         const params = new HttpParams({

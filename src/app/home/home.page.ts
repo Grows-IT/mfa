@@ -7,6 +7,8 @@ import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { Page } from '../knowledge-room/courses/course.model';
 import { switchMap, map, tap } from 'rxjs/operators';
+import { NewsArticle } from '../news/news-article.model';
+import { CoursesService } from '../knowledge-room/courses/courses.service';
 
 @Component({
   selector: 'app-home',
@@ -15,44 +17,46 @@ import { switchMap, map, tap } from 'rxjs/operators';
 })
 export class HomePage implements OnInit, OnDestroy {
   user: User;
-  newsPages: Page[] = null;
+  newsArticles: NewsArticle[];
   errorMessage: string;
   isLoading = false;
-  private userSub: Subscription;
-  private backButtonSub: Subscription;
   private newsSub: Subscription;
 
   constructor(
     private authService: AuthService,
     private platform: Platform,
-    private newsService: NewsService
+    private newsService: NewsService,
+    private coursesService: CoursesService
   ) { }
 
   ngOnInit() {
+    this.fetchData();
+  }
+
+  fetchData() {
     this.isLoading = true;
-    this.userSub = this.authService.fetchUser().subscribe(
-      user => {
+    this.newsSub = this.authService.fetchUser().pipe(
+      switchMap(user => {
         this.user = user;
-        this.newsSub = this.newsService.fetchNews().subscribe(pages => {
-          this.newsPages = pages;
-          this.isLoading = false;
-        });
+        return this.coursesService.fetchCourses();
+      }),
+      switchMap(() => {
+        return this.newsService.fetchNewsArticles();
+      })
+    ).subscribe(
+      newsArticles => {
+        this.newsArticles = newsArticles;
+        this.isLoading = false;
       },
       error => {
         console.log(error.message);
-        this.errorMessage = 'Error getting user information';
+        this.errorMessage = 'Error conneting to the server. Please try again later.';
         this.isLoading = false;
       }
     );
   }
 
   ngOnDestroy() {
-    this.userSub.unsubscribe();
-    if (this.newsSub) {
-      this.newsSub.unsubscribe();
-    }
-    if (this.backButtonSub) {
-      this.backButtonSub.unsubscribe();
-    }
+    this.newsSub.unsubscribe();
   }
 }
