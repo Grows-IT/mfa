@@ -16,10 +16,11 @@ import { switchMap, map, tap } from 'rxjs/operators';
 export class HomePage implements OnInit, OnDestroy {
   user: User;
   newsPages: Page[] = null;
+  errorMessage: string;
+  isLoading = false;
   private userSub: Subscription;
   private backButtonSub: Subscription;
   private newsSub: Subscription;
-  isLoading = false;
 
   constructor(
     private authService: AuthService,
@@ -29,28 +30,20 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.userSub = this.authService.fetchUser().pipe(
-      switchMap(user => {
+    this.userSub = this.authService.fetchUser().subscribe(
+      user => {
         this.user = user;
-        return this.newsService.pages;
-      }),
-      map(newsPages => {
-        this.newsPages = newsPages;
-        let i = 0;
-        newsPages.forEach(page => {
-          const imgResource = page.resources.find(resource => resource.type.includes('image'));
-          const fr = new FileReader();
-          fr.onload = () => {
-            page.img = fr.result.toString();
-            i += 1;
-            if (i >= newsPages.length) {
-              this.isLoading = false;
-            }
-          };
-          fr.readAsDataURL(imgResource.data);
+        this.newsSub = this.newsService.fetchNews().subscribe(pages => {
+          this.newsPages = pages;
+          this.isLoading = false;
         });
-      })
-    ).subscribe();
+      },
+      error => {
+        console.log(error.message);
+        this.errorMessage = 'Error getting user information';
+        this.isLoading = false;
+      }
+    );
   }
 
   ngOnDestroy() {
