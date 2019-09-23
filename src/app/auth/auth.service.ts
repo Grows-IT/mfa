@@ -187,15 +187,17 @@ export class AuthService {
         if (res.errorcode) {
           throw new Error(res.message);
         }
-        const regex = /(\w+:\/\/[\w\d\.]+)(\S+)/g;
-        const match = regex.exec(res.userpictureurl);
-        const imgUrl = `${match[1]}/webservice${match[2]}&token=${token}&offline=1#moodlemobile-embedded`;
+        if (!res.userpictureurl.includes('theme/image.php')) {
+          const regex = /(\w+:\/\/[\w\d\.]+)(\S+)/g;
+          const match = regex.exec(res.userpictureurl);
+          res.userpictureurl = `${match[1]}/webservice${match[2]}&token=${token}&offline=1#moodlemobile-embedded`;
+        }
         const user = new User(
           res.userid,
           res.username,
           res.firstname,
           res.lastname,
-          imgUrl
+          res.userpictureurl
         );
         return user;
       })
