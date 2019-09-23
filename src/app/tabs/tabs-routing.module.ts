@@ -55,7 +55,16 @@ const routes: Routes = [
       },
       {
         path: 'news',
-        loadChildren: '../news/news.module#NewsPageModule'
+        children: [
+          {
+            path: '',
+            loadChildren: '../news/news.module#NewsPageModule'
+          },
+          {
+            path: ':id',
+            loadChildren: '../news/news-detail/news-detail.module#NewsDetailPageModule'
+          }
+        ]
       },
       {
         path: '',
@@ -76,45 +85,3 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class TabsRoutingModule { }
-
-
-// , {
-//   path: 'knowledge-room',
-//   children: [
-//     {
-//       path: '',
-//       loadChildren: '../knowledge-room/knowledge-room.module#KnowledgeRoomPageModule'
-//     }, {
-//       path: ':categoryId',
-//       children: [
-//         {
-//           path: '',
-//           redirectTo: 'courses',
-//           pathMatch: 'full'
-//         }, {
-//           path: 'courses',
-//           children: [
-//             {
-//               path: '',
-//               loadChildren: '../knowledge-room/courses/courses.module#CoursesPageModule',
-//             }, {
-//               path: ':courseId',
-//               children: [{
-//                 path: '',
-//                 redirectTo: 'topics',
-//                 pathMatch: 'full'
-//               }, {
-//                 path: 'topics',
-//                 children: [{
-//                   path: '',
-//                   loadChildren: '../knowledge-room/courses/topics/topics.module#TopicsPageModule'
-//                 }]
-//               }
-//               ]
-//             }
-//           ]
-//         }
-//       ]
-//     }
-//   ]
-// }

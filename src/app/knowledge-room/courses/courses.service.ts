@@ -256,7 +256,7 @@ export class CoursesService {
     );
   }
 
-  private getTextFile(url: string) {
+  getTextFile(url: string) {
     return this.authService.token.pipe(
       first(),
       switchMap(token => {
