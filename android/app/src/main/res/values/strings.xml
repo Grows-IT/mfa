@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">MFA</string>
-    <string name="title_activity_main">MFA</string>
+    <string name="app_name">Modern Farm Academy</string>
+    <string name="title_activity_main">Modern Farm Academy</string>
     <string name="package_name">com.growsit.mitrpholmfa</string>
     <string name="fileprovider_authority">com.growsit.mitrpholmfa.fileprovider</string>
     <string name="custom_url_scheme">com.growsit.mitrpholmfa</string>
