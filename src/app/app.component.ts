@@ -17,22 +17,22 @@ export class AppComponent {
     url: '/tabs/home'
   }, {
     title: 'My Account',
-    url: '/static/2'
+    url: '/auth/profile'
   }, {
     title: 'Knowledge Room',
     url: '/tabs/knowledge-room'
   }, {
     title: 'Modern Farm',
-    url: '/tabs/knowledge-room/1/courses/3/topics'
+    url: '/tabs/knowledge-room/3/courses'
   }, {
     title: 'Calculators',
     url: '/tabs/calculators'
   }, {
     title: 'Question - Answer',
-    url: '/static/3'
+    url: '/static'
   }, {
     title: 'Settings',
-    url: '/static/4'
+    url: '/static'
   }, {
     title: 'Logout',
     url: '/auth/login'

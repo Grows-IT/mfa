@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { pages } from './pages';
-
 @Component({
   selector: 'app-static',
   templateUrl: './static.page.html',
@@ -13,10 +11,6 @@ export class StaticPage implements OnInit {
 
   constructor(private route: ActivatedRoute) { }
 
-  ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      this.page = pages[+params.get('pageId')];
-    });
-  }
+  ngOnInit() {}
 
 }

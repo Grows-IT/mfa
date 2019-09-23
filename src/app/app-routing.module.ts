@@ -14,7 +14,9 @@ const routes: Routes = [
     path: 'calculators',
     loadChildren: './calculators/calculators.module#CalculatorsPageModule'
   },
-  { path: 'static/:pageId', loadChildren: './static/static.module#StaticPageModule' }
+  { path: 'static', loadChildren: './static/static.module#StaticPageModule' },
+  { path: 'weather', loadChildren: './weather/weather.module#WeatherPageModule' },
+  { path: 'sugar-price', loadChildren: './sugar-price/sugar-price.module#SugarPricePageModule' }
 ];
 
 @NgModule({

@@ -61,7 +61,7 @@
       <ion-slides pager>
         <ion-slide *ngFor="let newsArticle of newsArticles">
           <ion-card class="card">
-            <img [src]="newsArticle.coverImg" />
+            <img class="card-img" [src]="newsArticle.coverImg" />
             <ion-card-content>
               <p>{{ newsArticle.title }}</p>
             </ion-card-content>
@@ -89,12 +89,12 @@
       </ion-col>
       <ion-col>
         <div align="center">
-          <img src="assets/home/sugar.png" />
+          <img src="assets/home/sugar.png" routerLink="/sugar-price" />
         </div>
       </ion-col>
       <ion-col>
         <div align="center">
-          <img src="assets/home/weather.png" />
+          <img src="assets/home/weather.png" routerLink="/weather" />
         </div>
       </ion-col>
     </ion-row>
