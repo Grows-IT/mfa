@@ -14,7 +14,7 @@
   <ion-grid>
     <ion-row *ngFor="let newsArticle of newsArticles">
       <ion-col size="10" offset="1">
-        <ion-card>
+        <ion-card [routerLink]="newsArticle.id">
           <img [src]="newsArticle.coverImg" />
           <ion-card-header>
             <ion-card-title>{{ newsArticle.title }}</ion-card-title>

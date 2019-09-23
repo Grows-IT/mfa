@@ -60,7 +60,7 @@
     <ion-row>
       <ion-slides pager>
         <ion-slide *ngFor="let newsArticle of newsArticles">
-          <ion-card class="card">
+          <ion-card class="card" [routerLink]="['/tabs/news/', newsArticle.id]">
             <img class="card-img" [src]="newsArticle.coverImg" />
             <ion-card-content>
               <p>{{ newsArticle.title }}</p>
