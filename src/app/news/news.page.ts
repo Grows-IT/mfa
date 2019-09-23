@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { NewsService } from './news.service';
 import { NewsArticle } from './news-article.model';
+import { Page } from '../knowledge-room/courses/course.model';
 
 @Component({
   selector: 'app-news',
@@ -10,7 +11,7 @@ import { NewsArticle } from './news-article.model';
   styleUrls: ['./news.page.scss'],
 })
 export class NewsPage implements OnInit, OnDestroy {
-  newsArticles: NewsArticle[];
+  newsPages: Page[];
   isLoading = false;
   private newsSub: Subscription;
 
@@ -20,8 +21,8 @@ export class NewsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.newsSub = this.newsService.fetchNewsArticles().subscribe(newsArticles => {
-      this.newsArticles = newsArticles;
+    this.newsSub = this.newsService.fetchNewsPages().subscribe(newsPages => {
+      this.newsPages = newsPages;
       this.isLoading = false;
     });
   }
@@ -36,8 +37,8 @@ export class NewsPage implements OnInit, OnDestroy {
     if (this.newsSub) {
       this.newsSub.unsubscribe();
     }
-    this.newsSub = this.newsService.fetchNewsArticles().subscribe(newsArticles => {
-      this.newsArticles = newsArticles;
+    this.newsSub = this.newsService.fetchNewsPages().subscribe(newsPages => {
+      this.newsPages = newsPages;
       event.target.complete();
     });
   }
