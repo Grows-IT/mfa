@@ -96,6 +96,15 @@ export class CalculatorsService {
     this.humanMachineData.machineCutTime *= sugarcaneWeight;
     this.humanMachineData.burnedSugarCutTime *= sugarcaneWeight;
     this.humanMachineData.freshSugarCutTime *= sugarcaneWeight;
+    if (this.humanMachineData.machineCutTime < 1) {
+      this.humanMachineData.machineCutTime = 1;
+    }
+    if (this.humanMachineData.burnedSugarCutTime < 1) {
+      this.humanMachineData.burnedSugarCutTime = 1;
+    }
+    if (this.humanMachineData.freshSugarCutTime < 1) {
+      this.humanMachineData.freshSugarCutTime = 1;
+    }
     return this.humanMachineData;
   }
 }
