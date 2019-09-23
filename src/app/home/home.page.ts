@@ -17,7 +17,7 @@ import { CoursesService } from '../knowledge-room/courses/courses.service';
 })
 export class HomePage implements OnInit, OnDestroy {
   user: User;
-  newsArticles: NewsArticle[];
+  newsPages: Page[];
   errorMessage: string;
   isLoading = false;
   private newsSub: Subscription;
@@ -41,11 +41,11 @@ export class HomePage implements OnInit, OnDestroy {
         return this.coursesService.fetchCourses();
       }),
       switchMap(() => {
-        return this.newsService.fetchNewsArticles();
+        return this.newsService.fetchNewsPages();
       })
     ).subscribe(
       newsArticles => {
-        this.newsArticles = newsArticles;
+        this.newsPages = newsArticles;
         this.isLoading = false;
       },
       error => {

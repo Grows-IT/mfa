@@ -21,7 +21,7 @@ export class PagesPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
-    this.activitySub = this.coursesService.getPageById(activityId).subscribe((page) => {
+    this.activitySub = this.coursesService.getPageById(activityId).subscribe(page => {
       page.content = decodeURI(page.content);
       this.currentPage = page;
       this.processResources(this.currentPage);

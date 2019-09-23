@@ -12,7 +12,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class NewsService {
-  private _newsArticles = new BehaviorSubject<NewsArticle[]>(null);
+  private _newsPages = new BehaviorSubject<Page[]>(null);
 
   constructor(
     private coursesService: CoursesService,
@@ -21,7 +21,7 @@ export class NewsService {
   ) { }
 
   get newsArticles() {
-    return this._newsArticles.asObservable();
+    return this._newsPages.asObservable();
   }
 
   getNewsArticleById(id: number) {
@@ -35,7 +35,7 @@ export class NewsService {
     );
   }
 
-  fetchNewsArticles() {
+  fetchNewsPages() {
     return this.coursesService.courses.pipe(
       first(),
       switchMap(courses => {
@@ -48,19 +48,16 @@ export class NewsService {
       withLatestFrom(this.authService.token),
       map(([page, token]) => {
         const imgResource = page.resources.find(resource => resource.type.includes('image'));
-        const contentResource = page.resources.find(resource => resource.name === 'index.html');
-        const img = `${imgResource.url}&token=${token}&offline=1`;
-        const content = `${contentResource.url}&token=${token}&offline=1`;
-        const newsArticle = new NewsArticle(page.id, page.name, img, content);
-        return newsArticle;
+        page.img = `${imgResource.url}&token=${token}&offline=1`;
+        return page;
       }),
       toArray(),
-      tap(newsArticles => this._newsArticles.next(newsArticles))
+      tap(newsArticles => this._newsPages.next(newsArticles))
     );
   }
 
-  getContent(article: NewsArticle) {
-    return this.http.get(article.content, {
+  getContent(url: string) {
+    return this.http.get(url, {
       headers: new HttpHeaders({
         Accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded'
