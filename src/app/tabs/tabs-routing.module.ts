@@ -46,6 +46,10 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'qa',
+        loadChildren: '../static/static.module#StaticPageModule'
+      },
+      {
         path: 'calculators',
         loadChildren: '../calculators/calculators.module#CalculatorsPageModule'
       },
