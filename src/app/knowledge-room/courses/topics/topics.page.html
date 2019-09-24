@@ -3,13 +3,14 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/courses"></ion-back-button>
     </ion-buttons>
-    <ion-grid>
-      <ion-row>
-        <ion-col size="7" offset="2">
-          <ion-img src="assets/img/modern-farm-banner.png"></ion-img>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <ion-item color="medium">
+        <ion-thumbnail class="banner" slot="start">
+          <img [src]="course.img" />
+        </ion-thumbnail>
+        <ion-label>
+          <h1>{{ course.name }}</h1>
+        </ion-label>
+      </ion-item>
   </ion-toolbar>
 </ion-header>
 

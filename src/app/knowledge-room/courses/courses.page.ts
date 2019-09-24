@@ -32,10 +32,12 @@ export class CoursesPage implements OnInit, OnDestroy {
     });
     this.coursesSub = this.coursesService.courses.subscribe(allCourses => {
       this.courses = allCourses.filter(course => course.categoryId === categoryId);
+      if (!this.courses || this.courses.length === 0) {
+        this.errorMessage = 'Coming soon';
+      }
     });
     this.fetchSub = this.coursesService.fetchCourses().subscribe(
       () => {
-        this.errorMessage = null;
         this.isLoading = false;
       },
       error => {
