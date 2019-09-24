@@ -39,6 +39,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   private imgUpdateSub: Subscription;
   user: User;
   usePicker = false;
+  errorMessage: string;
 
   constructor(
     private platform: Platform,
@@ -77,9 +78,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     });
     const fixed = await fixOrientation(image);
     const blob = base64toBlob(fixed.replace('data:image/jpeg;base64,', ''), 'image/jpeg');
-    this.imgUpdateSub = this.authService.updateProfilePicture(blob).subscribe(user => {
-      this.user = user;
-    });
+    this.updateProfilePicture(blob);
   }
 
   onFileChosen(event: Event) {
@@ -87,8 +86,16 @@ export class ProfilePage implements OnInit, OnDestroy {
     if (!pickedFile) {
       return;
     }
-    this.imgUpdateSub = this.authService.updateProfilePicture(pickedFile).subscribe(user => {
-      this.user = user;
-    });
+    this.updateProfilePicture(pickedFile);
+  }
+
+  updateProfilePicture(file: Blob | File) {
+    if (this.imgUpdateSub) {
+      this.imgUpdateSub.unsubscribe();
+    }
+    this.imgUpdateSub = this.authService.updateProfilePicture(file).subscribe(
+      () => this.errorMessage = null,
+      error => this.errorMessage = error.message
+    );
   }
 }

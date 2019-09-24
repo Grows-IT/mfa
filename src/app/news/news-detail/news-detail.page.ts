@@ -30,7 +30,7 @@ export class NewsDetailPage implements OnInit {
   ngOnInit() {
     this.isLoading = true;
     const id = +this.activatedRoute.snapshot.paramMap.get('id');
-    this.newsService.getNewsArticleById(id).pipe(
+    this.newsService.getNewsPageById(id).pipe(
       switchMap(page => {
         if (page.content) {
           return of(page);

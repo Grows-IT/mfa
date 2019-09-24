@@ -1,13 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Platform } from '@ionic/angular';
+import { switchMap } from 'rxjs/operators';
 
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { Page } from '../knowledge-room/courses/course.model';
-import { switchMap, map, tap } from 'rxjs/operators';
-import { NewsArticle } from '../news/news-article.model';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
 
 @Component({
@@ -24,12 +23,14 @@ export class HomePage implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private platform: Platform,
     private newsService: NewsService,
     private coursesService: CoursesService
   ) { }
 
   ngOnInit() {
+    this.newsService.newsPages.subscribe(pages => {
+      this.newsPages = pages;
+    })
     this.fetchData();
   }
 
@@ -54,6 +55,14 @@ export class HomePage implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     );
+  }
+
+  doRefresh(event: any) {
+    this.newsSub.unsubscribe();
+    this.newsSub = this.newsService.fetchNewsPages().subscribe(newsPages => {
+      this.newsPages = newsPages;
+      event.target.complete();
+    });
   }
 
   ngOnDestroy() {

@@ -111,18 +111,18 @@ export class AuthService {
 
   private uploadWs(file: File | Blob) {
     return this.token.pipe(
+      first(),
       switchMap(token => {
         const uploadData = new FormData();
         uploadData.append('token', token);
         uploadData.append('filearea', 'draft');
         uploadData.append('itemid', '0');
         uploadData.append('file', file);
-        return this.http.post<{ itemid: string }[]>(uploadImageWsUrl, uploadData);
+        return this.http.post<any>(uploadImageWsUrl, uploadData);
       }),
-      timeout(10000),
       map(res => {
-        if (!res[0]) {
-          throw new Error('Cannot upload image.');
+        if (res.errorcode === 'upload_error_ini_size') {
+          throw new Error('File size cannot exceed 2 MB');
         }
         return res[0].itemid;
       })

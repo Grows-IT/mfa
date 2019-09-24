@@ -5,7 +5,6 @@ import { switchMap, toArray, map, withLatestFrom, first, tap } from 'rxjs/operat
 import { Page } from '../knowledge-room/courses/course.model';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
 import { AuthService } from '../auth/auth.service';
-import { NewsArticle } from './news-article.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
@@ -20,12 +19,12 @@ export class NewsService {
     private http: HttpClient,
   ) { }
 
-  get newsArticles() {
+  get newsPages() {
     return this._newsPages.asObservable();
   }
 
-  getNewsArticleById(id: number) {
-    return this.newsArticles.pipe(
+  getNewsPageById(id: number) {
+    return this.newsPages.pipe(
       map(newsArticles => {
         if (!newsArticles) {
           return null;
