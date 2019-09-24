@@ -1,6 +1,6 @@
 {
   "appId": "com.growsit.mitrpholmfa",
-  "appName": "MFA",
+  "appName": "Modern Farm Academy",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www"
