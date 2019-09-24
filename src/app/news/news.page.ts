@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { NewsService } from './news.service';
-import { NewsArticle } from './news-article.model';
 import { Page } from '../knowledge-room/courses/course.model';
 
 @Component({

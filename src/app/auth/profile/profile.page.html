@@ -8,6 +8,9 @@
 </ion-header>
 
 <ion-content>
+  <ion-text text-center color="danger" *ngIf="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </ion-text>
   <ion-grid class="grid">
     <ion-row class="row">
       <ion-col margin class="background">
