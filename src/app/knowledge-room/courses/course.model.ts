@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs';
-
 export class Category {
   constructor(
     public id: number,
@@ -12,7 +10,6 @@ export class Course {
   constructor(
     public id: number,
     public name: string,
-    public identifier: string,
     public img?: string,
     public topics?: Topic[],
   ) {}

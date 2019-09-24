@@ -5,12 +5,13 @@ import { Plugins } from '@capacitor/core';
 import { from, BehaviorSubject, of, Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { Course, Topic, Page, Quiz, PageResource } from './course.model';
+import { Course, Topic, Page, Quiz, PageResource, Category } from './course.model';
 import { AuthService } from '../../auth/auth.service';
 
 const siteUrl = environment.siteUrl;
 const getCoursesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses';
 const coreCourseGetContentsWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_contents';
+const coreCourseGetCategoriesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_categories';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -47,21 +48,61 @@ export interface ContentData {
   fileurl: string;
 }
 
+export interface CategoryResponseData {
+  id: number;
+  name: string;
+  description: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class CoursesService {
+  private _categories = new BehaviorSubject<Category[]>(null);
   private _courses = new BehaviorSubject<Course[]>(null);
   private _topics = new BehaviorSubject<Topic[]>(null);
   private _activities = new BehaviorSubject<any>(null);
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
   ) { }
+
+  get categories() {
+    return this._categories.asObservable();
+  }
 
   get courses() {
     return this._courses.asObservable().pipe(map(courses => courses ? courses : null));
+  }
+
+  fetchCategories() {
+    return this.coreCourseGetCategories().pipe(
+      switchMap(resArr => from(resArr)),
+      withLatestFrom(this.authService.token),
+      map(([res, token]) => {
+        let imgUrl: string;
+        if (res.description && res.description.length > 0) {
+          const regex = /<img src="(\S+)"/;
+          const match = regex.exec(decodeURI(res.description));
+          imgUrl = `${match[1]}?token=${token}&offline=1`;
+        }
+        return new Category(res.id, res.name, imgUrl);
+      }),
+      toArray()
+    );
+  }
+
+  private coreCourseGetCategories() {
+    return this.authService.token.pipe(
+      first(),
+      switchMap(token => {
+        const form = new FormData();
+        form.append('wstoken', token);
+        return this.http.post<CategoryResponseData[]>(coreCourseGetCategoriesWsUrl, form);
+      }),
+      timeout(10000)
+    );
   }
 
   fetchCourses() {
@@ -136,7 +177,7 @@ export class CoursesService {
     //   })
     // );
     return this._activities.asObservable().pipe(map(activities => {
-      const activity = activities.find(a => a.id === activityId);
+      const activity = activities.find((a: any) => a.id === activityId);
       return activity;
     }));
   }

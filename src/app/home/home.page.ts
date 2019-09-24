@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Platform } from '@ionic/angular';
 import { switchMap } from 'rxjs/operators';
 
 import { AuthService } from '../auth/auth.service';
@@ -20,6 +19,8 @@ export class HomePage implements OnInit, OnDestroy {
   errorMessage: string;
   isLoading = false;
   private newsSub: Subscription;
+  private userSub: Subscription;
+  private dataSub: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -28,44 +29,49 @@ export class HomePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.newsService.newsPages.subscribe(pages => {
-      this.newsPages = pages;
-    })
-    this.fetchData();
-  }
-
-  fetchData() {
+    this.newsSub = this.newsService.newsPages.subscribe(pages => this.newsPages = pages);
+    this.userSub = this.authService.user.subscribe(user => this.user = user);
     this.isLoading = true;
-    this.newsSub = this.authService.fetchUser().pipe(
-      switchMap(user => {
-        this.user = user;
-        return this.coursesService.fetchCourses();
-      }),
-      switchMap(() => {
-        return this.newsService.fetchNewsPages();
-      })
-    ).subscribe(
-      newsArticles => {
-        this.newsPages = newsArticles;
+    this.dataSub = this.fetchData().subscribe(
+      () => {
+        this.errorMessage = null;
         this.isLoading = false;
       },
       error => {
-        console.log(error.message);
-        this.errorMessage = 'Error conneting to the server. Please try again later.';
+        this.errorMessage = error.message;
         this.isLoading = false;
       }
     );
   }
 
+  fetchData() {
+    return this.authService.fetchUser().pipe(
+      switchMap(() => {
+        return this.coursesService.fetchCourses();
+      }),
+      switchMap(() => {
+        return this.newsService.fetchNewsPages();
+      })
+    );
+  }
+
   doRefresh(event: any) {
-    this.newsSub.unsubscribe();
-    this.newsSub = this.newsService.fetchNewsPages().subscribe(newsPages => {
-      this.newsPages = newsPages;
-      event.target.complete();
-    });
+    this.dataSub.unsubscribe();
+    this.dataSub = this.fetchData().subscribe(
+      () => {
+        this.errorMessage = null;
+        event.target.complete();
+      },
+      error => {
+        this.errorMessage = error.message;
+        event.target.complete();
+      }
+    );
   }
 
   ngOnDestroy() {
+    this.userSub.unsubscribe();
     this.newsSub.unsubscribe();
+    this.dataSub.unsubscribe();
   }
 }

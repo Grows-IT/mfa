@@ -16,7 +16,10 @@ export class PagesPage implements OnInit, OnDestroy {
   slideContents: string[];
   private activitySub: Subscription;
 
-  constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private coursesService: CoursesService
+  ) { }
 
   ngOnInit() {
     this.isLoading = true;
