@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs';
 
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
+import { Category } from './courses/course.model';
+import { CoursesService } from './courses/courses.service';
 
 @Component({
   selector: 'app-knowledge-room',
@@ -15,22 +17,36 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
     id: number,
     name: string
   };
+  categories: Category[];
   isLoading = false;
+  errorMessage: string;
   private userSub: Subscription;
+  private categoriesSub: Subscription;
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private coursesService: CoursesService
+  ) { }
 
   ngOnInit() {
-    this.category = { id: 3, name: 'Modern Farm' };
     this.isLoading = true;
-    this.userSub = this.authService.user.subscribe(user => {
-      this.user = user;
-      this.isLoading = false;
-    });
+    this.userSub = this.authService.user.subscribe(user => this.user = user);
+    this.categoriesSub = this.coursesService.categories.subscribe(categories => this.categories = categories);
+    this.coursesService.fetchCategories().subscribe(
+      categories => {
+        this.categories = categories.slice(1);
+        this.isLoading = false;
+      },
+      error => {
+        this.errorMessage = error.message;
+        this.isLoading = false;
+      }
+    );
   }
 
   ngOnDestroy() {
     this.userSub.unsubscribe();
+    this.categoriesSub.unsubscribe();
   }
 
 }
