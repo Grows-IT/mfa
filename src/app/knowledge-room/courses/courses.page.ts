@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 import { CoursesService } from './courses.service';
 import { Course, Category } from './course.model';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-courses',
@@ -11,68 +11,43 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./courses.page.scss'],
 })
 export class CoursesPage implements OnInit, OnDestroy {
-  courses: Course[] = [
-    new Course(null, 'อ้อย', 'assets/courses/modern-farm/1-sugar.png'),
-    new Course(null, 'อารักขาอ้อย', 'assets/courses/modern-farm/2-guard.png'),
-    new Course(null, 'ดินและปุ๋ย', 'assets/courses/modern-farm/3-soil.png'),
-    new Course(null, 'AE', 'assets/courses/modern-farm/4-ae.png'),
-    new Course(null, 'น้ำ', 'assets/courses/modern-farm/5-water.png'),
-    new Course(null, 'Modern Farm', 'assets/courses/modern-farm/6-modern.png'),
-    new Course(null, 'AE - MDF', 'assets/courses/modern-farm/7-mdf.png', ),
-    new Course(null, 'Precision Farming', 'assets/courses/modern-farm/8-precision.png'),
-    new Course(null, 'Logistic', 'assets/courses/modern-farm/9-logistic.png'),
-  ];
+  courses: Course[];
   category: Category;
-  modernFarm: Course;
   errorMessage: string;
   isLoading = false;
   private coursesSub: Subscription;
+  private fetchSub: Subscription;
+  private categoriesSub: Subscription;
 
   constructor(
     private coursesService: CoursesService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.isLoading = true;
     const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
-    // TODO: call get courses by category
-    this.category = new Category(categoryId, 'Modern Farm', 'assets/courses/modern-farm/banner.png');
-    this.coursesSub = this.coursesService.fetchCourses().subscribe(courses => {
-      if (!courses || courses.length === 0) {
-        this.errorMessage = 'You are not enrolled in this course.';
-        this.isLoading = false;
-        return;
-      }
-      courses.forEach(course => {
-        this.updateCourseId(courses, course.name);
-      });
-      this.isLoading = false;
-    }, error => {
-      console.log(error.message);
-      this.errorMessage = 'Error getting courses';
-      this.isLoading = false;
+    this.categoriesSub = this.coursesService.categories.subscribe(categories => {
+      this.category = categories.find(cat => cat.id === categoryId);
     });
-  }
-
-  onClick(course: Course) {
-    if (course.id) {
-      this.router.navigate([course.id, 'topics'], { relativeTo: this.activatedRoute });
-    }
-  }
-
-  updateCourseId(courses: Course[], courseName: string) {
-    const course = courses.find(c => c.name === courseName);
-    if (course) {
-      const index = this.courses.findIndex(c => c.name === courseName);
-      if (index >= 0) {
-        this.courses[index].id = course.id;
+    this.coursesSub = this.coursesService.courses.subscribe(allCourses => {
+      this.courses = allCourses.filter(course => course.categoryId === categoryId);
+    });
+    this.fetchSub = this.coursesService.fetchCourses().subscribe(
+      () => {
+        this.errorMessage = null;
+        this.isLoading = false;
+      },
+      error => {
+        this.errorMessage = error.message;
+        this.isLoading = false;
       }
-    }
+    );
   }
 
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
+    this.fetchSub.unsubscribe();
+    this.categoriesSub.unsubscribe();
   }
 }

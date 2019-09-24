@@ -20,10 +20,10 @@ const httpOptions = {
   })
 };
 
-export interface CoreEnrolGetUsersCoursesResponse {
+export interface CoursesResponseData {
   id: number;
   shortname: string;
-  idnumber: string;
+  category: number;
   overviewfiles: [{
     fileurl: string;
   }];
@@ -89,29 +89,26 @@ export class CoursesService {
         }
         return new Category(res.id, res.name, imgUrl);
       }),
-      toArray()
-    );
-  }
-
-  private coreCourseGetCategories() {
-    return this.authService.token.pipe(
-      first(),
-      switchMap(token => {
-        const form = new FormData();
-        form.append('wstoken', token);
-        return this.http.post<CategoryResponseData[]>(coreCourseGetCategoriesWsUrl, form);
-      }),
-      timeout(10000)
+      toArray(),
+      tap(categories => this._categories.next(categories))
     );
   }
 
   fetchCourses() {
     return this.coreEnrolGetUsersCourses().pipe(
-      map(res => {
-        const courses = res.map(data => new Course(data.id, data.shortname, data.idnumber));
-        this._courses.next(courses);
-        return courses;
-      })
+      switchMap(resArr => {
+        return from(resArr);
+      }),
+      withLatestFrom(this.authService.token),
+      map(([res, token]) => {
+        let img: string;
+        if (res.overviewfiles && res.overviewfiles.length > 0) {
+          img = `${res.overviewfiles[0].fileurl}?token=${token}&offline=1`;
+        }
+        return new Course(res.id, res.shortname, img, res.category);
+      }),
+      toArray(),
+      tap(courses => this._courses.next(courses))
     );
   }
 
@@ -138,18 +135,6 @@ export class CoursesService {
   }
 
   getTopicById(topicId: number) {
-    // return this.courses.pipe(
-    //   map(courses => {
-    //     let topic: Topic = null;
-    //     courses.forEach(course => {
-    //       if (!topic && course.topics) {
-    //         topic = course.topics.find(t => t.id === topicId);
-    //         return;
-    //       }
-    //     });
-    //     return topic;
-    //   })
-    // );
     return this._topics.asObservable().pipe(map(topics => {
       const topic = topics.find(t => t.id === topicId);
       if (topic && topic.activities) {
@@ -243,6 +228,18 @@ export class CoursesService {
     );
   }
 
+  private coreCourseGetCategories() {
+    return this.authService.token.pipe(
+      first(),
+      switchMap(token => {
+        const form = new FormData();
+        form.append('wstoken', token);
+        return this.http.post<CategoryResponseData[]>(coreCourseGetCategoriesWsUrl, form);
+      }),
+      timeout(10000)
+    );
+  }
+
   private coreEnrolGetUsersCourses() {
     return this.authService.token.pipe(
       first(),
@@ -254,7 +251,7 @@ export class CoursesService {
             wstoken: token
           }
         });
-        return this.http.post<CoreEnrolGetUsersCoursesResponse[]>(getCoursesWsUrl, params, httpOptions);
+        return this.http.post<CoursesResponseData[]>(getCoursesWsUrl, params, httpOptions);
       }),
       timeout(10000)
     );
