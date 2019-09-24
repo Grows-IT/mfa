@@ -3,13 +3,14 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/knowledge-room"></ion-back-button>
     </ion-buttons>
-    <ion-grid>
-      <ion-row>
-        <ion-col size="7" offset="2">
-          <ion-img [src]="category.img"></ion-img>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <ion-item color="medium">
+      <ion-thumbnail class="banner">
+        <img [src]="category.img" />
+      </ion-thumbnail>
+      <ion-label>
+        <h1>{{ category.name }}</h1>
+      </ion-label>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
@@ -24,9 +25,11 @@
   </div>
   <ion-grid *ngIf="!isLoading && !errorMessage">
     <ion-row>
-      <ion-col text-center size="4" *ngFor="let course of courses" (click)="onClick(course)">
-        <img [src]="course.img"/>
-        <ion-text><h2>{{ course.name }}</h2></ion-text>
+      <ion-col text-center size="4" *ngFor="let course of courses" [routerLink]="[course.id, 'topics']">
+        <img [src]="course.img" />
+        <ion-text>
+          <h3>{{ course.name }}</h3>
+        </ion-text>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -23,7 +23,7 @@ export class AppComponent {
     url: '/tabs/knowledge-room'
   }, {
     title: 'Modern Farm',
-    url: '/tabs/knowledge-room/3/courses'
+    url: '/tabs/knowledge-room/4/courses'
   }, {
     title: 'Calculators',
     url: '/tabs/calculators'
