@@ -21,7 +21,6 @@ const { Network } = Plugins;
 export class HomePage implements OnInit, OnDestroy {
   user: User;
   newsPages: Page[];
-  errorMessage: string;
   isLoading = false;
   private newsSub: Subscription;
   private userSub: Subscription;
@@ -36,25 +35,24 @@ export class HomePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.newsSub = this.newsService.newsPages.subscribe(pages => this.newsPages = pages);
-    this.userSub = this.authService.user.subscribe(user => this.user = user);
     this.isLoading = true;
-    this.dataSub = this.fetchData().subscribe(
-      () => {
-        this.errorMessage = null;
-        this.isLoading = false;
-      },
-      error => {
-        this.errorMessage = error.message;
-        this.isLoading = false;
-      }
-    );
+    this.alertCtrl.create({ animated: false }).then(a => { a.present(); a.dismiss(); }); // Pre-load alert
     this.networkHandler = Network.addListener('networkStatusChange', status => {
       if (!status.connected) {
         this.showAlert('ไม่ได้เชื่อมต่อ Internet');
       }
     });
-    this.alertCtrl.create({ animated: false }).then(a => { a.present(); a.dismiss(); }); // Pre-load alert
+    this.userSub = this.authService.user.subscribe(user => this.user = user);
+    this.newsSub = this.newsService.newsPages.subscribe(pages => this.newsPages = pages);
+    this.dataSub = this.fetchData().subscribe(
+      () => {
+        this.isLoading = false;
+      },
+      error => {
+        console.log('[ERROR] home.page.ts#ngOnInit', error.message);
+        this.isLoading = false;
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -79,11 +77,10 @@ export class HomePage implements OnInit, OnDestroy {
     this.dataSub.unsubscribe();
     this.dataSub = this.fetchData().subscribe(
       () => {
-        this.errorMessage = null;
         event.target.complete();
       },
       error => {
-        this.errorMessage = error.message;
+        console.log('[ERROR] home.page.ts#doRefresh', error.message);
         event.target.complete();
       }
     );
@@ -94,8 +91,7 @@ export class HomePage implements OnInit, OnDestroy {
       .create({
         header: 'Error',
         message,
-        buttons: ['Close'],
-        animated: false
+        buttons: ['OK']
       })
       .then(alertEl => alertEl.present());
   }

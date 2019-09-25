@@ -13,6 +13,7 @@ export class NewsPage implements OnInit, OnDestroy {
   newsPages: Page[];
   isLoading = false;
   private newsSub: Subscription;
+  private fetchSub: Subscription;
 
   constructor(
     private newsService: NewsService
@@ -20,25 +21,29 @@ export class NewsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.newsSub = this.newsService.fetchNewsPages().subscribe(newsPages => {
-      this.newsPages = newsPages;
-      this.isLoading = false;
-    });
+    this.newsSub = this.newsService.newsPages.subscribe(pages => this.newsPages = pages);
   }
 
   ngOnDestroy() {
-    if (this.newsSub) {
-      this.newsSub.unsubscribe();
+    this.newsSub.unsubscribe();
+    if (this.fetchSub) {
+      this.fetchSub.unsubscribe();
     }
   }
 
   doRefresh(event: any) {
-    if (this.newsSub) {
-      this.newsSub.unsubscribe();
+    if (this.fetchSub) {
+      this.fetchSub.unsubscribe();
     }
-    this.newsSub = this.newsService.fetchNewsPages().subscribe(newsPages => {
-      this.newsPages = newsPages;
-      event.target.complete();
-    });
+    this.fetchSub = this.newsService.fetchNewsPages().subscribe(
+      newsPages => {
+        this.newsPages = newsPages;
+        event.target.complete();
+      },
+      error => {
+        console.log('[ERROR] news.page.ts#doRefresh', error.message);
+        event.target.complete();
+      }
+    );
   }
 }
