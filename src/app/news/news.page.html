@@ -15,7 +15,7 @@
     <ion-row *ngFor="let page of newsPages">
       <ion-col size="10" offset="1">
         <ion-card [routerLink]="page.id">
-          <img [src]="page.img" />
+          <img *ngIf="page.img" [src]="page.img" />
           <ion-card-header>
             <ion-card-title>{{ page.name }}</ion-card-title>
           </ion-card-header>

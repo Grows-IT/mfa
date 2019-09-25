@@ -7,6 +7,7 @@ import { Plugins } from '@capacitor/core';
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
 
+const duration = environment.timeoutDuration;
 const siteUrl = environment.siteUrl;
 const loginWsUrl = siteUrl + '/login/token.php';
 const getSiteInfoWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_webservice_get_site_info';
@@ -139,7 +140,7 @@ export class AuthService {
         formData.append('draftitemid', itemId);
         return this.http.post<{ profileimageurl: string }>(coreUserUpdatePictureWsUrl, formData);
       }),
-      timeout(10000),
+      timeout(duration),
       map(res => {
         if (!res.profileimageurl) {
           throw new Error('Cannot update profile picture.');
@@ -158,7 +159,7 @@ export class AuthService {
       }
     });
     return this.http.post<GetTokenResponseData>(loginWsUrl, params, httpOptions).pipe(
-      timeout(10000),
+      timeout(duration),
       map(res => {
         if (res.error) {
           throw new Error(res.error);
@@ -182,7 +183,7 @@ export class AuthService {
         });
         return this.http.post<GetSiteInfoResponseData>(getSiteInfoWsUrl, params, httpOptions);
       }),
-      timeout(10000),
+      timeout(duration),
       map(res => {
         if (res.errorcode) {
           throw new Error(res.message);

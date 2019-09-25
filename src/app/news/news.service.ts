@@ -46,8 +46,10 @@ export class NewsService {
       }),
       withLatestFrom(this.authService.token),
       map(([page, token]) => {
-        const imgResource = page.resources.find(resource => resource.type.includes('image'));
-        page.img = `${imgResource.url}&token=${token}&offline=1`;
+        const imgResource = page.resources.find(resource => resource.type && resource.type.includes('image'));
+        if (imgResource) {
+          page.img = `${imgResource.url}&token=${token}&offline=1`;
+        }
         return page;
       }),
       toArray(),
