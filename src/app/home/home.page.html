@@ -64,7 +64,7 @@
       <ion-slides pager>
         <ion-slide *ngFor="let page of newsPages">
           <ion-card class="card" [routerLink]="['/tabs/news/', page.id]">
-            <img class="card-img" [src]="page.img" />
+            <img *ngIf="page.img" class="card-img" [src]="page.img" />
             <ion-card-content>
               <p>{{ page.name }}</p>
             </ion-card-content>

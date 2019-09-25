@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, timeout, take, concatMap, first, takeLast, withLatestFrom, toArray, find } from 'rxjs/operators';
+import { map, tap, switchMap, timeout, concatMap, first, withLatestFrom, toArray } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { from, BehaviorSubject, of, Observable } from 'rxjs';
 
@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 import { Course, Topic, Page, Quiz, PageResource, Category } from './course.model';
 import { AuthService } from '../../auth/auth.service';
 
+const duration = environment.timeoutDuration;
 const siteUrl = environment.siteUrl;
 const getCoursesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses';
 const coreCourseGetContentsWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_contents';
@@ -145,22 +146,6 @@ export class CoursesService {
   }
 
   getActivityById(activityId: number) {
-    // return this.courses.pipe(
-    //   map(courses => {
-    //     let activity = null;
-    //     courses.forEach(course => {
-    //       if (course.topics) {
-    //         course.topics.forEach(topic => {
-    //           if (!activity && topic.activities) {
-    //             activity = topic.activities.find(a => a.id === activityId);
-    //             return;
-    //           }
-    //         });
-    //       }
-    //     });
-    //     return activity;
-    //   })
-    // );
     return this._activities.asObservable().pipe(map(activities => {
       const activity = activities.find((a: any) => a.id === activityId);
       return activity;
@@ -236,7 +221,7 @@ export class CoursesService {
         form.append('wstoken', token);
         return this.http.post<CategoryResponseData[]>(coreCourseGetCategoriesWsUrl, form);
       }),
-      timeout(10000)
+      timeout(duration)
     );
   }
 
@@ -253,7 +238,7 @@ export class CoursesService {
         });
         return this.http.post<CoursesResponseData[]>(getCoursesWsUrl, params, httpOptions);
       }),
-      timeout(10000)
+      timeout(duration)
     );
   }
 
