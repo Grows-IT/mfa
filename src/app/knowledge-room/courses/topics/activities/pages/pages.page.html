@@ -13,15 +13,15 @@
   <div text-center *ngIf="isLoading">
     <ion-spinner></ion-spinner>
   </div>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-slides pager *ngIf="!isLoading">
-          <ion-slide *ngFor="let content of slideContents">
-            <div text-start [innerHTML]="content"></div>
-          </ion-slide>
-        </ion-slides>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-slides pager *ngIf="!isLoading">
+    <ion-slide text-start *ngFor="let content of slideContents">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <div [innerHTML]="content"></div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
