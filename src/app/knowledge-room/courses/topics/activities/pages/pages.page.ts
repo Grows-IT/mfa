@@ -12,9 +12,11 @@ import { Subscription } from 'rxjs';
 })
 export class PagesPage implements OnInit, OnDestroy {
   isLoading = false;
-  currentPage: Page;
+  page: Page;
   slideContents: string[];
-  private activitySub: Subscription;
+  private fetchSub: Subscription;
+  private coursesSub: Subscription;
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -23,12 +25,29 @@ export class PagesPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
+    const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
+    const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
     const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
-    this.activitySub = this.coursesService.getPageById(activityId).subscribe(page => {
-      page.content = decodeURI(page.content);
-      this.currentPage = page;
-      this.processResources(this.currentPage);
+    this.coursesSub = this.coursesService.courses.subscribe(courses => {
+      const course = courses.find(c => c.id === courseId);
+      const topic = course.topics.find(t => t.id === topicId);
+      this.page = topic.activities.find(a => a.id === activityId);
+      
     });
+    this.fetchSub = this.coursesService.fetchResources(courseId, topicId, activityId).subscribe(
+      page => {
+        console.log(page);
+        this.isLoading = false;
+      },
+      error => {
+        console.log('[ERROR] pages.page.ts#ngOnInit', error.message);
+        this.isLoading = false;
+      }
+    );
+  }
+
+  fetchResources() {
+    // this.coursesService.fetchResources(courseId, topicId, activityId)
   }
 
   processResources(page: Page) {
@@ -57,6 +76,7 @@ export class PagesPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.activitySub.unsubscribe();
+    this.coursesSub.unsubscribe();
+    this.fetchSub.unsubscribe();
   }
 }

@@ -224,6 +224,30 @@ export class CoursesService {
     );
   }
 
+  fetchResources(courseId: number, topicId: number, activityId: number) {
+    let page: Page;
+    let courses: Course[];
+    return this.courses.pipe(
+      first(),
+      map(cs => {
+        courses = cs;
+        return cs.find(c => c.id === courseId);
+      }),
+      map(course => course.topics.find(topic => topic.id === topicId)),
+      map(topic => topic.activities.find(activity => activity.id === activityId)),
+      switchMap((p: Page) => {
+        page = p;
+        const indexHtmlResource = p.resources.find(resource => resource.name === 'index.html');
+        return this.getTextFile(indexHtmlResource.url);
+      }),
+      map(content => {
+        page.content = content;
+        this._courses.next(courses);
+        return page;
+      })
+    );
+  }
+
   private coreCourseGetCategories() {
     return this.authService.token.pipe(
       first(),
