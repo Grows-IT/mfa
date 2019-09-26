@@ -12,31 +12,33 @@ import { Topic, Page, Quiz } from '../../course.model';
 })
 export class ActivitiesPage implements OnInit, OnDestroy {
   isLoading = false;
-  currentTopic: Topic;
+  topic: Topic;
   pages: Page[];
   quiz: Quiz;
   errorMessage: string;
-  private topicSub: Subscription;
+  private coursesSub: Subscription;
 
   constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
 
   ngOnInit() {
     this.isLoading = true;
     const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
-    this.topicSub = this.coursesService.getTopicById(topicId).subscribe(topic => {
-      this.currentTopic = topic;
-      if (!this.currentTopic.activities || this.currentTopic.activities.length === 0) {
-        this.isLoading = false;
+    const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
+    this.coursesSub = this.coursesService.courses.subscribe(courses => {
+      const course = courses.find(c => c.id === courseId);
+      this.topic = course.topics.find(t => t.id === topicId);
+      if (!this.topic.activities || this.topic.activities.length === 0) {
         this.errorMessage = 'Coming Soon';
+        this.isLoading = false;
         return;
       }
-      this.pages = this.currentTopic.activities.filter(activity => activity instanceof Page);
-      this.quiz = this.currentTopic.activities.find(activity => activity instanceof Quiz);
+      this.pages = this.topic.activities.filter(activity => activity instanceof Page);
+      this.quiz = this.topic.activities.find(activity => activity instanceof Quiz);
       this.isLoading = false;
     });
   }
 
   ngOnDestroy() {
-    this.topicSub.unsubscribe();
+    this.coursesSub.unsubscribe();
   }
 }
