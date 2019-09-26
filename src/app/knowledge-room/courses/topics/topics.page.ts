@@ -15,7 +15,6 @@ export class TopicsPage implements OnInit, OnDestroy {
   topics: Topic[];
   course: Course;
   errorMessage: string;
-  private topicsSub: Subscription;
   private coursesSub: Subscription;
   private fetchSub: Subscription;
 
@@ -29,8 +28,8 @@ export class TopicsPage implements OnInit, OnDestroy {
     const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
       this.course = courses.find(course => course.id === courseId);
+      this.topics = this.course.topics;
     });
-    this.topicsSub = this.coursesService.topics.subscribe(topics => this.topics = topics);
     this.fetchSub = this.coursesService.fetchTopics(courseId).subscribe(topics => {
       if (!topics || topics.length === 0) {
         this.errorMessage = 'Coming soon';
@@ -43,7 +42,6 @@ export class TopicsPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.topicsSub.unsubscribe();
     this.coursesSub.unsubscribe();
     this.fetchSub.unsubscribe();
   }
