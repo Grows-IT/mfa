@@ -41,7 +41,7 @@ export class CoursesPage implements OnInit, OnDestroy {
         this.isLoading = false;
       },
       error => {
-        this.errorMessage = error.message;
+        console.log('[ERROR] courses.page.ts#ngOnInit', error.message);
         this.isLoading = false;
       }
     );
