@@ -1,79 +1,53 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, of } from 'rxjs';
-
-import { NewsService } from '../news.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Page } from 'src/app/knowledge-room/courses/course.model';
+
+import { Page, Course, Topic } from 'src/app/knowledge-room/courses/course.model';
 import { CoursesService } from 'src/app/knowledge-room/courses/courses.service';
-import { map, switchMap } from 'rxjs/operators';
+import { NewsService } from '../news.service';
 
 @Component({
   selector: 'app-news-detail',
   templateUrl: './news-detail.page.html',
   styleUrls: ['./news-detail.page.scss'],
 })
-export class NewsDetailPage implements OnInit {
-  newsSub: Subscription;
+export class NewsDetailPage implements OnInit, OnDestroy {
+  private fetchSub: Subscription;
+  private newsSub: Subscription;
+  newsCourse: Course;
+  newsTopic: Topic;
   newsPage: Page;
   errorMessage: string;
   indexHtml: SafeHtml;
   isLoading = false;
 
   constructor(
-    private newsService: NewsService,
     private activatedRoute: ActivatedRoute,
-    private sanitizer: DomSanitizer,
-    private coursesService: CoursesService
+    private newsService: NewsService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
     this.isLoading = true;
-    const id = +this.activatedRoute.snapshot.paramMap.get('id');
-    this.newsService.getNewsPageById(id).pipe(
-      switchMap(page => {
-        if (page.content) {
-          return of(page);
-        }
-        return this.coursesService.downloadResources(page);
-      }),
-      map(page => {
-        page.content = decodeURI(page.content);
-        this.newsPage = page;
-        if (!page.resources || page.resources.length === 0) {
-          this.indexHtml = this.sanitizer.bypassSecurityTrustHtml(page.content);
-          this.isLoading = false;
-          return;
-        }
-        let i = 0;
-        page.resources.forEach(resource => {
-          const fileReader = new FileReader();
-          fileReader.onload = () => {
-            const data = fileReader.result.toString();
-            page.content = page.content.replace(resource.name, data);
-            i += 1;
-            if (i >= page.resources.length) {
-              this.indexHtml = this.sanitizer.bypassSecurityTrustHtml(page.content);
-              this.isLoading = false;
-            }
-          };
-          fileReader.readAsDataURL(resource.data);
-        });
-      })
-    ).subscribe(news => {
-
+    const pageId = +this.activatedRoute.snapshot.paramMap.get('id');
+    this.newsSub = this.newsService.newsPages.subscribe(pages => {
+      this.newsPage = pages.find(page => page.id === pageId);
+      this.indexHtml = this.sanitizer.bypassSecurityTrustHtml(this.newsPage.content);
     });
+    this.fetchSub = this.newsService.fetchResources(pageId).subscribe(
+      () => {
+        this.isLoading = false;
+      },
+      error => {
+        console.log('[ERROR] news-detail.page.ts#ngOnInit', error.message);
+        this.isLoading = false;
+      }
+    );
+  }
 
-    // this.newsSub = this.newsService.getNewsArticleById(id).subscribe(page => {
-    //   if (page === null) {
-    //     this.errorMessage = 'Error getting news article';
-    //     return;
-    //   }
-    //   this.newsService.getContent(page.content).subscribe(content => {
-    //     this.indexHtml = this.sanitizer.bypassSecurityTrustHtml(content);
-    //     page.content = content;
-    //     this.newsPage = page;
-    //   });
-    // });
+  ngOnDestroy() {
+    this.fetchSub.unsubscribe();
+    this.newsSub.unsubscribe();
   }
 }

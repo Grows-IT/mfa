@@ -16,7 +16,6 @@ export class CoursesPage implements OnInit, OnDestroy {
   errorMessage: string;
   isLoading = false;
   private coursesSub: Subscription;
-  private fetchSub: Subscription;
   private categoriesSub: Subscription;
 
   constructor(
@@ -35,21 +34,12 @@ export class CoursesPage implements OnInit, OnDestroy {
       if (!this.courses || this.courses.length === 0) {
         this.errorMessage = 'Coming soon';
       }
+      this.isLoading = false;
     });
-    this.fetchSub = this.coursesService.fetchCourses().subscribe(
-      () => {
-        this.isLoading = false;
-      },
-      error => {
-        console.log('[ERROR] courses.page.ts#ngOnInit', error.message);
-        this.isLoading = false;
-      }
-    );
   }
 
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
-    this.fetchSub.unsubscribe();
     this.categoriesSub.unsubscribe();
   }
 }

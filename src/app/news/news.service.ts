@@ -5,7 +5,7 @@ import { switchMap, toArray, map, withLatestFrom, first, tap } from 'rxjs/operat
 import { Page } from '../knowledge-room/courses/course.model';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
 import { AuthService } from '../auth/auth.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -23,17 +23,6 @@ export class NewsService {
     return this._newsPages.asObservable();
   }
 
-  getNewsPageById(id: number) {
-    return this.newsPages.pipe(
-      map(newsArticles => {
-        if (!newsArticles) {
-          return null;
-        }
-        return newsArticles.find(article => article.id === id);
-      })
-    );
-  }
-
   fetchNewsPages() {
     return this.coursesService.courses.pipe(
       first(),
@@ -44,25 +33,33 @@ export class NewsService {
       switchMap(topics => {
         return from(topics[0].activities as Page[]);
       }),
-      withLatestFrom(this.authService.token),
-      map(([page, token]) => {
+      map(page => {
         const imgResource = page.resources.find(resource => resource.type && resource.type.includes('image'));
         if (imgResource) {
-          page.img = `${imgResource.url}&token=${token}&offline=1`;
+          page.img = imgResource.url;
         }
         return page;
       }),
       toArray(),
-      tap(newsArticles => this._newsPages.next(newsArticles))
+      tap(newsPages => this._newsPages.next(newsPages))
     );
   }
 
-  getContent(url: string) {
-    return this.http.get(url, {
-      headers: new HttpHeaders({
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }), responseType: 'text'
-    });
+  fetchResources(pageId: number) {
+    return this.coursesService.courses.pipe(
+      first(),
+      switchMap(courses => {
+        const course = courses.find(c => c.name === 'News and Update');
+        const topic = course.topics[0];
+        return this.coursesService.fetchResources(course.id, topic.id, pageId);
+      }),
+      withLatestFrom(this.newsPages),
+      map(([fetchedPage, newsPages]) => {
+        const index = newsPages.findIndex(p => p.id === fetchedPage.id);
+        newsPages.splice(index, 1, fetchedPage);
+        this._newsPages.next(newsPages);
+        return fetchedPage;
+      })
+    );
   }
 }

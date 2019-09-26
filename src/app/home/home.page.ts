@@ -24,7 +24,7 @@ export class HomePage implements OnInit, OnDestroy {
   isLoading = false;
   private newsSub: Subscription;
   private userSub: Subscription;
-  private dataSub: Subscription;
+  private fetchSub: Subscription;
   private networkHandler: PluginListenerHandle;
 
   constructor(
@@ -44,7 +44,7 @@ export class HomePage implements OnInit, OnDestroy {
     });
     this.userSub = this.authService.user.subscribe(user => this.user = user);
     this.newsSub = this.newsService.newsPages.subscribe(pages => this.newsPages = pages);
-    this.dataSub = this.fetchData().subscribe(
+    this.fetchSub = this.fetchData().subscribe(
       () => {
         this.isLoading = false;
       },
@@ -58,7 +58,7 @@ export class HomePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.userSub.unsubscribe();
     this.newsSub.unsubscribe();
-    this.dataSub.unsubscribe();
+    this.fetchSub.unsubscribe();
     this.networkHandler.remove();
   }
 
@@ -74,8 +74,8 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   doRefresh(event: any) {
-    this.dataSub.unsubscribe();
-    this.dataSub = this.fetchData().subscribe(
+    this.fetchSub.unsubscribe();
+    this.fetchSub = this.fetchData().subscribe(
       () => {
         event.target.complete();
       },
