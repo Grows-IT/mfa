@@ -135,7 +135,6 @@ export class CoursesService {
           });
           return new Topic(res.id, res.name, activities);
         });
-        this._topics.next(topics);
         return topics;
       }),
       withLatestFrom(this.courses),
@@ -143,7 +142,6 @@ export class CoursesService {
         const course = courses.find(c => c.id === courseId);
         course.topics = topics;
         this._courses.next(courses);
-        console.log(topics);
         return topics;
       })
     );
