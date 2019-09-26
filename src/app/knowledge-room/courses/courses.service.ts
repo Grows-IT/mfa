@@ -74,7 +74,11 @@ export class CoursesService {
   }
 
   get courses() {
-    return this._courses.asObservable().pipe(map(courses => courses ? courses : null));
+    return this._courses.asObservable();
+  }
+
+  get topics() {
+    return this._topics.asObservable();
   }
 
   fetchCategories() {
