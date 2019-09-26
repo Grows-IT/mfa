@@ -21,7 +21,6 @@ export class NewsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.isLoading = true;
     this.newsSub = this.newsService.newsPages.subscribe(pages => this.newsPages = pages);
   }
 
@@ -36,7 +35,6 @@ export class NewsPage implements OnInit, OnDestroy {
     if (this.fetchSub) {
       this.fetchSub.unsubscribe();
     }
-    this.fetchSub.unsubscribe();
     this.fetchSub = this.newsService.fetchNewsPages().subscribe(
       () => event.target.complete(),
       error => {
