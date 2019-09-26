@@ -13,8 +13,7 @@
   <div text-center *ngIf="isLoading">
     <ion-spinner></ion-spinner>
   </div>
-  <div *ngIf="!isLoading" [innerHTML]="page.content"></div>
-  <!-- <ion-slides pager *ngIf="!isLoading">
+  <ion-slides pager *ngIf="!isLoading">
     <ion-slide text-start *ngFor="let content of slideContents">
       <ion-grid>
         <ion-row>
@@ -24,5 +23,5 @@
         </ion-row>
       </ion-grid>
     </ion-slide>
-  </ion-slides> -->
+  </ion-slides>
 </ion-content>

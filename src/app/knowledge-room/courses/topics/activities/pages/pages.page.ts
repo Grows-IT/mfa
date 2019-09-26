@@ -32,11 +32,12 @@ export class PagesPage implements OnInit, OnDestroy {
       const course = courses.find(c => c.id === courseId);
       const topic = course.topics.find(t => t.id === topicId);
       this.page = topic.activities.find(a => a.id === activityId);
-      
+      if (this.page.content) {
+        this.slideContents = this.page.content.split('<p></p>');
+      }
     });
     this.fetchSub = this.coursesService.fetchResources(courseId, topicId, activityId).subscribe(
-      page => {
-        console.log(page);
+      () => {
         this.isLoading = false;
       },
       error => {
@@ -44,35 +45,6 @@ export class PagesPage implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     );
-  }
-
-  fetchResources() {
-    // this.coursesService.fetchResources(courseId, topicId, activityId)
-  }
-
-  processResources(page: Page) {
-    if (!page.resources || page.resources.length === 0) {
-      return this.populateSlides(page.content);
-    }
-    let i = 0;
-    page.resources.forEach(resource => {
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        const data = fileReader.result.toString();
-        page.content = page.content.replace(resource.name, data);
-
-        i += 1;
-        if (i >= page.resources.length) {
-          return this.populateSlides(page.content);
-        }
-      };
-      fileReader.readAsDataURL(resource.data);
-    });
-  }
-
-  populateSlides(content: string) {
-    this.slideContents = content.split('<p></p>');
-    this.isLoading = false;
   }
 
   ngOnDestroy() {
