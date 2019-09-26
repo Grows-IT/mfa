@@ -119,14 +119,16 @@ export class CoursesService {
 
   fetchTopics(courseId: number) {
     return this.coreCourseGetContents(courseId).pipe(
-      map(resArr => {
+      withLatestFrom(this.authService.token),
+      map(([resArr, token]) => {
         const topics = resArr.map(res => {
           const activities = res.modules.map(mod => {
             if (mod.modname === 'quiz') {
               return new Quiz(mod.id, mod.name);
             } else if (mod.modname === 'page') {
               const pageResources = mod.contents.map(content => {
-                return new PageResource(content.filename, content.mimetype, content.fileurl);
+                const fileUrl = `${content.fileurl}&token=${token}&offline=1`;
+                return new PageResource(content.filename, content.mimetype, fileUrl);
               });
               return new Page(mod.id, mod.name, null, pageResources);
             }
@@ -141,6 +143,7 @@ export class CoursesService {
         const course = courses.find(c => c.id === courseId);
         course.topics = topics;
         this._courses.next(courses);
+        console.log(topics);
         return topics;
       })
     );
@@ -241,6 +244,10 @@ export class CoursesService {
         return this.getTextFile(indexHtmlResource.url);
       }),
       map(content => {
+        const mediaResources = page.resources.filter(resource => resource.type);
+        mediaResources.forEach(mediaResource => {
+          content = content.replace(mediaResource.name, mediaResource.url);
+        });
         page.content = content;
         this._courses.next(courses);
         return page;
