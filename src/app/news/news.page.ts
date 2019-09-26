@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { NewsService } from './news.service';
-import { Page, Course, Topic } from '../knowledge-room/courses/course.model';
-import { CoursesService } from '../knowledge-room/courses/courses.service';
+import { Page } from '../knowledge-room/courses/course.model';
 
 @Component({
   selector: 'app-news',
