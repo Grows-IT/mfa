@@ -3,13 +3,13 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { PluginListenerHandle } from '@capacitor/core/dist/esm/web/network';
+import { AlertController } from '@ionic/angular';
 
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { Page } from '../knowledge-room/courses/course.model';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
-import { AlertController } from '@ionic/angular';
 
 const { Network } = Plugins;
 
@@ -76,9 +76,7 @@ export class HomePage implements OnInit, OnDestroy {
   doRefresh(event: any) {
     this.fetchSub.unsubscribe();
     this.fetchSub = this.fetchData().subscribe(
-      () => {
-        event.target.complete();
-      },
+      () => event.target.complete(),
       error => {
         console.log('[ERROR] home.page.ts#doRefresh', error.message);
         event.target.complete();
