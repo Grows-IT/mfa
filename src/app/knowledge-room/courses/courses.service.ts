@@ -135,6 +135,13 @@ export class CoursesService {
         });
         this._topics.next(topics);
         return topics;
+      }),
+      withLatestFrom(this.courses),
+      map(([topics, courses]) => {
+        const course = courses.find(c => c.id === courseId);
+        course.topics = topics;
+        this._courses.next(courses);
+        return topics;
       })
     );
   }
