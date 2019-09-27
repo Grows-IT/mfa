@@ -19,7 +19,6 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
   };
   categories: Category[];
   isLoading = false;
-  errorMessage: string;
   private userSub: Subscription;
   private categoriesSub: Subscription;
 
@@ -38,7 +37,7 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
         this.isLoading = false;
       },
       error => {
-        this.errorMessage = error.message;
+        console.log('[ERROR] knowledge-room.page.ts#ngOnInit', error.message);
         this.isLoading = false;
       }
     );
