@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { from, BehaviorSubject } from 'rxjs';
-import { timeout, tap, map, flatMap, switchMap, take, first, withLatestFrom } from 'rxjs/operators';
+import { timeout, tap, map, switchMap, first, withLatestFrom } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
 import { environment } from '../../environments/environment';
