@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, timeout, concatMap, first, withLatestFrom, toArray } from 'rxjs/operators';
+import { map, tap, switchMap, timeout, first, withLatestFrom, toArray, flatMap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
-import { from, BehaviorSubject, of, Observable } from 'rxjs';
+import { from, BehaviorSubject } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { Course, Topic, Page, Quiz, PageResource, Category } from './course.model';
@@ -152,71 +152,35 @@ export class CoursesService {
     );
   }
 
-  getTopicById(topicId: number) {
-    return this._topics.asObservable().pipe(map(topics => {
-      const topic = topics.find(t => t.id === topicId);
-      if (topic && topic.activities) {
-        this._activities.next(topic.activities);
-      }
-      return topic;
-    }));
-  }
-
-  getActivityById(activityId: number) {
-    return this._activities.asObservable().pipe(map(activities => {
-      const activity = activities.find((a: any) => a.id === activityId);
-      return activity;
-    }));
-  }
-
-  getPageById(pageId: number): Observable<Page> {
-    return this.getActivityById(pageId).pipe(
-      switchMap(activity => {
-        if (!(activity instanceof Page)) {
-          return of(null);
-        }
-        const page = activity as Page;
-        if (page.content) {
-          return of(page);
-        }
-        const indexHtmlResource = page.resources.find(resource => resource.name === 'index.html');
-        const otherResources = page.resources.filter(resource => resource.type);
-        let otherResource: PageResource;
-        return this.getTextFile(indexHtmlResource.url).pipe(
-          switchMap(content => {
-            page.content = content;
-            return from(otherResources);
-          }),
-          concatMap(resource => {
-            otherResource = resource;
-            return this.getBinaryFile(resource.url);
-          }),
-          map(data => {
-            otherResource.data = data;
-            return otherResource;
-          }),
-          toArray(),
-          map(resources => {
-            page.resources = resources;
-            return page;
-          })
-        );
-      })
+  downloadCourse(courseId: number) {
+    let course: Course;
+    return this.courses.pipe(
+      first(),
+      map(courses => {
+        course = courses.find(c => c.id === courseId);
+        return course;
+      }),
+      switchMap(c => from(c.topics)),
+      flatMap(topic => from(topic.activities.filter(activity => activity instanceof Page))),
+      flatMap((p: Page) => {
+        return this.downloadResources(p);
+      }),
+      toArray()
     );
   }
 
-  downloadResources(page: Page) {
+  private downloadResources(page: Page) {
     const indexHtmlResource = page.resources.find(resource => resource.name === 'index.html');
     const otherResources = page.resources.filter(resource => resource.type);
     let otherResource: PageResource;
-    return this.getTextFile(indexHtmlResource.url).pipe(
+    return this.http.get(indexHtmlResource.url, { responseType: 'text' }).pipe(
       switchMap(content => {
         page.content = content;
         return from(otherResources);
       }),
-      concatMap(resource => {
+      flatMap(resource => {
         otherResource = resource;
-        return this.getBinaryFile(resource.url);
+        return this.http.get(resource.url, { responseType: 'blob' });
       }),
       map(data => {
         otherResource.data = data;

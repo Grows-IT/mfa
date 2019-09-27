@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CoursesService } from '../courses.service';
 import { Topic, Course, Category } from '../course.model';
 import { Subscription } from 'rxjs';
+import { pages } from 'src/app/static/pages';
 
 @Component({
   selector: 'app-topics',
