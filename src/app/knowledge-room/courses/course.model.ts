@@ -3,7 +3,15 @@ export class Category {
     public id: number,
     public name: string,
     public img?: string
-  ) {}
+  ) { }
+
+  toObject() {
+    return {
+      id: this.id,
+      name: this.name,
+      img: this.img
+    };
+  }
 }
 
 export class Course {
@@ -13,12 +21,15 @@ export class Course {
     public img?: string,
     public categoryId?: number,
     public topics?: Topic[],
-  ) {}
+  ) { }
 
   toObject() {
     return {
       id: this.id,
-      name: this.name
+      name: this.name,
+      img: this.img,
+      categoryId: this.categoryId,
+      topics: this.topics ? this.topics.map(topic => topic.toObject()) : null
     };
   }
 }
@@ -28,12 +39,30 @@ export class Topic {
     public id: number,
     public name: string,
     public activities: any[]
-  ) {}
+  ) { }
 
   toObject() {
     return {
       id: this.id,
-      name: this.name
+      name: this.name,
+      activities: this.activities ? this.activities.map(activity => {
+        return activity.toObject();
+      }) : null
+    };
+  }
+}
+
+export class Quiz {
+  constructor(
+    public id: number,
+    public name: string
+  ) { }
+
+  toObject() {
+    return {
+      id: this.id,
+      name: this.name,
+      type: 'quiz'
     };
   }
 }
@@ -45,7 +74,18 @@ export class Page {
     public content: string,
     public resources?: PageResource[],
     public img?: string
-  ) {}
+  ) { }
+
+  toObject() {
+    return {
+      id: this.id,
+      name: this.name,
+      type: 'page',
+      content: this.content,
+      resources: this.resources ? this.resources.map(resource => resource.toObject()) : null,
+      img: this.img
+    };
+  }
 }
 
 export class PageResource {
@@ -54,13 +94,15 @@ export class PageResource {
     public type: string,
     public url: string,
     public data?: Blob
-  ) {}
+  ) { }
+
+  toObject() {
+    return {
+      name: this.name,
+      type: this.type,
+      url: this.url,
+    };
+  }
 }
 
-export class Quiz {
-  constructor(
-    public id: number,
-    public name: string
-  ) {}
-}
 

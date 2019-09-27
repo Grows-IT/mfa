@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 import { Course, Topic, Page, Quiz, PageResource, Category } from './course.model';
 import { AuthService } from '../../auth/auth.service';
 
+const { Storage } = Plugins;
 const duration = environment.timeoutDuration;
 const siteUrl = environment.siteUrl;
 const getCoursesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses';
@@ -113,7 +114,10 @@ export class CoursesService {
         return new Course(res.id, res.shortname, img, res.category);
       }),
       toArray(),
-      tap(courses => this._courses.next(courses))
+      tap(courses => {
+        this._courses.next(courses);
+        this.saveCoursestoStorage(courses);
+      })
     );
   }
 
@@ -142,6 +146,7 @@ export class CoursesService {
         const course = courses.find(c => c.id === courseId);
         course.topics = topics;
         this._courses.next(courses);
+        this.saveCoursestoStorage(courses);
         return topics;
       })
     );
@@ -248,6 +253,7 @@ export class CoursesService {
         });
         page.content = content;
         this._courses.next(courses);
+        this.saveCoursestoStorage(courses);
         return page;
       })
     );
@@ -338,23 +344,69 @@ export class CoursesService {
     );
   }
 
-  // private saveCoursestoStorage(courses: Course[]) {
-  //   const data = JSON.stringify(courses.map(course => course.toObject()));
-  //   Plugins.Storage.set({ key: 'courses', value: data });
-  // }
+  private saveCoursestoStorage(courses: Course[]) {
+    const data = JSON.stringify(courses.map(course => {
+      const val = course.toObject();
+      return val;
+    }));
+    Storage.set({ key: 'courses', value: data });
+  }
 
-  // private getCoursesFromStorage() {
-  //   return from(Plugins.Storage.get({ key: 'courses' })).pipe(map(storedData => {
-  //     if (!storedData || !storedData.value) {
-  //       console.log('Courses are not stored locally.');
-  //       return null;
-  //     }
-  //     const parsedData = JSON.parse(storedData.value) as {
-  //       id: number;
-  //       name: string;
-  //     }[];
-  //     const courses = parsedData.map(element => new Course(element.id, element.name));
-  //     return courses;
-  //   }));
-  // }
+  getCoursesFromStorage() {
+    return from(Storage.get({ key: 'courses' })).pipe(map(storedData => {
+      if (!storedData || !storedData.value) {
+        console.log('Courses are not stored locally.');
+        return null;
+      }
+      const parsedData = JSON.parse(storedData.value) as {
+        id: number;
+        name: string;
+        img: string,
+        categoryId: number;
+        topics: [{
+          id: number;
+          name: string,
+          activities: [{
+            id: number,
+            name: string,
+            type: string,
+            content: string,
+            img: string,
+            resources: [{
+              name: string,
+              type: string,
+              url: string
+            }]
+          }]
+        }]
+      }[];
+      const courses = parsedData.map(courseData => {
+        let topics: Topic[];
+        if (courseData.topics) {
+          topics = courseData.topics.map(topicData => {
+            let activities: any[];
+            if (topicData.activities) {
+              activities = topicData.activities.map(activityData => {
+                if (activityData.type === 'quiz') {
+                  return new Quiz(activityData.id, activityData.name);
+                }
+                if (activityData.type === 'page') {
+                  let resources: PageResource[];
+                  if (activityData.resources) {
+                    resources = activityData.resources.map(resourceData => {
+                      return new PageResource(resourceData.name, resourceData.type, resourceData.url);
+                    });
+                    return new Page(activityData.id, activityData.name, activityData.content, resources, activityData.img);
+                  }
+                }
+              });
+            }
+            return new Topic(topicData.id, topicData.name, activities);
+          });
+        }
+        return new Course(courseData.id, courseData.name, courseData.img, courseData.categoryId, topics);
+      });
+      return courses;
+    }));
+  }
 }

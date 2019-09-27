@@ -232,7 +232,7 @@ export class AuthService {
     Plugins.Storage.set({ key: 'user', value: data });
   }
 
-  private getUserFromStorage() {
+  getUserFromStorage() {
     return from(Plugins.Storage.get({ key: 'user' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
         return null;
@@ -251,6 +251,7 @@ export class AuthService {
         parsedData.lastName,
         parsedData.imgUrl
       );
+      this._user.next(user);
       return user;
     }));
   }
