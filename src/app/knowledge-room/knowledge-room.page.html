@@ -11,9 +11,6 @@
   <div text-center>
     <ion-spinner *ngIf="isLoading"></ion-spinner>
   </div>
-  <ion-text text-center *ngIf="!isLoading && errorMessage">
-    <h1>{{ errorMessage }}</h1>
-  </ion-text>
   <ion-grid *ngIf="!isLoading">
     <ion-row>
       <ion-col size="4" offset="4">
