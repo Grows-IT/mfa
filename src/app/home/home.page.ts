@@ -38,10 +38,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.alertCtrl.create({ animated: false }).then(a => { a.present(); a.dismiss(); }); // Pre-load alert
+    // this.alertCtrl.create({ animated: false }).then(a => { a.present(); a.dismiss(); }); // Pre-load alert
     this.networkHandler = Network.addListener('networkStatusChange', status => {
       if (!status.connected) {
-        this.showAlert('ไม่ได้เชื่อมต่อ Internet');
+        this.showAlert('คุณไม่ได้เชื่อมต่อ Internet กำลังใช้งานแบบ offline');
       }
     });
     this.userSub = this.authService.user.subscribe(user => this.user = user);
@@ -61,9 +61,11 @@ export class HomePage implements OnInit, OnDestroy {
     this.userSub.unsubscribe();
     this.newsSub.unsubscribe();
     this.fetchSub.unsubscribe();
-    this.coursesStoreSub.unsubscribe();
     if (this.userStoreSub) {
       this.userStoreSub.unsubscribe();
+    }
+    if (this.coursesStoreSub) {
+      this.coursesStoreSub.unsubscribe();
     }
     this.networkHandler.remove();
   }
@@ -98,8 +100,8 @@ export class HomePage implements OnInit, OnDestroy {
         buttons: ['OK']
       })
       .then(alertEl => {
-        this.userStoreSub = this.authService.getUserFromStorage().subscribe(user => console.log(user));
-        this.coursesStoreSub = this.coursesService.getCoursesFromStorage().subscribe(courses => console.log(courses));
+        // this.userStoreSub = this.authService.getUserFromStorage().subscribe(user => console.log(user));
+        // this.coursesStoreSub = this.coursesService.getCoursesFromStorage().subscribe(courses => console.log(courses));
         alertEl.present();
       });
   }
