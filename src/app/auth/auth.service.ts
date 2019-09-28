@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { from, BehaviorSubject } from 'rxjs';
-import { timeout, tap, map, switchMap, first, withLatestFrom } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { from, BehaviorSubject, throwError } from 'rxjs';
+import { timeout, tap, map, switchMap, first, withLatestFrom, catchError } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
 import { environment } from '../../environments/environment';
@@ -159,6 +159,7 @@ export class AuthService {
       }
     });
     return this.http.post<GetTokenResponseData>(loginWsUrl, params, httpOptions).pipe(
+      catchError(this.handleHttpError),
       timeout(duration),
       map(res => {
         if (res.error) {
@@ -254,5 +255,24 @@ export class AuthService {
       this._user.next(user);
       return user;
     }));
+  }
+
+  private handleHttpError(error: HttpErrorResponse) {
+    let message: string;
+    if (error.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      message = 'An error occurred:' + error.error.message;
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      if (error.status === 0) { // No internet connection
+        message = 'ไม่สามารถ login ได้เพราะคุณไม่ได้เชื่อมต่อ internet';
+      } else {
+        message = `Server error, code: ${error.status} body: ${error.error}`;
+      }
+    }
+    // return an observable with a user-facing error message
+    console.error(message);
+    return throwError(message);
   }
 }

@@ -59,7 +59,7 @@ export class LoginPage implements OnInit, OnDestroy {
       this.router.navigateByUrl('/tabs/home');
       loadingEl.dismiss();
     }, error => {
-      this.errorMessage = error.message;
+      this.errorMessage = error;
       loadingEl.dismiss();
     });
   }
