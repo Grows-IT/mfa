@@ -10,10 +10,6 @@ const routes: Routes = [
     loadChildren: './tabs/tabs.module#TabsPageModule',
     canLoad: [AuthGuard]
   },
-  {
-    path: 'calculators',
-    loadChildren: './calculators/calculators.module#CalculatorsPageModule'
-  },
   { path: 'static', loadChildren: './static/static.module#StaticPageModule' },
   { path: 'weather', loadChildren: './weather/weather.module#WeatherPageModule' },
   { path: 'sugar-price', loadChildren: './sugar-price/sugar-price.module#SugarPricePageModule' },

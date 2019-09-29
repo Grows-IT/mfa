@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { from, BehaviorSubject, throwError } from 'rxjs';
-import { timeout, tap, map, switchMap, first, withLatestFrom, catchError } from 'rxjs/operators';
+import { timeout, map, switchMap, first, withLatestFrom, catchError } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
 import { environment } from '../../environments/environment';
@@ -92,9 +92,10 @@ export class AuthService {
 
   fetchUser() {
     return this.coreWebserviceGetSiteInfo().pipe(
-      tap(user => {
+      map(user => {
         this._user.next(user);
         this.saveUserToStorage(user);
+        return true;
       })
     );
   }
@@ -253,7 +254,7 @@ export class AuthService {
         parsedData.imgUrl
       );
       this._user.next(user);
-      return user;
+      return true;
     }));
   }
 

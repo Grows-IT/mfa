@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { CanLoad, Route, UrlSegment, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { tap, take, switchMap, flatMap, map, first } from 'rxjs/operators';
+import { tap, switchMap, first, catchError } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
+import { CoursesService } from '../knowledge-room/courses/courses.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,23 +12,96 @@ import { AuthService } from './auth.service';
 export class AuthGuard implements CanLoad {
   constructor(
     private authService: AuthService,
+    private coursesService: CoursesService,
     private router: Router
   ) {}
 
   canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
-    return this.authService.isLoggedIn.pipe(
+    return this.authService.token.pipe(
       first(),
-      switchMap(loggedIn => {
-        if (!loggedIn) {
+      switchMap(token => {
+        if (!token) {
           return this.authService.autoLogin();
-        } else {
-          return of(loggedIn);
         }
+        return of(!!token);
       }),
-      tap(loggedIn => {
-        if (!loggedIn) {
+      switchMap(isLoggedIn => {
+        if (!isLoggedIn) {
+          return of(isLoggedIn);
+        }
+        return this.loadUser().pipe(
+          switchMap(() => {
+            return this.loadCategories();
+          }),
+          switchMap(() => {
+            return this.loadCourses();
+          })
+        );
+      }),
+      tap(isLoggedIn => {
+        if (!isLoggedIn) {
           this.router.navigateByUrl('/auth/login');
         }
+      })
+    );
+  }
+
+  loadUser() {
+    return this.authService.user.pipe(
+      first(),
+      switchMap(user => {
+          if (!user) {
+            return this.authService.fetchUser().pipe(
+              catchError(() => of(false))
+            );
+          }
+          return of(!!user);
+      }),
+      switchMap(userExist => {
+        if (!userExist) {
+          return this.authService.getUserFromStorage();
+        }
+        return of(userExist);
+      }),
+    );
+  }
+
+  loadCategories() {
+    return this.coursesService.categories.pipe(
+      first(),
+      switchMap(categories => {
+        if (!categories || categories.length === 0) {
+          return this.coursesService.getCategoriesFromStorage();
+        }
+        return of(!!categories);
+      }),
+      switchMap(categoriesExist => {
+        if (!categoriesExist) {
+          return this.coursesService.fetchCategories().pipe(
+            catchError(() => of(false))
+          );
+        }
+        return of(categoriesExist);
+      })
+    );
+  }
+
+  loadCourses() {
+    return this.coursesService.courses.pipe(
+      first(),
+      switchMap(courses => {
+        if (!courses || courses.length === 0) {
+          return this.coursesService.getCoursesFromStorage();
+        }
+        return of(!!courses);
+      }),
+      switchMap(result => {
+        if (!result) {
+          return this.coursesService.fetchCourses().pipe(
+            catchError(() => of(false))
+          );
+        }
+        return of(result);
       })
     );
   }
