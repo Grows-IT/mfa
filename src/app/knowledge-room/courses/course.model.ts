@@ -104,16 +104,6 @@ export class PageResource {
       data: this.data
     };
   }
-
-  // saveDataToFileSystem() {
-  //   try {
-  //     Filesystem.writeFile({
-  //       path: this.url,
-  //       data: this.data,
-  //       directory: FilesystemDirectory.Documents,
-  //     })
-  //   }
-  // }
 }
 
 

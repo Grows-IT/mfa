@@ -18,7 +18,6 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
     name: string
   };
   categories: Category[];
-  isLoading = false;
   private userSub: Subscription;
   private categoriesSub: Subscription;
 
@@ -28,24 +27,14 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.isLoading = true;
     this.userSub = this.authService.user.subscribe(user => this.user = user);
-    this.categoriesSub = this.coursesService.categories.subscribe(categories => this.categories = categories);
-    this.coursesService.fetchCategories().subscribe(
-      categories => {
-        this.categories = categories.slice(1);
-        this.isLoading = false;
-      },
-      error => {
-        console.log('[ERROR] knowledge-room.page.ts#ngOnInit', error.message);
-        this.isLoading = false;
-      }
-    );
+    this.categoriesSub = this.coursesService.categories.subscribe(categories => {
+      this.categories = categories.slice(1);
+    });
   }
 
   ngOnDestroy() {
     this.userSub.unsubscribe();
     this.categoriesSub.unsubscribe();
   }
-
 }

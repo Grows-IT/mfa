@@ -95,9 +95,10 @@ export class CoursesService {
         return new Category(res.id, res.name, imgUrl);
       }),
       toArray(),
-      tap(categories => {
+      map(categories => {
         this._categories.next(categories);
         this.saveCategoriesToStorage(categories);
+        return true;
       })
     );
   }
@@ -116,9 +117,10 @@ export class CoursesService {
         return new Course(res.id, res.shortname, img, res.category);
       }),
       toArray(),
-      tap(courses => {
+      map(courses => {
         this._courses.next(courses);
         this.saveCoursestoStorage(courses);
+        return true;
       })
     );
   }
@@ -339,7 +341,8 @@ export class CoursesService {
   getCategoriesFromStorage() {
     return from(Storage.get({ key: 'categories' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        throwError('Categories are not stored locally');
+        console.log('Categories are not stored locally');
+        return false;
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number,
@@ -348,7 +351,7 @@ export class CoursesService {
       }[];
       const categories = parsedData.map(categoryData => new Category(categoryData.id, categoryData.name, categoryData.img));
       this._categories.next(categories);
-      return categories;
+      return true;
     }));
   }
 
@@ -360,7 +363,8 @@ export class CoursesService {
   getCoursesFromStorage() {
     return from(Storage.get({ key: 'courses' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        throwError('Courses are not stored locally.');
+        console.log('Courses are not stored locally.');
+        return false;
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number;
@@ -412,7 +416,7 @@ export class CoursesService {
         return new Course(courseData.id, courseData.name, courseData.img, courseData.categoryId, topics);
       });
       this._courses.next(courses);
-      return courses;
+      return true;
     }));
   }
 }

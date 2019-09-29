@@ -4,8 +4,6 @@ import { switchMap, toArray, map, withLatestFrom, first, tap } from 'rxjs/operat
 
 import { Page } from '../knowledge-room/courses/course.model';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
-import { AuthService } from '../auth/auth.service';
-import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +12,7 @@ export class NewsService {
   private _newsPages = new BehaviorSubject<Page[]>(null);
 
   constructor(
-    private coursesService: CoursesService,
-    private authService: AuthService,
-    private http: HttpClient,
+    private coursesService: CoursesService
   ) { }
 
   get newsPages() {

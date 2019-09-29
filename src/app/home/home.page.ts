@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { PluginListenerHandle } from '@capacitor/core/dist/esm/web/network';
 import { AlertController } from '@ionic/angular';
@@ -75,14 +74,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   fetchData() {
-    return this.authService.fetchUser().pipe(
-      switchMap(() => {
-        return this.coursesService.fetchCourses();
-      }),
-      switchMap(() => {
-        return this.newsService.fetchNewsPages();
-      })
-    );
+    return this.newsService.fetchNewsPages();
   }
 
   doRefresh(event: any) {
@@ -104,9 +96,6 @@ export class HomePage implements OnInit, OnDestroy {
         buttons: ['OK']
       })
       .then(alertEl => {
-        this.userStoreSub = this.authService.getUserFromStorage().subscribe(user => console.log(user));
-        this.coursesStoreSub = this.coursesService.getCoursesFromStorage().subscribe(courses => console.log(courses));
-        this.categoriesStoreSub = this.coursesService.getCategoriesFromStorage().subscribe(categories => console.log(categories));
         alertEl.present();
       });
   }
