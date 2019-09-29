@@ -1,7 +1,3 @@
-import { Plugins, FilesystemDirectory } from '@capacitor/core';
-
-const { Filesystem } = Plugins;
-
 export class Category {
   constructor(
     public id: number,

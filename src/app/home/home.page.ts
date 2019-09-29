@@ -27,6 +27,7 @@ export class HomePage implements OnInit, OnDestroy {
   private fetchSub: Subscription;
   private userStoreSub: Subscription;
   private coursesStoreSub: Subscription;
+  private categoriesStoreSub: Subscription;
   private networkHandler: PluginListenerHandle;
 
   constructor(
@@ -61,13 +62,16 @@ export class HomePage implements OnInit, OnDestroy {
     this.userSub.unsubscribe();
     this.newsSub.unsubscribe();
     this.fetchSub.unsubscribe();
+    this.networkHandler.remove();
     if (this.userStoreSub) {
       this.userStoreSub.unsubscribe();
     }
     if (this.coursesStoreSub) {
       this.coursesStoreSub.unsubscribe();
     }
-    this.networkHandler.remove();
+    if (this.categoriesStoreSub) {
+      this.categoriesStoreSub.unsubscribe();
+    }
   }
 
   fetchData() {
@@ -102,6 +106,7 @@ export class HomePage implements OnInit, OnDestroy {
       .then(alertEl => {
         this.userStoreSub = this.authService.getUserFromStorage().subscribe(user => console.log(user));
         this.coursesStoreSub = this.coursesService.getCoursesFromStorage().subscribe(courses => console.log(courses));
+        this.categoriesStoreSub = this.coursesService.getCategoriesFromStorage().subscribe(categories => console.log(categories));
         alertEl.present();
       });
   }
