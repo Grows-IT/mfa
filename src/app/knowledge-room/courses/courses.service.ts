@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, timeout, first, withLatestFrom, toArray, flatMap } from 'rxjs/operators';
+import { map, tap, switchMap, timeout, first, withLatestFrom, toArray, flatMap, concatMap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
-import { from, BehaviorSubject } from 'rxjs';
+import { from, BehaviorSubject, Observable, throwError } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { Course, Topic, Page, Quiz, PageResource, Category } from './course.model';
@@ -63,7 +63,6 @@ export class CoursesService {
   private _categories = new BehaviorSubject<Category[]>(null);
   private _courses = new BehaviorSubject<Course[]>(null);
   private _topics = new BehaviorSubject<Topic[]>(null);
-  private _activities = new BehaviorSubject<any>(null);
 
   constructor(
     private http: HttpClient,
@@ -153,38 +152,44 @@ export class CoursesService {
   }
 
   downloadCourse(courseId: number) {
-    let course: Course;
+    let courses: Course[];
     return this.courses.pipe(
       first(),
-      map(courses => {
-        course = courses.find(c => c.id === courseId);
-        return course;
+      map(cs => {
+        courses = cs;
+        return cs.find(c => c.id === courseId);
       }),
       switchMap(c => from(c.topics)),
       flatMap(topic => from(topic.activities.filter(activity => activity instanceof Page))),
       flatMap((p: Page) => {
         return this.downloadResources(p);
       }),
-      toArray()
+      toArray(),
+      tap(() => {
+        console.log(courses);
+        this._courses.next(courses);
+        this.saveCoursestoStorage(courses);
+      })
     );
   }
 
   private downloadResources(page: Page) {
-    const indexHtmlResource = page.resources.find(resource => resource.name === 'index.html');
-    const otherResources = page.resources.filter(resource => resource.type);
-    let otherResource: PageResource;
-    return this.http.get(indexHtmlResource.url, { responseType: 'text' }).pipe(
-      switchMap(content => {
-        page.content = content;
-        return from(otherResources);
-      }),
-      flatMap(resource => {
-        otherResource = resource;
-        return this.http.get(resource.url, { responseType: 'blob' });
+    let currentResource: PageResource;
+    return from(page.resources).pipe(
+      concatMap(resource => {
+        currentResource = resource;
+        if (resource.name === 'index.html') {
+          return this.http.get(resource.url, { responseType: 'text' });
+        }
+        return this.http.get(resource.url, { responseType: 'blob' }).pipe(
+          flatMap(blob => {
+            return this.readFile(blob);
+          })
+        );
       }),
       map(data => {
-        otherResource.data = data;
-        return otherResource;
+        currentResource.data = data;
+        return currentResource;
       }),
       toArray(),
       map(resources => {
@@ -192,6 +197,20 @@ export class CoursesService {
         return page;
       })
     );
+  }
+
+  private readFile(blob: Blob): Observable<string> {
+    if (!(blob instanceof Blob)) {
+      return throwError(new Error('`blob` must be an instance of File or Blob.'));
+    }
+    return new Observable(obs => {
+      const reader = new FileReader();
+      reader.onerror = err => obs.error(err);
+      reader.onabort = err => obs.error(err);
+      reader.onload = () => obs.next(reader.result.toString());
+      reader.onloadend = () => obs.complete();
+      return reader.readAsDataURL(blob);
+    });
   }
 
   fetchResources(courseId: number, topicId: number, activityId: number) {
@@ -339,7 +358,8 @@ export class CoursesService {
             resources: [{
               name: string,
               type: string,
-              url: string
+              url: string,
+              data: string
             }]
           }]
         }]
@@ -358,7 +378,7 @@ export class CoursesService {
                   let resources: PageResource[];
                   if (activityData.resources) {
                     resources = activityData.resources.map(resourceData => {
-                      return new PageResource(resourceData.name, resourceData.type, resourceData.url);
+                      return new PageResource(resourceData.name, resourceData.type, resourceData.url, resourceData.data);
                     });
                     return new Page(activityData.id, activityData.name, activityData.content, resources, activityData.img);
                   }

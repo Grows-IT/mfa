@@ -38,7 +38,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    // this.alertCtrl.create({ animated: false }).then(a => { a.present(); a.dismiss(); }); // Pre-load alert
+    this.alertCtrl.create({ animated: false }).then(a => { a.present(); a.dismiss(); }); // Pre-load alert
     this.networkHandler = Network.addListener('networkStatusChange', status => {
       if (!status.connected) {
         this.showAlert('คุณไม่ได้เชื่อมต่อ Internet กำลังใช้งานแบบ offline');
@@ -100,8 +100,8 @@ export class HomePage implements OnInit, OnDestroy {
         buttons: ['OK']
       })
       .then(alertEl => {
-        // this.userStoreSub = this.authService.getUserFromStorage().subscribe(user => console.log(user));
-        // this.coursesStoreSub = this.coursesService.getCoursesFromStorage().subscribe(courses => console.log(courses));
+        this.userStoreSub = this.authService.getUserFromStorage().subscribe(user => console.log(user));
+        this.coursesStoreSub = this.coursesService.getCoursesFromStorage().subscribe(courses => console.log(courses));
         alertEl.present();
       });
   }

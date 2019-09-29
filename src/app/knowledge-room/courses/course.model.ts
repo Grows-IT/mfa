@@ -1,3 +1,7 @@
+import { Plugins, FilesystemDirectory } from '@capacitor/core';
+
+const { Filesystem } = Plugins;
+
 export class Category {
   constructor(
     public id: number,
@@ -93,7 +97,7 @@ export class PageResource {
     public name: string,
     public type: string,
     public url: string,
-    public data?: Blob
+    public data?: string
   ) { }
 
   toObject() {
@@ -101,8 +105,19 @@ export class PageResource {
       name: this.name,
       type: this.type,
       url: this.url,
+      data: this.data
     };
   }
+
+  // saveDataToFileSystem() {
+  //   try {
+  //     Filesystem.writeFile({
+  //       path: this.url,
+  //       data: this.data,
+  //       directory: FilesystemDirectory.Documents,
+  //     })
+  //   }
+  // }
 }
 
 

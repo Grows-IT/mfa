@@ -34,6 +34,7 @@ export class TopicsPage implements OnInit, OnDestroy {
       if (!topics || topics.length === 0) {
         this.errorMessage = 'Coming soon';
       }
+      this.coursesService.downloadCourse(courseId).subscribe();
       this.isLoading = false;
     }, error => {
       console.log('[ERROR] topics.page.ts#ngOnInit', error.message);
