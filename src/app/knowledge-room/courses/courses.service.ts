@@ -95,7 +95,10 @@ export class CoursesService {
         return new Category(res.id, res.name, imgUrl);
       }),
       toArray(),
-      tap(categories => this._categories.next(categories))
+      tap(categories => {
+        this._categories.next(categories);
+        this.saveCategoriesToStorage(categories);
+      })
     );
   }
 
@@ -166,7 +169,6 @@ export class CoursesService {
       }),
       toArray(),
       tap(() => {
-        console.log(courses);
         this._courses.next(courses);
         this.saveCoursestoStorage(courses);
       })
@@ -327,19 +329,38 @@ export class CoursesService {
     );
   }
 
-  private saveCoursestoStorage(courses: Course[]) {
-    const data = JSON.stringify(courses.map(course => {
-      const val = course.toObject();
-      return val;
+  private saveCategoriesToStorage(categories: Category[]) {
+    const data = JSON.stringify(categories.map(category => {
+      return category.toObject();
     }));
+    Storage.set({ key: 'categories', value: data });
+  }
+
+  getCategoriesFromStorage() {
+    return from(Storage.get({ key: 'categories' })).pipe(map(storedData => {
+      if (!storedData || !storedData.value) {
+        throwError('Categories are not stored locally');
+      }
+      const parsedData = JSON.parse(storedData.value) as {
+        id: number,
+        name: string,
+        img: string
+      }[];
+      const categories = parsedData.map(categoryData => new Category(categoryData.id, categoryData.name, categoryData.img));
+      this._categories.next(categories);
+      return categories;
+    }));
+  }
+
+  private saveCoursestoStorage(courses: Course[]) {
+    const data = JSON.stringify(courses.map(course => course.toObject()));
     Storage.set({ key: 'courses', value: data });
   }
 
   getCoursesFromStorage() {
     return from(Storage.get({ key: 'courses' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        console.log('Courses are not stored locally.');
-        return null;
+        throwError('Courses are not stored locally.');
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number;
@@ -390,6 +411,7 @@ export class CoursesService {
         }
         return new Course(courseData.id, courseData.name, courseData.img, courseData.categoryId, topics);
       });
+      this._courses.next(courses);
       return courses;
     }));
   }
