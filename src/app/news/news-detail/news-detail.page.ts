@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-import { Page, Course, Topic } from 'src/app/knowledge-room/courses/course.model';
-import { CoursesService } from 'src/app/knowledge-room/courses/courses.service';
 import { NewsService } from '../news.service';
+import { NewsArticle } from '../news.model';
 
 @Component({
   selector: 'app-news-detail',
@@ -13,12 +12,8 @@ import { NewsService } from '../news.service';
   styleUrls: ['./news-detail.page.scss'],
 })
 export class NewsDetailPage implements OnInit, OnDestroy {
-  private fetchSub: Subscription;
   private newsSub: Subscription;
-  newsCourse: Course;
-  newsTopic: Topic;
-  newsPage: Page;
-  errorMessage: string;
+  newsArticle: NewsArticle;
   indexHtml: SafeHtml;
   isLoading = false;
 
@@ -30,24 +25,15 @@ export class NewsDetailPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    const pageId = +this.activatedRoute.snapshot.paramMap.get('id');
-    this.newsSub = this.newsService.newsPages.subscribe(pages => {
-      this.newsPage = pages.find(page => page.id === pageId);
-      this.indexHtml = this.sanitizer.bypassSecurityTrustHtml(this.newsPage.content);
+    const newsArticleId = +this.activatedRoute.snapshot.paramMap.get('id');
+    this.newsSub = this.newsService.getNewsArticleById(newsArticleId).subscribe(article => {
+      this.newsArticle = article;
+      this.indexHtml = this.sanitizer.bypassSecurityTrustHtml(article.content);
+      this.isLoading = false;
     });
-    // this.fetchSub = this.newsService.fetchResources(pageId).subscribe(
-    //   () => {
-    //     this.isLoading = false;
-    //   },
-    //   error => {
-    //     console.log('[ERROR] news-detail.page.ts#ngOnInit', error.message);
-    //     this.isLoading = false;
-    //   }
-    // );
   }
 
   ngOnDestroy() {
-    this.fetchSub.unsubscribe();
     this.newsSub.unsubscribe();
   }
 }

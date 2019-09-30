@@ -7,7 +7,7 @@ import { AlertController } from '@ionic/angular';
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
-import { Page } from '../knowledge-room/courses/course.model';
+import { NewsArticle } from '../news/news.model';
 
 const { Network } = Plugins;
 
@@ -18,7 +18,7 @@ const { Network } = Plugins;
 })
 export class HomePage implements OnInit, OnDestroy {
   user: User;
-  newsPages: Page[];
+  newsArticles: NewsArticle[];
   isLoading = false;
   private newsSub: Subscription;
   private userSub: Subscription;
@@ -40,7 +40,9 @@ export class HomePage implements OnInit, OnDestroy {
       }
     });
     this.userSub = this.authService.user.subscribe(user => this.user = user);
-    this.newsSub = this.newsService.newsPages.subscribe(pages => this.newsPages = pages);
+    this.newsSub = this.newsService.newsArticles.subscribe(articles => {
+      this.newsArticles = articles;
+    });
     this.fetchSub = this.fetchData().subscribe(
       () => {
         this.isLoading = false;
@@ -60,7 +62,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   fetchData() {
-    return this.newsService.fetchNewsPages();
+    return this.newsService.fetchNewsArticles();
   }
 
   doRefresh(event: any) {

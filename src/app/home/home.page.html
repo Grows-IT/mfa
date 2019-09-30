@@ -62,11 +62,11 @@
     </ion-row>
     <ion-row>
       <ion-slides pager>
-        <ion-slide *ngFor="let page of newsPages">
-          <ion-card class="card" [routerLink]="['/tabs/news/', page.id]">
-            <img *ngIf="page.img" class="card-img" [src]="page.img" />
+        <ion-slide *ngFor="let article of newsArticles">
+          <ion-card class="card" [routerLink]="['/tabs/news/', article.id]">
+            <img *ngIf="article.imgUrl" class="card-img" [src]="article.imgData" />
             <ion-card-content>
-              <p>{{ page.name }}</p>
+              <p>{{ article.name }}</p>
             </ion-card-content>
           </ion-card>
         </ion-slide>

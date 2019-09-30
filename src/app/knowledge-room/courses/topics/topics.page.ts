@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CoursesService } from '../courses.service';
 import { Topic, Course } from '../course.model';
 import { Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-topics',
@@ -31,21 +32,33 @@ export class TopicsPage implements OnInit, OnDestroy {
       this.course = courses.find(course => course.id === courseId);
     });
     this.topicsSub = this.coursesService.topics.subscribe(topics => {
+      if (!topics || topics.length === 0) {
+        return this.errorMessage = 'Coming soon';
+      }
       this.topics = topics;
     });
-    this.fetchSub = this.coursesService.fetchTopics(courseId).subscribe(topics => {
-      if (!topics || topics.length === 0) {
-        this.errorMessage = 'Coming soon';
+    this.fetchSub = this.getTopics(courseId).subscribe(
+      () => {
+        this.isLoading = false;
+      }, error => {
+        console.log('[ERROR] topics.page.ts#ngOnInit', error.message);
+        this.isLoading = false;
       }
-      this.isLoading = false;
-    }, error => {
-      console.log('[ERROR] topics.page.ts#ngOnInit', error.message);
-      this.isLoading = false;
-    });
+    );
+  }
+
+  getTopics(courseId: number) {
+    return this.coursesService.fetchTopics(courseId).pipe(
+      catchError(error => {
+        console.log(error);
+        return this.coursesService.getTopicsFromStorage(courseId);
+      })
+    );
   }
 
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
+    this.topicsSub.unsubscribe();
     this.fetchSub.unsubscribe();
   }
 }

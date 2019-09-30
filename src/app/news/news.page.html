@@ -12,12 +12,12 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-grid>
-    <ion-row *ngFor="let page of newsPages">
+    <ion-row *ngFor="let article of newsArticles">
       <ion-col size="10" offset="1">
-        <ion-card [routerLink]="page.id">
-          <img *ngIf="page.img" [src]="page.img" />
+        <ion-card [routerLink]="article.id">
+          <img *ngIf="article.imgUrl" [src]="article.imgData" />
           <ion-card-header>
-            <ion-card-title>{{ page.name }}</ion-card-title>
+            <ion-card-title>{{ article.name }}</ion-card-title>
           </ion-card-header>
         </ion-card>
       </ion-col>
