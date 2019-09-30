@@ -19,17 +19,19 @@ export class Category {
 export class Course {
   constructor(
     public id: number,
+    public categoryId: number,
     public name: string,
-    public img?: string,
-    public categoryId?: number
+    public imgUrl?: string,
+    public imgData?: string,
   ) { }
 
   toObject() {
     return {
       id: this.id,
+      categoryId: this.categoryId,
       name: this.name,
-      img: this.img,
-      categoryId: this.categoryId
+      imgUrl: this.imgUrl,
+      imgData: this.imgData
     };
   }
 }

@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from } from 'rxjs';
-import { switchMap, toArray, map, withLatestFrom, first, tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { switchMap, map, first, tap } from 'rxjs/operators';
 
 import { Page } from '../knowledge-room/courses/course.model';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
+import { NewsArticle } from './news.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService {
   private _newsPages = new BehaviorSubject<Page[]>(null);
+  private _newsArticles = new BehaviorSubject<NewsArticle[]>(null);
 
   constructor(
     private coursesService: CoursesService
@@ -19,43 +21,44 @@ export class NewsService {
     return this._newsPages.asObservable();
   }
 
-  fetchNewsPages() {
-    return this.coursesService.courses.pipe(
-      first(),
-      switchMap(courses => {
-        const newsCourse = courses.find(course => course.name === 'News and Update');
-        return this.coursesService.fetchTopics(newsCourse.id);
-      }),
-      switchMap(topics => {
-        return from(topics[0].activities as Page[]);
-      }),
-      map(page => {
-        const imgResource = page.resources.find(resource => resource.type && resource.type.includes('image'));
-        if (imgResource) {
-          page.img = imgResource.url;
-        }
-        return page;
-      }),
-      toArray(),
-      tap(newsPages => this._newsPages.next(newsPages))
+  get newsArticles() {
+    return this._newsArticles.asObservable();
+  }
+
+  getNewsArticleById(articleId: number) {
+    return this.newsArticles.pipe(
+      map(articles => {
+        return articles.find(article => article.id === articleId);
+      })
     );
   }
 
-  // fetchResources(pageId: number) {
-  //   return this.coursesService.courses.pipe(
-  //     first(),
-  //     switchMap(courses => {
-  //       const course = courses.find(c => c.name === 'News and Update');
-  //       const topic = course.topics[0];
-  //       return this.coursesService.fetchResources(course.id, topic.id, pageId);
-  //     }),
-  //     withLatestFrom(this.newsPages),
-  //     map(([fetchedPage, newsPages]) => {
-  //       const index = newsPages.findIndex(p => p.id === fetchedPage.id);
-  //       newsPages.splice(index, 1, fetchedPage);
-  //       this._newsPages.next(newsPages);
-  //       return fetchedPage;
-  //     })
-  //   );
-  // }
+  fetchNewsArticles() {
+    return this.coursesService.getCourseByName('News and Update').pipe(
+      first(),
+      switchMap(course => {
+        return this.coursesService.fetchTopics(course.id);
+      }),
+      map(topics => {
+        const pages = topics[0].activities as Page[];
+        const newsArticles = pages.map(page => {
+          const contentRes = page.resources.find(resource => resource.name === 'index.html');
+          const imgRes = page.resources.find(resource => resource.type && resource.type.includes('image'));
+          const otherRes = page.resources.filter(resource => resource.type);
+          let content = contentRes.data;
+          otherRes.forEach(resource => {
+            content = content.replace(resource.name, resource.data);
+          });
+          const newsArticle = new NewsArticle(page.id, page.name, content);
+          if (imgRes) {
+            newsArticle.imgUrl = imgRes.url;
+            newsArticle.imgData = imgRes.data;
+          }
+          return newsArticle;
+        });
+        return newsArticles;
+      }),
+      tap(newsArticles => this._newsArticles.next(newsArticles))
+    );
+  }
 }

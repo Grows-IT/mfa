@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanLoad, Route, UrlSegment, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { tap, switchMap, first, catchError } from 'rxjs/operators';
+import { tap, switchMap, first, catchError, map } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
@@ -91,14 +91,17 @@ export class AuthGuard implements CanLoad {
       first(),
       switchMap(courses => {
         if (!courses || courses.length === 0) {
-          return this.coursesService.getCoursesFromStorage();
+          return this.coursesService.getCoursesFromStorage().pipe(map(savedCourses => !!savedCourses));
         }
         return of(!!courses);
       }),
       switchMap(result => {
         if (!result) {
           return this.coursesService.fetchCourses().pipe(
-            catchError(() => of(false))
+            catchError(() => of(false)),
+            map(courses => {
+              return !!courses;
+            })
           );
         }
         return of(result);

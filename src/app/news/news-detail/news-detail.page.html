@@ -3,13 +3,13 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/news"></ion-back-button>
     </ion-buttons>
-    <ion-title *ngIf=!isLoading>{{ newsPage.name }}</ion-title>
+    <ion-title *ngIf=!isLoading>{{ newsArticle.name }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <div text-center *ngIf="isLoading">
-        <ion-spinner></ion-spinner>
-      </div>
+  <div text-center *ngIf="isLoading">
+    <ion-spinner></ion-spinner>
+  </div>
   <div *ngIf="!isLoading" [innerHTML]="indexHtml"></div>
 </ion-content>

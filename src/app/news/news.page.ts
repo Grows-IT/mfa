@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { NewsService } from './news.service';
-import { Page } from '../knowledge-room/courses/course.model';
+import { NewsArticle } from './news.model';
 
 @Component({
   selector: 'app-news',
@@ -10,7 +10,7 @@ import { Page } from '../knowledge-room/courses/course.model';
   styleUrls: ['./news.page.scss'],
 })
 export class NewsPage implements OnInit, OnDestroy {
-  newsPages: Page[];
+  newsArticles: NewsArticle[];
   isLoading = false;
   private newsSub: Subscription;
   private fetchSub: Subscription;
@@ -20,7 +20,7 @@ export class NewsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.newsSub = this.newsService.newsPages.subscribe(pages => this.newsPages = pages);
+    this.newsSub = this.newsService.newsArticles.subscribe(articles => this.newsArticles = articles);
   }
 
   ngOnDestroy() {
@@ -34,7 +34,7 @@ export class NewsPage implements OnInit, OnDestroy {
     if (this.fetchSub) {
       this.fetchSub.unsubscribe();
     }
-    this.fetchSub = this.newsService.fetchNewsPages().subscribe(
+    this.fetchSub = this.newsService.fetchNewsArticles().subscribe(
       () => event.target.complete(),
       error => {
         console.log('[ERROR] news.page.ts#doRefresh', error.message);

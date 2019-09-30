@@ -26,9 +26,11 @@ export interface CoursesResponseData {
   id: number;
   shortname: string;
   category: number;
-  overviewfiles: [{
-    fileurl: string;
-  }];
+  overviewfiles: OverviewFile[];
+}
+
+export interface OverviewFile {
+  fileurl: string;
 }
 
 export interface CoreCourseGetContentsResponse {
@@ -86,6 +88,26 @@ export class CoursesService {
     return this._activities.asObservable().pipe();
   }
 
+  getCourseById(courseId: number) {
+    return this.courses.pipe(
+      map(courses => {
+        return courses.find(course => course.id === courseId);
+      })
+    );
+  }
+
+  getCourseByName(courseName: string) {
+    return this.courses.pipe(
+      map(courses => {
+        return courses.find(course => course.name === courseName);
+      })
+    );
+  }
+
+  getTopicsByCourseId(courseId: number) {
+    // TODO
+  }
+
   getTopicById(topicId: number) {
     return this.topics.pipe(
       map(topics => {
@@ -138,18 +160,22 @@ export class CoursesService {
         return from(resArr);
       }),
       withLatestFrom(this.authService.token),
-      map(([res, token]) => {
-        let img: string;
-        if (res.overviewfiles && res.overviewfiles.length > 0) {
-          img = `${res.overviewfiles[0].fileurl}?token=${token}&offline=1`;
+      flatMap(([res, token]) => {
+        if (!res.overviewfiles || res.overviewfiles.length === 0) {
+          return of(new Course(res.id, res.category, res.shortname));
         }
-        return new Course(res.id, res.shortname, img, res.category);
+        const imgUrl = `${res.overviewfiles[0].fileurl}?token=${token}&offline=1`;
+        return this.getBinaryFile(imgUrl).pipe(
+          map(imgData => {
+            return new Course(res.id, res.category, res.shortname, imgUrl, imgData);
+          })
+        );
       }),
       toArray(),
       map(courses => {
         this._courses.next(courses);
         this.saveCoursestoStorage(courses);
-        return true;
+        return courses;
       })
     );
   }
@@ -182,84 +208,6 @@ export class CoursesService {
     );
   }
 
-  // fetchTopics(courseId: number) {
-  //   return this.coreCourseGetContents(courseId).pipe(
-  //     withLatestFrom(this.authService.token),
-  //     map(([resArr, token]) => {
-  //       const topics = resArr.map(res => {
-  //         const activities = res.modules.map(mod => {
-  //           if (mod.modname === 'quiz') {
-  //             return new Quiz(mod.id, mod.name);
-  //           } else if (mod.modname === 'page') {
-  //             const pageResources = mod.contents.map(content => {
-  //               const fileUrl = `${content.fileurl}&token=${token}&offline=1`;
-  //               return new PageResource(content.filename, content.mimetype, fileUrl);
-  //             });
-  //             return new Page(mod.id, mod.name, null, pageResources);
-  //           }
-  //         });
-  //         return new Topic(res.id, res.name, activities);
-  //       });
-  //       return topics;
-  //     }),
-  //     withLatestFrom(this.courses),
-  //     map(([topics, courses]) => {
-  //       const course = courses.find(c => c.id === courseId);
-  //       course.topics = topics;
-  //       this._courses.next(courses);
-  //       this.saveCoursestoStorage(courses);
-  //       return topics;
-  //     })
-  //   );
-  // }
-
-  // downloadCourse(courseId: number) {
-  //   let courses: Course[];
-  //   return this.courses.pipe(
-  //     first(),
-  //     map(cs => {
-  //       courses = cs;
-  //       return cs.find(c => c.id === courseId);
-  //     }),
-  //     switchMap(c => from(c.topics)),
-  //     flatMap(topic => from(topic.activities.filter(activity => activity instanceof Page))),
-  //     flatMap((p: Page) => {
-  //       return this.downloadResources(p);
-  //     }),
-  //     toArray(),
-  //     tap(() => {
-  //       this._courses.next(courses);
-  //       this.saveCoursestoStorage(courses);
-  //     })
-  //   );
-  // }
-
-  // private downloadResources(page: Page) {
-  //   let currentResource: PageResource;
-  //   return from(page.resources).pipe(
-  //     concatMap(resource => {
-  //       currentResource = resource;
-  //       if (resource.name === 'index.html') {
-  //         return this.http.get(resource.url, { responseType: 'text' });
-  //       }
-  //       return this.http.get(resource.url, { responseType: 'blob' }).pipe(
-  //         flatMap(blob => {
-  //           return this.readFile(blob);
-  //         })
-  //       );
-  //     }),
-  //     map(data => {
-  //       currentResource.data = data;
-  //       return currentResource;
-  //     }),
-  //     toArray(),
-  //     map(resources => {
-  //       page.resources = resources;
-  //       return page;
-  //     })
-  //   );
-  // }
-
   private readFile(blob: Blob): Observable<string> {
     if (!(blob instanceof Blob)) {
       return throwError(new Error('`blob` must be an instance of File or Blob.'));
@@ -273,35 +221,6 @@ export class CoursesService {
       return reader.readAsDataURL(blob);
     });
   }
-
-  // fetchResources(courseId: number, topicId: number, activityId: number) {
-  //   let page: Page;
-  //   let courses: Course[];
-  //   return this.courses.pipe(
-  //     first(),
-  //     map(cs => {
-  //       courses = cs;
-  //       return cs.find(c => c.id === courseId);
-  //     }),
-  //     map(course => course.topics.find(topic => topic.id === topicId)),
-  //     map(topic => topic.activities.find(activity => activity.id === activityId)),
-  //     switchMap((p: Page) => {
-  //       page = p;
-  //       const indexHtmlResource = p.resources.find(resource => resource.name === 'index.html');
-  //       return this.getTextFile(indexHtmlResource.url);
-  //     }),
-  //     map(content => {
-  //       const mediaResources = page.resources.filter(resource => resource.type);
-  //       mediaResources.forEach(mediaResource => {
-  //         content = content.replace(mediaResource.name, mediaResource.url);
-  //       });
-  //       page.content = content;
-  //       this._courses.next(courses);
-  //       this.saveCoursestoStorage(courses);
-  //       return page;
-  //     })
-  //   );
-  // }
 
   private coreCourseGetCategories() {
     return this.authService.token.pipe(
@@ -381,39 +300,9 @@ export class CoursesService {
   }
 
   private getBinaryFile(url: string) {
-    return this.authService.token.pipe(
-      first(),
-      switchMap(token => {
-        const params = new HttpParams({
-          fromObject: {
-            token
-          }
-        });
-        return this.http.post(url, params, {
-          headers: new HttpHeaders({
-            Accept: 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }), responseType: 'blob'
-        });
-      })
-    );
-  }
-
-  getTextFile(url: string) {
-    return this.authService.token.pipe(
-      first(),
-      switchMap(token => {
-        const params = new HttpParams({
-          fromObject: {
-            token
-          }
-        });
-        return this.http.post(url, params, {
-          headers: new HttpHeaders({
-            Accept: 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }), responseType: 'text'
-        });
+    return this.http.get(url, { responseType: 'blob' }).pipe(
+      switchMap(blob => {
+        return this.readFile(blob);
       })
     );
   }
@@ -511,15 +400,16 @@ export class CoursesService {
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number;
-        name: string;
-        img: string,
         categoryId: number;
+        name: string;
+        imgUrl: string,
+        imgData: string
       }[];
       const courses = parsedData.map(courseData => {
-        return new Course(courseData.id, courseData.name, courseData.img, courseData.categoryId);
+        return new Course(courseData.id, courseData.categoryId, courseData.name, courseData.imgUrl, courseData.imgData);
       });
       this._courses.next(courses);
-      return true;
+      return courses;
     }));
   }
 }
