@@ -6,6 +6,7 @@ import { Plugins } from '@capacitor/core';
 
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
+import { CoursesService } from '../knowledge-room/courses/courses.service';
 
 const duration = environment.timeoutDuration;
 const siteUrl = environment.siteUrl;
@@ -45,6 +46,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
+    private coursesService: CoursesService
   ) { }
 
   get user() {
@@ -174,6 +176,7 @@ export class AuthService {
 
   private coreWebserviceGetSiteInfo() {
     let token: string;
+    let user: User;
     return this.token.pipe(
       first(),
       switchMap(t => {
@@ -186,24 +189,23 @@ export class AuthService {
         return this.http.post<GetSiteInfoResponseData>(getSiteInfoWsUrl, params, httpOptions);
       }),
       timeout(duration),
-      map(res => {
+      switchMap(res => {
         if (res.errorcode) {
           throw new Error(res.message);
         }
+        user = new User(res.userid, res.username, res.firstname, res.lastname, res.userpictureurl);
         if (!res.userpictureurl.includes('theme/image.php')) {
           const regex = /(\w+:\/\/[\w\d\.]+)(\S+)/g;
           const match = regex.exec(res.userpictureurl);
-          res.userpictureurl = `${match[1]}/webservice${match[2]}&token=${token}&offline=1#moodlemobile-embedded`;
+          user.imgUrl = `${match[1]}/webservice${match[2]}&token=${token}&offline=1#moodlemobile-embedded`;
         }
-        const user = new User(
-          res.userid,
-          res.username,
-          res.firstname,
-          res.lastname,
-          res.userpictureurl
-        );
+        return this.http.get(user.imgUrl, { responseType: 'blob' });
+      }),
+      switchMap(blob => this.coursesService.readFile(blob)),
+      map(imgData => {
+        user.imgData = imgData;
         return user;
-      })
+      }),
     );
   }
 
@@ -229,7 +231,8 @@ export class AuthService {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
-      imgUrl: user.imgUrl
+      imgUrl: user.imgUrl,
+      imgData: user.imgData
     });
     Plugins.Storage.set({ key: 'user', value: data });
   }
@@ -245,13 +248,15 @@ export class AuthService {
         firstName: string;
         lastName: string;
         imgUrl: string;
+        imgData: string;
       };
       const user = new User(
         parsedData.id,
         parsedData.username,
         parsedData.firstName,
         parsedData.lastName,
-        parsedData.imgUrl
+        parsedData.imgUrl,
+        parsedData.imgData
       );
       this._user.next(user);
       return true;

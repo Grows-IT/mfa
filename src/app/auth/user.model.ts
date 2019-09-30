@@ -4,6 +4,7 @@ export class User {
     public username: string,
     public firstName: string,
     public lastName: string,
-    public imgUrl: string,
+    public imgUrl?: string,
+    public imgData?: string
   ) {}
 }

@@ -62,7 +62,6 @@ export interface CategoryResponseData {
 export class CoursesService {
   private _categories = new BehaviorSubject<Category[]>(null);
   private _courses = new BehaviorSubject<Course[]>(null);
-  private _topics = new BehaviorSubject<Topic[]>(null);
 
   constructor(
     private http: HttpClient,
@@ -77,10 +76,6 @@ export class CoursesService {
     return this._courses.asObservable();
   }
 
-  get topics() {
-    return this._topics.asObservable();
-  }
-
   fetchCategories() {
     return this.coreCourseGetCategories().pipe(
       switchMap(resArr => from(resArr)),
@@ -91,9 +86,7 @@ export class CoursesService {
           const match = regex.exec(decodeURI(res.description));
           const imgUrl = `${match[1]}?token=${token}&offline=1`;
           return this.http.get(imgUrl, { responseType: 'blob' }).pipe(
-            tap(data => console.log(data)),
             switchMap(blob => this.readFile(blob)),
-            tap(data => console.log(data)),
             map(imgData => {
               return new Category(res.id, res.name, imgUrl, imgData);
             })
@@ -210,7 +203,7 @@ export class CoursesService {
     );
   }
 
-  private readFile(blob: Blob): Observable<string> {
+  readFile(blob: Blob): Observable<string> {
     if (!(blob instanceof Blob)) {
       return throwError(new Error('`blob` must be an instance of File or Blob.'));
     }
