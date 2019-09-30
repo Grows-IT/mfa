@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { from, BehaviorSubject, throwError } from 'rxjs';
+import { from, BehaviorSubject, throwError, Observable } from 'rxjs';
 import { timeout, map, switchMap, first, withLatestFrom, catchError } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
-import { CoursesService } from '../knowledge-room/courses/courses.service';
 
 const duration = environment.timeoutDuration;
 const siteUrl = environment.siteUrl;
@@ -45,8 +44,7 @@ export class AuthService {
   private _token = new BehaviorSubject<string>(null);
 
   constructor(
-    private http: HttpClient,
-    private coursesService: CoursesService
+    private http: HttpClient
   ) { }
 
   get user() {
@@ -201,12 +199,26 @@ export class AuthService {
         }
         return this.http.get(user.imgUrl, { responseType: 'blob' });
       }),
-      switchMap(blob => this.coursesService.readFile(blob)),
+      switchMap(blob => this.readFile(blob)),
       map(imgData => {
         user.imgData = imgData;
         return user;
       }),
     );
+  }
+
+  private readFile(blob: Blob): Observable<string> {
+    if (!(blob instanceof Blob)) {
+      return throwError(new Error('`blob` must be an instance of File or Blob.'));
+    }
+    return new Observable(obs => {
+      const reader = new FileReader();
+      reader.onerror = err => obs.error(err);
+      reader.onabort = err => obs.error(err);
+      reader.onload = () => obs.next(reader.result.toString());
+      reader.onloadend = () => obs.complete();
+      return reader.readAsDataURL(blob);
+    });
   }
 
   private saveTokenToStorage(token: string) {

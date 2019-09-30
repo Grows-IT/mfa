@@ -203,7 +203,7 @@ export class CoursesService {
     );
   }
 
-  readFile(blob: Blob): Observable<string> {
+  private readFile(blob: Blob): Observable<string> {
     if (!(blob instanceof Blob)) {
       return throwError(new Error('`blob` must be an instance of File or Blob.'));
     }
