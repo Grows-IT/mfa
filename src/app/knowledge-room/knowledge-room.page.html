@@ -8,6 +8,9 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-grid>
     <ion-row>
       <ion-col size="4" offset="4">
@@ -21,7 +24,7 @@
     </ion-row>
     <ion-row>
       <ion-col text-center size="6" *ngFor="let category of categories" [routerLink]="[category.id, 'courses']">
-        <img [src]="category.img" />
+        <img [src]="category.imgData" />
         <ion-text>
           <h3>{{ category.name }}</h3>
         </ion-text>

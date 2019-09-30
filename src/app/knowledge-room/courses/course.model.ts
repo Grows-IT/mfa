@@ -2,14 +2,16 @@ export class Category {
   constructor(
     public id: number,
     public name: string,
-    public img?: string
+    public imgUrl?: string,
+    public imgData?: string
   ) { }
 
   toObject() {
     return {
       id: this.id,
       name: this.name,
-      img: this.img
+      imgUrl: this.imgUrl,
+      imgData: this.imgData
     };
   }
 }
