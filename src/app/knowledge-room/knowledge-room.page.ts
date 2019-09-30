@@ -13,13 +13,10 @@ import { CoursesService } from './courses/courses.service';
 })
 export class KnowledgeRoomPage implements OnInit, OnDestroy {
   user: User;
-  category: {
-    id: number,
-    name: string
-  };
   categories: Category[];
   private userSub: Subscription;
   private categoriesSub: Subscription;
+  private fetchSub: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -31,6 +28,19 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
     this.categoriesSub = this.coursesService.categories.subscribe(categories => {
       this.categories = categories.slice(1);
     });
+  }
+
+  doRefresh(event: any) {
+    if (this.fetchSub) {
+      this.fetchSub.unsubscribe();
+    }
+    this.fetchSub = this.coursesService.fetchCategories().subscribe(
+      () => event.target.complete(),
+      error => {
+        console.log('[ERROR] knowledge-room.page.ts#doRefresh', error.message);
+        event.target.complete();
+      }
+    );
   }
 
   ngOnDestroy() {

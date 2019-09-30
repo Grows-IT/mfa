@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, tap, switchMap, timeout, first, withLatestFrom, toArray, flatMap, concatMap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
-import { from, BehaviorSubject, Observable, throwError } from 'rxjs';
+import { from, BehaviorSubject, Observable, throwError, of } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { Course, Topic, Page, Quiz, PageResource, Category } from './course.model';
@@ -85,14 +85,21 @@ export class CoursesService {
     return this.coreCourseGetCategories().pipe(
       switchMap(resArr => from(resArr)),
       withLatestFrom(this.authService.token),
-      map(([res, token]) => {
-        let imgUrl: string;
+      concatMap(([res, token]) => {
         if (res.description && res.description.length > 0) {
           const regex = /<img src="(\S+)"/;
           const match = regex.exec(decodeURI(res.description));
-          imgUrl = `${match[1]}?token=${token}&offline=1`;
+          const imgUrl = `${match[1]}?token=${token}&offline=1`;
+          return this.http.get(imgUrl, { responseType: 'blob' }).pipe(
+            tap(data => console.log(data)),
+            switchMap(blob => this.readFile(blob)),
+            tap(data => console.log(data)),
+            map(imgData => {
+              return new Category(res.id, res.name, imgUrl, imgData);
+            })
+          );
         }
-        return new Category(res.id, res.name, imgUrl);
+        return of(new Category(res.id, res.name));
       }),
       toArray(),
       map(categories => {
@@ -347,9 +354,12 @@ export class CoursesService {
       const parsedData = JSON.parse(storedData.value) as {
         id: number,
         name: string,
-        img: string
+        imgUrl: string,
+        imgData: string
       }[];
-      const categories = parsedData.map(categoryData => new Category(categoryData.id, categoryData.name, categoryData.img));
+      const categories = parsedData.map(categoryData => {
+        return new Category(categoryData.id, categoryData.name, categoryData.imgUrl, categoryData.imgData);
+      });
       this._categories.next(categories);
       return true;
     }));
