@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { CoursesService } from '../../../courses.service';
 import { Page } from '../../../course.model';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pages',
@@ -14,7 +14,6 @@ export class PagesPage implements OnInit, OnDestroy {
   isLoading = false;
   page: Page;
   slideContents: string[];
-  private fetchSub: Subscription;
   private coursesSub: Subscription;
 
 
@@ -32,23 +31,18 @@ export class PagesPage implements OnInit, OnDestroy {
       const course = courses.find(c => c.id === courseId);
       const topic = course.topics.find(t => t.id === topicId);
       this.page = topic.activities.find(a => a.id === activityId);
-      if (this.page.content) {
-        this.slideContents = this.page.content.split('<p></p>');
-      }
+      const htmlResource = this.page.resources.find(resource => resource.name === 'index.html');
+      let htmlContent = htmlResource.data;
+      const otherResources = this.page.resources.filter(resource => resource.type);
+      otherResources.forEach(resource => {
+        htmlContent = htmlContent.replace(resource.name, resource.data);
+      });
+      this.slideContents = htmlContent.split('<p></p>');
+      this.isLoading = false;
     });
-    this.fetchSub = this.coursesService.fetchResources(courseId, topicId, activityId).subscribe(
-      () => {
-        this.isLoading = false;
-      },
-      error => {
-        console.log('[ERROR] pages.page.ts#ngOnInit', error.message);
-        this.isLoading = false;
-      }
-    );
   }
 
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
-    this.fetchSub.unsubscribe();
   }
 }
