@@ -21,8 +21,7 @@ export class Course {
     public id: number,
     public name: string,
     public img?: string,
-    public categoryId?: number,
-    public topics?: Topic[],
+    public categoryId?: number
   ) { }
 
   toObject() {
@@ -30,8 +29,7 @@ export class Course {
       id: this.id,
       name: this.name,
       img: this.img,
-      categoryId: this.categoryId,
-      topics: this.topics ? this.topics.map(topic => topic.toObject()) : null
+      categoryId: this.categoryId
     };
   }
 }

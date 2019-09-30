@@ -41,21 +41,21 @@ export class NewsService {
     );
   }
 
-  fetchResources(pageId: number) {
-    return this.coursesService.courses.pipe(
-      first(),
-      switchMap(courses => {
-        const course = courses.find(c => c.name === 'News and Update');
-        const topic = course.topics[0];
-        return this.coursesService.fetchResources(course.id, topic.id, pageId);
-      }),
-      withLatestFrom(this.newsPages),
-      map(([fetchedPage, newsPages]) => {
-        const index = newsPages.findIndex(p => p.id === fetchedPage.id);
-        newsPages.splice(index, 1, fetchedPage);
-        this._newsPages.next(newsPages);
-        return fetchedPage;
-      })
-    );
-  }
+  // fetchResources(pageId: number) {
+  //   return this.coursesService.courses.pipe(
+  //     first(),
+  //     switchMap(courses => {
+  //       const course = courses.find(c => c.name === 'News and Update');
+  //       const topic = course.topics[0];
+  //       return this.coursesService.fetchResources(course.id, topic.id, pageId);
+  //     }),
+  //     withLatestFrom(this.newsPages),
+  //     map(([fetchedPage, newsPages]) => {
+  //       const index = newsPages.findIndex(p => p.id === fetchedPage.id);
+  //       newsPages.splice(index, 1, fetchedPage);
+  //       this._newsPages.next(newsPages);
+  //       return fetchedPage;
+  //     })
+  //   );
+  // }
 }

@@ -14,7 +14,7 @@ export class PagesPage implements OnInit, OnDestroy {
   isLoading = false;
   page: Page;
   slideContents: string[];
-  private coursesSub: Subscription;
+  private activitySub: Subscription;
 
 
   constructor(
@@ -24,13 +24,9 @@ export class PagesPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
-    const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
     const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
-    this.coursesSub = this.coursesService.courses.subscribe(courses => {
-      const course = courses.find(c => c.id === courseId);
-      const topic = course.topics.find(t => t.id === topicId);
-      this.page = topic.activities.find(a => a.id === activityId);
+    this.activitySub = this.coursesService.getActivityById(activityId).subscribe((page: Page) => {
+      this.page = page;
       const htmlResource = this.page.resources.find(resource => resource.name === 'index.html');
       let htmlContent = htmlResource.data;
       const otherResources = this.page.resources.filter(resource => resource.type);
@@ -43,6 +39,6 @@ export class PagesPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.coursesSub.unsubscribe();
+    this.activitySub.unsubscribe();
   }
 }

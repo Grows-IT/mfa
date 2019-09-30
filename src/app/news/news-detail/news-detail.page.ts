@@ -35,15 +35,15 @@ export class NewsDetailPage implements OnInit, OnDestroy {
       this.newsPage = pages.find(page => page.id === pageId);
       this.indexHtml = this.sanitizer.bypassSecurityTrustHtml(this.newsPage.content);
     });
-    this.fetchSub = this.newsService.fetchResources(pageId).subscribe(
-      () => {
-        this.isLoading = false;
-      },
-      error => {
-        console.log('[ERROR] news-detail.page.ts#ngOnInit', error.message);
-        this.isLoading = false;
-      }
-    );
+    // this.fetchSub = this.newsService.fetchResources(pageId).subscribe(
+    //   () => {
+    //     this.isLoading = false;
+    //   },
+    //   error => {
+    //     console.log('[ERROR] news-detail.page.ts#ngOnInit', error.message);
+    //     this.isLoading = false;
+    //   }
+    // );
   }
 
   ngOnDestroy() {

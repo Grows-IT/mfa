@@ -8,7 +8,6 @@ import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { Page } from '../knowledge-room/courses/course.model';
-import { CoursesService } from '../knowledge-room/courses/courses.service';
 
 const { Network } = Plugins;
 
@@ -24,15 +23,11 @@ export class HomePage implements OnInit, OnDestroy {
   private newsSub: Subscription;
   private userSub: Subscription;
   private fetchSub: Subscription;
-  private userStoreSub: Subscription;
-  private coursesStoreSub: Subscription;
-  private categoriesStoreSub: Subscription;
   private networkHandler: PluginListenerHandle;
 
   constructor(
     private authService: AuthService,
     private newsService: NewsService,
-    private coursesService: CoursesService,
     private alertCtrl: AlertController
   ) { }
 
@@ -62,15 +57,6 @@ export class HomePage implements OnInit, OnDestroy {
     this.newsSub.unsubscribe();
     this.fetchSub.unsubscribe();
     this.networkHandler.remove();
-    if (this.userStoreSub) {
-      this.userStoreSub.unsubscribe();
-    }
-    if (this.coursesStoreSub) {
-      this.coursesStoreSub.unsubscribe();
-    }
-    if (this.categoriesStoreSub) {
-      this.categoriesStoreSub.unsubscribe();
-    }
   }
 
   fetchData() {
