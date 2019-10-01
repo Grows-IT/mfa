@@ -14,7 +14,7 @@ export class AuthGuard implements CanLoad {
     private authService: AuthService,
     private coursesService: CoursesService,
     private router: Router
-  ) {}
+  ) { }
 
   canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
     return this.authService.token.pipe(
@@ -50,12 +50,12 @@ export class AuthGuard implements CanLoad {
     return this.authService.user.pipe(
       first(),
       switchMap(user => {
-          if (!user) {
-            return this.authService.fetchUser().pipe(
-              catchError(() => of(false))
-            );
-          }
-          return of(!!user);
+        if (!user) {
+          return this.authService.fetchUser().pipe(
+            catchError(() => of(false))
+          );
+        }
+        return of(!!user);
       }),
       switchMap(userExist => {
         if (!userExist) {
@@ -71,7 +71,10 @@ export class AuthGuard implements CanLoad {
       first(),
       switchMap(categories => {
         if (!categories || categories.length === 0) {
-          return this.coursesService.getCategoriesFromStorage().pipe(map(storedCategories => !!storedCategories));
+          return this.coursesService.getCategoriesFromStorage().pipe(
+            catchError(() => of(null)),
+            map(storedCategories => !!storedCategories),
+          );
         }
         return of(!!categories);
       }),
@@ -92,7 +95,10 @@ export class AuthGuard implements CanLoad {
       first(),
       switchMap(courses => {
         if (!courses || courses.length === 0) {
-          return this.coursesService.getCoursesFromStorage().pipe(map(savedCourses => !!savedCourses));
+          return this.coursesService.getCoursesFromStorage().pipe(
+            catchError(() => of(null)),
+            map(savedCourses => !!savedCourses),
+            );
         }
         return of(!!courses);
       }),
