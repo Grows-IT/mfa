@@ -269,23 +269,11 @@ export class CoursesService {
     if (mod.modname === 'quiz') {
       return of(new Quiz(mod.id, mod.name));
     } else if (mod.modname === 'page') {
-      let savedContent: ContentData;
       return from(mod.contents).pipe(
         withLatestFrom(this.authService.token),
-        concatMap(([content, token]) => {
-          savedContent = content;
-          savedContent.fileurl = `${content.fileurl}&token=${token}&offline=1`;
-          if (content.filename === 'index.html') {
-            return this.http.get(savedContent.fileurl, { responseType: 'text' });
-          }
-          return this.http.get(savedContent.fileurl, { responseType: 'blob' }).pipe(
-            flatMap(blob => {
-              return this.readFile(blob);
-            })
-          );
-        }),
-        map(data => {
-          return new PageResource(savedContent.filename, savedContent.mimetype, savedContent.fileurl, data);
+        map(([content, token]) => {
+          content.fileurl = `${content.fileurl}&token=${token}&offline=1`;
+          return new PageResource(content.filename, content.mimetype, content.fileurl);
         }),
         toArray(),
         map(resources => {
@@ -293,6 +281,58 @@ export class CoursesService {
         })
       );
     }
+  }
+
+  downloadResources(courseId: number, topics: Topic[]) {
+    return from(topics).pipe(
+      concatMap(topic => {
+        if (!topic.activities || topic.activities.length === 0) {
+          return of(topic);
+        }
+        return from(topic.activities).pipe(
+          concatMap(activity => {
+            if (activity instanceof Page) {
+              const page = activity as Page;
+              let savedResource: PageResource;
+              return from(page.resources).pipe(
+                concatMap(resource => {
+                  savedResource = resource;
+                  if (resource.name === 'index.html') {
+                    return this.http.get(resource.url, { responseType: 'text' });
+                  }
+                  return this.http.get(resource.url, { responseType: 'blob' }).pipe(
+                    flatMap(blob => {
+                      return this.readFile(blob);
+                    })
+                  );
+                }),
+                map(data => {
+                  savedResource.data = data;
+                  return savedResource;
+                }),
+                toArray(),
+                map(resources => {
+                  page.resources = resources;
+                  return page;
+                })
+              );
+            }
+            return of(activity);
+          }),
+          toArray(),
+          map(activities => {
+            topic.activities = activities;
+            return topic;
+          }),
+        );
+      }),
+      toArray(),
+      map(updatedTopics => {
+        this._topics.next(updatedTopics);
+        this.saveTopicsToStorage(courseId, updatedTopics);
+        return updatedTopics;
+      })
+    );
   }
 
   private getBinaryFile(url: string) {
