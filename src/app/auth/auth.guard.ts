@@ -71,14 +71,15 @@ export class AuthGuard implements CanLoad {
       first(),
       switchMap(categories => {
         if (!categories || categories.length === 0) {
-          return this.coursesService.getCategoriesFromStorage();
+          return this.coursesService.getCategoriesFromStorage().pipe(map(storedCategories => !!storedCategories));
         }
         return of(!!categories);
       }),
       switchMap(categoriesExist => {
         if (!categoriesExist) {
           return this.coursesService.fetchCategories().pipe(
-            catchError(() => of(false))
+            catchError(() => of(false)),
+            map(categories => !!categories)
           );
         }
         return of(categoriesExist);
@@ -99,9 +100,7 @@ export class AuthGuard implements CanLoad {
         if (!result) {
           return this.coursesService.fetchCourses().pipe(
             catchError(() => of(false)),
-            map(courses => {
-              return !!courses;
-            })
+            map(courses => !!courses)
           );
         }
         return of(result);

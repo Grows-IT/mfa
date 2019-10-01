@@ -104,10 +104,6 @@ export class CoursesService {
     );
   }
 
-  getTopicsByCourseId(courseId: number) {
-    // TODO
-  }
-
   getTopicById(topicId: number) {
     return this.topics.pipe(
       map(topics => {
@@ -149,7 +145,7 @@ export class CoursesService {
       map(categories => {
         this._categories.next(categories);
         this.saveCategoriesToStorage(categories);
-        return true;
+        return categories;
       })
     );
   }
@@ -317,8 +313,7 @@ export class CoursesService {
   getCategoriesFromStorage() {
     return from(Storage.get({ key: 'categories' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        console.log('Categories are not stored locally');
-        return false;
+        throw new Error('โปรดเชื่อมต่อ internet.');
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number,
@@ -330,7 +325,7 @@ export class CoursesService {
         return new Category(categoryData.id, categoryData.name, categoryData.imgUrl, categoryData.imgData);
       });
       this._categories.next(categories);
-      return true;
+      return categories;
     }));
   }
 
@@ -342,8 +337,7 @@ export class CoursesService {
   getTopicsFromStorage(courseId: number) {
     return from(Storage.get({ key: `course${courseId}` })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        console.log('Topics are not stored locally.');
-        return false;
+        throw new Error('โปรดเชื่อมต่อ internet.');
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number;
@@ -395,8 +389,7 @@ export class CoursesService {
   getCoursesFromStorage() {
     return from(Storage.get({ key: 'courses' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        console.log('Courses are not stored locally.');
-        return false;
+        throw new Error('โปรดเชื่อมต่อ internet.');
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number;
