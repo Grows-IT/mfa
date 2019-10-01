@@ -34,10 +34,15 @@ export class NewsService {
   }
 
   fetchNewsArticles() {
+    let courseId: number;
     return this.coursesService.getCourseByName('News and Update').pipe(
       first(),
       switchMap(course => {
-        return this.coursesService.fetchTopics(course.id);
+        courseId = course.id;
+        return this.coursesService.fetchTopics(courseId);
+      }),
+      switchMap(topics => {
+        return this.coursesService.downloadResources(courseId, topics);
       }),
       map(topics => {
         const pages = topics[0].activities as Page[];
