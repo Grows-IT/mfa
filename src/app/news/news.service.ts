@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { switchMap, map, first, tap } from 'rxjs/operators';
 
 import { Page } from '../knowledge-room/courses/course.model';
@@ -34,6 +34,16 @@ export class NewsService {
     let courseId: number;
     return this.coursesService.getCourseByName(newsCourseName).pipe(
       first(),
+      switchMap(course => {
+        if (!course) {
+          return this.coursesService.fetchCourses().pipe(
+            map(courses => {
+              return courses.find(c => c.name === newsCourseName);
+            })
+          );
+        }
+        return of(course);
+      }),
       switchMap(course => {
         courseId = course.id;
         return this.coursesService.fetchTopics(courseId);

@@ -1,13 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { PluginListenerHandle } from '@capacitor/core/dist/esm/web/network';
-import { AlertController } from '@ionic/angular';
 
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { NewsArticle } from '../news/news.model';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +18,7 @@ export class HomePage implements OnInit, OnDestroy {
   isLoading = false;
   private newsSub: Subscription;
   private userSub: Subscription;
-  private fetchSub: Subscription;
+  private fetchNewsSub: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -33,12 +31,12 @@ export class HomePage implements OnInit, OnDestroy {
     this.newsSub = this.newsService.newsArticles.subscribe(articles => {
       this.newsArticles = articles;
     });
-    this.fetchSub = this.getNews().subscribe(
+    this.fetchNewsSub = this.getData().subscribe(
       () => {
         this.isLoading = false;
       },
       error => {
-        console.log('[ERROR] home.page.ts#ngOnInit', error.message);
+        console.log('[ERROR] home.page.ts#getData', error.message);
         this.isLoading = false;
       }
     );
@@ -47,7 +45,15 @@ export class HomePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.userSub.unsubscribe();
     this.newsSub.unsubscribe();
-    this.fetchSub.unsubscribe();
+    this.fetchNewsSub.unsubscribe();
+  }
+
+  getData() {
+    return this.authService.fetchUser().pipe(
+      catchError(() => this.authService.getUserFromStorage()),
+      switchMap(() => this.newsService.fetchNewsArticles()),
+      catchError(() => this.newsService.getNewsArticlesFromStorage())
+    );
   }
 
   getNews() {
@@ -57,8 +63,8 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   doRefresh(event: any) {
-    this.fetchSub.unsubscribe();
-    this.fetchSub = this.getNews().subscribe(
+    this.fetchNewsSub.unsubscribe();
+    this.fetchNewsSub = this.getNews().subscribe(
       () => event.target.complete(),
       error => {
         console.log('[ERROR] home.page.ts#doRefresh', error.message);
