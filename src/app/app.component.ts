@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { MenuController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
 import { Plugins, Capacitor } from '@capacitor/core';
+import { AppMinimize } from '@ionic-native/app-minimize/ngx';
+
 import { AuthService } from './auth/auth.service';
 
 const { SplashScreen, App } = Plugins;
@@ -45,6 +46,7 @@ export class AppComponent {
     private router: Router,
     private authService: AuthService,
     private menuCtrl: MenuController,
+    private appMinimize: AppMinimize
   ) {
     this.initializeApp();
   }
@@ -57,7 +59,7 @@ export class AppComponent {
     });
     App.addListener('backButton', () => {
       if (window.location.pathname === '/tabs/home' || window.location.pathname === '/auth/login') {
-        App.exitApp();
+        this.appMinimize.minimize();
       } else {
         window.history.back();
       }
