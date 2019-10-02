@@ -12,16 +12,11 @@ const newsCourseName = 'News and Update';
   providedIn: 'root'
 })
 export class NewsService {
-  private _newsPages = new BehaviorSubject<Page[]>(null);
   private _newsArticles = new BehaviorSubject<NewsArticle[]>(null);
 
   constructor(
     private coursesService: CoursesService
   ) { }
-
-  get newsPages() {
-    return this._newsPages.asObservable();
-  }
 
   get newsArticles() {
     return this._newsArticles.asObservable();
@@ -82,6 +77,10 @@ export class NewsService {
         return newsArticles;
       })
     );
+  }
+
+  delete() {
+    this._newsArticles.next(null);
   }
 
   private createNewsArticlesFromPages(pages: Page[]) {

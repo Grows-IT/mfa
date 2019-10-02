@@ -204,6 +204,13 @@ export class CoursesService {
     );
   }
 
+  delete() {
+    this._categories.next(null);
+    this._courses.next(null);
+    this._topics.next(null);
+    this._activities.next(null);
+  }
+
   private readFile(blob: Blob): Observable<string> {
     if (!(blob instanceof Blob)) {
       return throwError(new Error('`blob` must be an instance of File or Blob.'));
