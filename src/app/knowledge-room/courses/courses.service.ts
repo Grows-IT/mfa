@@ -156,7 +156,7 @@ export class CoursesService {
         return from(resArr);
       }),
       withLatestFrom(this.authService.token),
-      flatMap(([res, token]) => {
+      concatMap(([res, token]) => {
         if (!res.overviewfiles || res.overviewfiles.length === 0) {
           return of(new Course(res.id, res.category, res.shortname));
         }
