@@ -6,6 +6,8 @@ import { Platform } from '@ionic/angular';
 import { Plugins, Capacitor } from '@capacitor/core';
 import { AuthService } from './auth/auth.service';
 
+const { SplashScreen, App } = Plugins;
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -42,7 +44,7 @@ export class AppComponent {
     private platform: Platform,
     private router: Router,
     private authService: AuthService,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
   ) {
     this.initializeApp();
   }
@@ -50,7 +52,14 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       if (Capacitor.isPluginAvailable('SplashScreen')) {
-        Plugins.SplashScreen.hide();
+        SplashScreen.hide();
+      }
+    });
+    App.addListener('backButton', () => {
+      if (window.location.pathname === '/tabs/home' || window.location.pathname === '/auth/login') {
+        App.exitApp();
+      } else {
+        window.history.back();
       }
     });
   }

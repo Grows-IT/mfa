@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
-import { Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '../auth.service';
@@ -17,14 +16,12 @@ export class LoginPage implements OnInit, OnDestroy {
   errorMessage: string;
   loginForm: FormGroup;
   private loginSub: Subscription;
-  private backButtonSub: Subscription;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private loadingCtrl: LoadingController,
     private menuCtrl: MenuController,
-    private platform: Platform
   ) { }
 
   ngOnInit() {
@@ -36,10 +33,10 @@ export class LoginPage implements OnInit, OnDestroy {
         validators: [Validators.required]
       })
     });
-    this.backButtonSub = this.platform.backButton.subscribe(() => {
-      const app = 'app';
-      navigator[app].exitApp();
-    });
+  }
+
+  ngOnDestroy() {
+    this.loginSub.unsubscribe();
   }
 
   async onSubmitLoginForm() {
@@ -48,7 +45,7 @@ export class LoginPage implements OnInit, OnDestroy {
     }
     const loadingEl = await this.loadingCtrl.create({
       keyboardClose: true,
-      message: 'Logging in...'
+      message: 'กำลังเข้าระบบ...'
     });
     loadingEl.present();
     this.loginSub = this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
@@ -62,14 +59,5 @@ export class LoginPage implements OnInit, OnDestroy {
       this.errorMessage = error;
       loadingEl.dismiss();
     });
-  }
-
-  ngOnDestroy() {
-    if (this.loginSub) {
-      this.loginSub.unsubscribe();
-    }
-    if (this.backButtonSub) {
-      this.backButtonSub.unsubscribe();
-    }
   }
 }
