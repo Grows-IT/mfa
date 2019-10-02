@@ -366,7 +366,7 @@ export class CoursesService {
   getCategoriesFromStorage() {
     return from(Storage.get({ key: 'categories' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        throw new Error('โปรดเชื่อมต่อ internet.');
+        throw new Error('ไม่มีข้อมูล');
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number,
