@@ -6,6 +6,7 @@ import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { NewsArticle } from '../news/news.model';
 import { catchError, switchMap } from 'rxjs/operators';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -18,20 +19,26 @@ export class HomePage implements OnInit, OnDestroy {
   isLoading = false;
   private newsSub: Subscription;
   private userSub: Subscription;
-  private fetchNewsSub: Subscription;
 
   constructor(
     private authService: AuthService,
-    private newsService: NewsService
+    private newsService: NewsService,
+    private menuCtrl: MenuController
   ) { }
 
   ngOnInit() {
-    this.isLoading = true;
-    this.userSub = this.authService.user.subscribe(user => this.user = user);
+    this.userSub = this.authService.user.subscribe(user => {
+      this.user = user;
+    });
     this.newsSub = this.newsService.newsArticles.subscribe(articles => {
       this.newsArticles = articles;
     });
-    this.fetchNewsSub = this.getData().subscribe(
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.menuCtrl.enable(true);
+    this.getData().subscribe(
       () => {
         this.isLoading = false;
       },
@@ -45,31 +52,23 @@ export class HomePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.userSub.unsubscribe();
     this.newsSub.unsubscribe();
-    this.fetchNewsSub.unsubscribe();
-  }
-
-  getData() {
-    return this.authService.fetchUser().pipe(
-      catchError(() => this.authService.getUserFromStorage()),
-      switchMap(() => this.newsService.fetchNewsArticles()),
-      catchError(() => this.newsService.getNewsArticlesFromStorage())
-    );
-  }
-
-  getNews() {
-    return this.newsService.fetchNewsArticles().pipe(
-      catchError(() => this.newsService.getNewsArticlesFromStorage())
-    );
   }
 
   doRefresh(event: any) {
-    this.fetchNewsSub.unsubscribe();
-    this.fetchNewsSub = this.getNews().subscribe(
+    this.getData().subscribe(
       () => event.target.complete(),
       error => {
         console.log('[ERROR] home.page.ts#doRefresh', error.message);
         event.target.complete();
       }
+    );
+  }
+
+  private getData() {
+    return this.authService.fetchUser().pipe(
+      catchError(() => this.authService.getUserFromStorage()),
+      switchMap(() => this.newsService.fetchNewsArticles()),
+      catchError(() => this.newsService.getNewsArticlesFromStorage())
     );
   }
 }

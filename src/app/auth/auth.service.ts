@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { from, BehaviorSubject, throwError, Observable } from 'rxjs';
+import { from, BehaviorSubject, throwError, Observable, of } from 'rxjs';
 import { timeout, map, switchMap, first, withLatestFrom, catchError } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
@@ -73,6 +73,21 @@ export class AuthService {
     this._user.next(null);
     this._token.next(null);
     Plugins.Storage.clear();
+  }
+
+  isLoggedIn() {
+    return this.token.pipe(
+      first(),
+      switchMap(token => {
+        if (!token) {
+          return this.getTokenFromStorage().pipe(
+            catchError(() => of(null)),
+            map(storedtoken => !!storedtoken)
+          );
+        }
+        return of(!!token);
+      })
+    );
   }
 
   fetchUser() {

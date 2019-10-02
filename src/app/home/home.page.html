@@ -7,8 +7,8 @@
       Modern Farm Academy
     </ion-title>
     <ion-buttons slot="primary">
-      <ion-avatar *ngIf="!isLoading" padding routerLink="/auth/profile">
-        <ion-img [src]="user.imgUrl"></ion-img>
+      <ion-avatar padding routerLink="/auth/profile">
+        <ion-img *ngIf="user" [src]="user.imgData"></ion-img>
       </ion-avatar>
     </ion-buttons>
   </ion-toolbar>
@@ -48,7 +48,7 @@
         </ion-button>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row *ngIf="newsArticles">
       <ion-col margin-start>
         <ion-text>
           <h1>NEWS UPDATES</h1>
@@ -60,7 +60,7 @@
         </ion-text>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row *ngIf="newsArticles">
       <ion-slides pager>
         <ion-slide *ngFor="let article of newsArticles">
           <ion-card class="card" [routerLink]="['/tabs/news/', article.id]">
