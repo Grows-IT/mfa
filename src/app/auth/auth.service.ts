@@ -75,15 +75,6 @@ export class AuthService {
     Plugins.Storage.clear();
   }
 
-  autoLogin() {
-    return this.getTokenFromStorage().pipe(
-      map(token => {
-        this._token.next(token);
-        return !!token;
-      })
-    );
-  }
-
   fetchUser() {
     return this.coreWebserviceGetSiteInfo().pipe(
       map(user => {
@@ -216,7 +207,7 @@ export class AuthService {
     Plugins.Storage.set({ key: 'token', value: token });
   }
 
-  private getTokenFromStorage() {
+  getTokenFromStorage() {
     return from(Plugins.Storage.get({ key: 'token' })).pipe(
       map(storedToken => {
         if (!storedToken || !storedToken.value) {
