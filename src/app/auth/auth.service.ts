@@ -33,7 +33,7 @@ export interface GetSiteInfoResponseData {
 export interface GetTokenResponseData {
   token: string;
   error: string;
-  message: string;
+  errorcode: string;
 }
 
 @Injectable({
@@ -57,12 +57,6 @@ export class AuthService {
 
   get userId() {
     return this.user.pipe(map(user => user ? user.id : null));
-  }
-
-  get isLoggedIn() {
-    return this.token.pipe(
-      first(),
-      map(token => token ? !!token : false));
   }
 
   login(username: string, password: string) {
@@ -124,7 +118,7 @@ export class AuthService {
       }),
       map(res => {
         if (res.errorcode === 'upload_error_ini_size') {
-          throw new Error('File size cannot exceed 2 MB');
+          throw new Error('ไฟล์ขนาดใหญ่ไป');
         }
         return res[0].itemid;
       })
@@ -144,7 +138,7 @@ export class AuthService {
       timeout(duration),
       map(res => {
         if (!res.profileimageurl) {
-          throw new Error('Cannot update profile picture.');
+          throw new Error('อัพโหลดรูปภาพล้มเหลว');
         }
         return res.profileimageurl;
       })
@@ -163,8 +157,8 @@ export class AuthService {
       catchError(this.handleHttpError),
       timeout(duration),
       map(res => {
-        if (res.error) {
-          throw new Error(res.error);
+        if (res.errorcode === 'invalidlogin') {
+          throw new Error('ชื่อหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่');
         }
         this._token.next(res.token);
         this.saveTokenToStorage(res.token);
@@ -208,9 +202,6 @@ export class AuthService {
   }
 
   private readFile(blob: Blob): Observable<string> {
-    if (!(blob instanceof Blob)) {
-      return throwError(new Error('`blob` must be an instance of File or Blob.'));
-    }
     return new Observable(obs => {
       const reader = new FileReader();
       reader.onerror = err => obs.error(err);
@@ -231,8 +222,9 @@ export class AuthService {
         if (!storedToken || !storedToken.value) {
           return null;
         }
-        this._token.next(storedToken.value);
-        return storedToken.value;
+        const token = storedToken.value;
+        this._token.next(token);
+        return token;
       })
     );
   }
@@ -271,7 +263,7 @@ export class AuthService {
         parsedData.imgData
       );
       this._user.next(user);
-      return true;
+      return user;
     }));
   }
 
@@ -279,14 +271,14 @@ export class AuthService {
     let message: string;
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
-      message = 'An error occurred:' + error.error.message;
+      message = 'แอพขัดข้อง โปรดติดต่อทีมงาน';
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
       if (error.status === 0) { // No internet connection
-        message = 'ไม่สามารถ login ได้เพราะคุณไม่ได้เชื่อมต่อ internet';
+        message = 'คุณไม่ได้เชื่อมต่อ internet ไม่สามารถ login ได้';
       } else {
-        message = `Server error, code: ${error.status} body: ${error.error}`;
+        message = 'เซอร์เวอร์ขัดข้อง โปรดลองใหม่อีกครั้ง';
       }
     }
     // return an observable with a user-facing error message

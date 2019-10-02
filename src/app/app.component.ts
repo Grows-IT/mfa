@@ -88,7 +88,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.authService.logout();
       this.coursesService.delete();
       this.newsService.delete();
-      this.menuCtrl.enable(false);
     }
     this.router.navigateByUrl(p.url);
   }

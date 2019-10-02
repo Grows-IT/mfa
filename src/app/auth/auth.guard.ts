@@ -17,14 +17,7 @@ export class AuthGuard implements CanLoad {
   ) { }
 
   canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
-    return this.authService.token.pipe(
-      first(),
-      switchMap(token => {
-        if (!token) {
-          return this.authService.autoLogin();
-        }
-        return of(!!token);
-      }),
+    return this.loadToken().pipe(
       switchMap(isLoggedIn => {
         if (!isLoggedIn) {
           return of(isLoggedIn);
@@ -42,6 +35,21 @@ export class AuthGuard implements CanLoad {
         if (!isLoggedIn) {
           this.router.navigateByUrl('/auth/login');
         }
+      })
+    );
+  }
+
+  loadToken() {
+    return this.authService.token.pipe(
+      first(),
+      switchMap(token => {
+        if (!token) {
+          return this.authService.getUserFromStorage().pipe(
+            catchError(() => of(null)),
+            map(storedtoken => !!storedtoken)
+          );
+        }
+        return of(!!token);
       })
     );
   }

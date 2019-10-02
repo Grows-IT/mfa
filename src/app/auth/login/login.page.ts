@@ -35,6 +35,14 @@ export class LoginPage implements OnInit, OnDestroy {
     });
   }
 
+  ionViewWillEnter() {
+    this.menuCtrl.enable(false);
+  }
+
+  ionViewWillLeave() {
+    this.menuCtrl.enable(true);
+  }
+
   ngOnDestroy() {
     this.loginSub.unsubscribe();
   }
@@ -50,9 +58,6 @@ export class LoginPage implements OnInit, OnDestroy {
     loadingEl.present();
     this.loginSub = this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
       this.errorMessage = null;
-      this.loginForm.value.username = null;
-      this.loginForm.value.password = null;
-      this.menuCtrl.enable(true);
       this.router.navigateByUrl('/tabs/home');
       loadingEl.dismiss();
     }, error => {
