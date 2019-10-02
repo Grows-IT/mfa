@@ -5,6 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { Category } from './courses/course.model';
 import { CoursesService } from './courses/courses.service';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-knowledge-room',
@@ -14,6 +15,8 @@ import { CoursesService } from './courses/courses.service';
 export class KnowledgeRoomPage implements OnInit, OnDestroy {
   user: User;
   categories: Category[];
+  isLoading = false;
+  errorMessage: string;
   private userSub: Subscription;
   private categoriesSub: Subscription;
   private fetchSub: Subscription;
@@ -26,13 +29,26 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.userSub = this.authService.user.subscribe(user => this.user = user);
     this.categoriesSub = this.coursesService.categories.subscribe(categories => {
-      if (!categories || categories.length === 0) {
-        // Error message
-        this.categories = null;
-        return;
+      if (categories && categories.length > 0) {
+        this.categories = categories.slice(1);
       }
-      this.categories = categories.slice(1);
     });
+  }
+
+  ionViewWillEnter() {
+    this.getCategories().subscribe(
+      () => this.isLoading = false,
+      error => {
+        this.errorMessage = error;
+        this.isLoading = false;
+      }
+    );
+  }
+
+  getCategories() {
+    return this.coursesService.fetchCategories().pipe(
+      catchError(() => this.coursesService.getCategoriesFromStorage())
+    );
   }
 
   doRefresh(event: any) {
