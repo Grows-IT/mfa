@@ -7,6 +7,7 @@ import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { NewsArticle } from '../news/news.model';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +33,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.newsSub = this.newsService.newsArticles.subscribe(articles => {
       this.newsArticles = articles;
     });
-    this.fetchSub = this.fetchData().subscribe(
+    this.fetchSub = this.getNews().subscribe(
       () => {
         this.isLoading = false;
       },
@@ -49,13 +50,15 @@ export class HomePage implements OnInit, OnDestroy {
     this.fetchSub.unsubscribe();
   }
 
-  fetchData() {
-    return this.newsService.fetchNewsArticles();
+  getNews() {
+    return this.newsService.fetchNewsArticles().pipe(
+      catchError(() => this.newsService.getNewsArticlesFromStorage())
+    );
   }
 
   doRefresh(event: any) {
     this.fetchSub.unsubscribe();
-    this.fetchSub = this.fetchData().subscribe(
+    this.fetchSub = this.getNews().subscribe(
       () => event.target.complete(),
       error => {
         console.log('[ERROR] home.page.ts#doRefresh', error.message);

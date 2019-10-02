@@ -26,6 +26,11 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.userSub = this.authService.user.subscribe(user => this.user = user);
     this.categoriesSub = this.coursesService.categories.subscribe(categories => {
+      if (!categories || categories.length === 0) {
+        // Error message
+        this.categories = null;
+        return;
+      }
       this.categories = categories.slice(1);
     });
   }
