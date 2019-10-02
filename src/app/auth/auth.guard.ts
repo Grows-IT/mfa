@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanLoad, Route, UrlSegment, Router } from '@angular/router';
+import { CanLoad, Route, UrlSegment, Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { tap, switchMap, first, catchError, map } from 'rxjs/operators';
 
@@ -9,7 +9,7 @@ import { CoursesService } from '../knowledge-room/courses/courses.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanLoad {
+export class AuthGuard implements CanLoad, CanActivate {
   constructor(
     private authService: AuthService,
     private coursesService: CoursesService,
@@ -17,14 +17,20 @@ export class AuthGuard implements CanLoad {
   ) { }
 
   canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
-    return this.loadToken().pipe(
-      tap(isLoggedIn => {
-        if (!isLoggedIn) {
-          this.router.navigateByUrl('/auth/login');
+    return this.authService.isLoggedIn().pipe(tap(isLoggedIn => {
+      if (!isLoggedIn) {
+        this.router.navigateByUrl('/auth/login');
+      }
+    }));
+  }
 
-        }
-      })
-    );
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
+    Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return this.authService.isLoggedIn().pipe(tap(isLoggedIn => {
+      if (!isLoggedIn) {
+        this.router.navigateByUrl('/auth/login');
+      }
+    }));
   }
 
   loadToken() {

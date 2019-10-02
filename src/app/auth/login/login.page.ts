@@ -25,6 +25,7 @@ export class LoginPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.menuCtrl.enable(false);
     this.loginForm = new FormGroup({
       username: new FormControl(null, {
         validators: [Validators.required]
@@ -33,14 +34,6 @@ export class LoginPage implements OnInit, OnDestroy {
         validators: [Validators.required]
       })
     });
-  }
-
-  ionViewWillEnter() {
-    this.menuCtrl.enable(false);
-  }
-
-  ionViewWillLeave() {
-    this.menuCtrl.enable(true);
   }
 
   ngOnDestroy() {

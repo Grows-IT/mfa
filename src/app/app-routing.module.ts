@@ -8,7 +8,8 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: './tabs/tabs.module#TabsPageModule',
-    canLoad: [AuthGuard]
+    canLoad: [AuthGuard],
+    // canActivate: [AuthGuard]
   },
   { path: 'static', loadChildren: './static/static.module#StaticPageModule' },
   { path: 'weather', loadChildren: './weather/weather.module#WeatherPageModule' },
