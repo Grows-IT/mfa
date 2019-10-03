@@ -219,9 +219,6 @@ export class CoursesService {
   }
 
   private readFile(blob: Blob): Observable<string> {
-    if (!(blob instanceof Blob)) {
-      return throwError(new Error('`blob` must be an instance of File or Blob.'));
-    }
     return new Observable(obs => {
       const reader = new FileReader();
       reader.onerror = err => obs.error(err);
@@ -391,8 +388,7 @@ export class CoursesService {
   getTopicsFromStorage(courseId: number) {
     return from(Storage.get({ key: `course${courseId}` })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        this._topics.next(null);
-        throw new Error('ไม่มีข้อมูล กรุณาเชื่อมต่อ internet');
+        return null;
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number;
@@ -444,8 +440,7 @@ export class CoursesService {
   getCoursesFromStorage() {
     return from(Storage.get({ key: 'courses' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        this._courses.next(null);
-        throw new Error('ไม่มีข้อมูล กรุณาเชื่อมต่อ internet');
+        return null;
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number;

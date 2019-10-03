@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="medium">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/knowledge-room"></ion-back-button>
+      <ion-back-button [defaultHref]="prevUrl"></ion-back-button>
     </ion-buttons>
     <ion-item *ngIf="!isLoading" color="medium">
       <ion-thumbnail class="banner" slot="start">

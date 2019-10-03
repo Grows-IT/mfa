@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { CoursesPage } from './courses.page';
+import { CoursesGuard } from './courses.guard';
 
 const routes: Routes = [
   {
@@ -16,7 +17,8 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: './topics/topics.module#TopicsPageModule'
+            loadChildren: './topics/topics.module#TopicsPageModule',
+            canActivate: [CoursesGuard]
           },
           {
             path: ':topicId',
