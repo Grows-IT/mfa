@@ -14,8 +14,9 @@ export class PagesPage implements OnInit, OnDestroy {
   isLoading = false;
   page: Page;
   slideContents: string[];
+  prevUrl: string;
   private activitySub: Subscription;
-
+  private topicId: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -24,9 +25,14 @@ export class PagesPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
+    this.setPrevUrl();
     const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
-    this.activitySub = this.coursesService.getActivityById(activityId).subscribe((page: Page) => {
-      this.page = page;
+    this.activitySub = this.coursesService.topics.subscribe(topics => {
+      const currentTopic = topics.find(topic => topic.id === this.topicId);
+      // if (!currentTopic || currentTopic.activities.length === 0) {
+      //   return;
+      // }
+      this.page = currentTopic.activities.find(activity => activity.id === activityId);
       const htmlResource = this.page.resources.find(resource => resource.name === 'index.html');
       let htmlContent = htmlResource.data;
       const otherResources = this.page.resources.filter(resource => resource.type);
@@ -40,5 +46,12 @@ export class PagesPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.activitySub.unsubscribe();
+  }
+
+  private setPrevUrl() {
+    const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
+    const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
+    this.topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
+    this.prevUrl = `/tabs/knowledge-room/${categoryId}/courses/${courseId}/topics/${this.topicId}/activities`;
   }
 }

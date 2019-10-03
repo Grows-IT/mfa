@@ -2,9 +2,9 @@
   <div>
     <ion-toolbar color="tertiary">
       <ion-buttons slot="start">
-        <ion-back-button defaultHref="/tabs/knowledge-room"></ion-back-button>
+        <ion-back-button [defaultHref]="prevUrl"></ion-back-button>
       </ion-buttons>
-      <ion-title *ngIf="!isLoading">{{ page.name }}</ion-title>
+      <ion-title>{{ page.name }}</ion-title>
     </ion-toolbar>
   </div>
 </ion-header>

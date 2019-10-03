@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CoursesPage } from './courses.page';
 import { CoursesGuard } from './courses.guard';
 import { TopicsGuard } from './topics/topics.guard';
+import { ActivitiesGuard } from './topics/activities/activities.guard';
 
 const routes: Routes = [
   {
@@ -37,7 +38,8 @@ const routes: Routes = [
                     children: [
                       {
                         path: 'pages',
-                        loadChildren: './topics/activities/pages/pages.module#PagesPageModule'
+                        loadChildren: './topics/activities/pages/pages.module#PagesPageModule',
+                        canActivate: [ActivitiesGuard]
                       },
                       {
                         path: '',
