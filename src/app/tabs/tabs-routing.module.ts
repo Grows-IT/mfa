@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { TabsPage } from './tabs.page';
 import { UserGuard } from '../auth/user.guard';
+import { CategoriesGuard } from '../knowledge-room/categories.guard';
 
 const routes: Routes = [
   {
@@ -34,7 +35,8 @@ const routes: Routes = [
                 children: [
                   {
                     path: '',
-                    loadChildren: '../knowledge-room/courses/courses.module#CoursesPageModule'
+                    loadChildren: '../knowledge-room/courses/courses.module#CoursesPageModule',
+                    canLoad: [UserGuard, CategoriesGuard]
                   }
                 ]
               },
