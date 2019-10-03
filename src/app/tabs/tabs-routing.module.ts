@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { TabsPage } from './tabs.page';
+import { UserGuard } from '../auth/user.guard';
 
 const routes: Routes = [
   {
@@ -22,7 +23,8 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: '../knowledge-room/knowledge-room.module#KnowledgeRoomPageModule'
+            loadChildren: '../knowledge-room/knowledge-room.module#KnowledgeRoomPageModule',
+            canLoad: [UserGuard]
           },
           {
             path: ':categoryId',
