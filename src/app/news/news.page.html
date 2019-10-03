@@ -8,10 +8,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-  <ion-grid>
+  <div text-center>
+    <ion-spinner *ngIf="isLoading"></ion-spinner>
+  </div>
+  <ion-grid *ngIf=!isLoading>
     <ion-row *ngFor="let article of newsArticles">
       <ion-col size="10" offset="1">
         <ion-card [routerLink]="article.id">

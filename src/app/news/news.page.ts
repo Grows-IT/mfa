@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { NewsService } from './news.service';
 import { NewsArticle } from './news.model';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-news',
@@ -12,34 +13,36 @@ import { NewsArticle } from './news.model';
 export class NewsPage implements OnInit, OnDestroy {
   newsArticles: NewsArticle[];
   isLoading = false;
+  errorMessage: string;
   private newsSub: Subscription;
-  private fetchSub: Subscription;
 
   constructor(
     private newsService: NewsService
   ) { }
 
   ngOnInit() {
-    this.newsSub = this.newsService.newsArticles.subscribe(articles => this.newsArticles = articles);
+    this.newsSub = this.newsService.newsArticles.subscribe(articles => {
+      this.newsArticles = articles;
+    });
   }
 
   ngOnDestroy() {
     this.newsSub.unsubscribe();
-    if (this.fetchSub) {
-      this.fetchSub.unsubscribe();
-    }
   }
 
-  doRefresh(event: any) {
-    if (this.fetchSub) {
-      this.fetchSub.unsubscribe();
-    }
-    this.fetchSub = this.newsService.fetchNewsArticles().subscribe(
-      () => event.target.complete(),
+  ionViewWillEnter() {
+    this.getNewsArticles().subscribe(
+      () => this.isLoading = false,
       error => {
-        console.log('[ERROR] news.page.ts#doRefresh', error.message);
-        event.target.complete();
+        this.errorMessage = error.message;
+        this.isLoading = false;
       }
+    );
+  }
+
+  private getNewsArticles(): Observable<NewsArticle[]> {
+    return this.newsService.fetchNewsArticles().pipe(
+      catchError(() => this.newsService.getNewsArticlesFromStorage())
     );
   }
 }

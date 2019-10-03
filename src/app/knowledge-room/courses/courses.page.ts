@@ -15,6 +15,7 @@ export class CoursesPage implements OnInit, OnDestroy {
   category: Category;
   errorMessage: string;
   isLoading = false;
+  private categoryId: number;
   private coursesSub: Subscription;
   private categoriesSub: Subscription;
 
@@ -24,18 +25,32 @@ export class CoursesPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.isLoading = true;
-    const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
+    this.categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
     this.categoriesSub = this.coursesService.categories.subscribe(categories => {
-      this.category = categories.find(cat => cat.id === categoryId);
+      this.category = categories.find(category => category.id === this.categoryId);
     });
-    this.coursesSub = this.coursesService.courses.subscribe(allCourses => {
-      this.courses = allCourses.filter(course => course.categoryId === categoryId);
+    this.coursesSub = this.coursesService.courses.subscribe(courses => {
+      this.courses = courses.filter(course => course.categoryId === this.categoryId);
       if (!this.courses || this.courses.length === 0) {
         this.errorMessage = 'Coming soon';
       }
-      this.isLoading = false;
     });
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.coursesService.fetchCourses().subscribe(
+      () => this.isLoading = false,
+      () => {
+        this.coursesService.getCoursesFromStorage().subscribe(
+          () => this.isLoading = false,
+          storageError => {
+            this.errorMessage = storageError;
+            this.isLoading = false;
+          }
+        );
+      }
+    );
   }
 
   ngOnDestroy() {

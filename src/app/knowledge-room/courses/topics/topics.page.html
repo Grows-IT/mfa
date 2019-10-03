@@ -3,14 +3,14 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/knowledge-room"></ion-back-button>
     </ion-buttons>
-    <ion-item color="medium">
-        <ion-thumbnail class="banner" slot="start">
-          <img [src]="course.imgData" />
-        </ion-thumbnail>
-        <ion-label>
-          <h1>{{ course.name }}</h1>
-        </ion-label>
-      </ion-item>
+    <ion-item *ngIf="!isLoading" color="medium">
+      <ion-thumbnail class="banner" slot="start">
+        <img *ngIf="!isLoading" [src]="course.imgData" />
+      </ion-thumbnail>
+      <ion-label>
+        <h1 *ngIf="!isLoading">{{ course.name }}</h1>
+      </ion-label>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
