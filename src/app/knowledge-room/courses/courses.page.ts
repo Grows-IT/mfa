@@ -34,8 +34,9 @@ export class CoursesPage implements OnInit, OnDestroy {
       if (courses) {
         this.courses = courses.filter(course => course.categoryId === categoryId);
         if (this.courses.length === 0) {
-          this.errorMessage = 'Coming soon';
+          return this.errorMessage = 'Coming soon';
         }
+        this.errorMessage = null;
       }
     });
   }

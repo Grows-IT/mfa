@@ -15,6 +15,7 @@ export class TopicsPage implements OnInit, OnDestroy {
   topics: Topic[];
   course: Course;
   errorMessage: string;
+  prevUrl: string;
   private courseId: number;
   private coursesSub: Subscription;
   private topicsSub: Subscription;
@@ -25,12 +26,17 @@ export class TopicsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.setPrevUrl();
     this.courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
       this.course = courses.find(course => course.id === this.courseId);
     });
     this.topicsSub = this.coursesService.topics.subscribe(topics => {
+      if (!topics || topics.length === 0) {
+        return this.errorMessage = 'Coming soon';
+      }
       this.topics = topics;
+      this.errorMessage = null;
     });
   }
 
@@ -55,5 +61,10 @@ export class TopicsPage implements OnInit, OnDestroy {
         );
       }
     );
+  }
+
+  private setPrevUrl() {
+    const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
+    this.prevUrl = `/tabs/knowledge-room/${categoryId}/courses`;
   }
 }
