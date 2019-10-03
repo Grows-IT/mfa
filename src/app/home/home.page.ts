@@ -7,6 +7,7 @@ import { NewsService } from '../news/news.service';
 import { NewsArticle } from '../news/news.model';
 import { catchError, switchMap } from 'rxjs/operators';
 import { MenuController } from '@ionic/angular';
+import { CoursesService } from '../knowledge-room/courses/courses.service';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
+    private coursesService: CoursesService,
     private newsService: NewsService,
     private menuCtrl: MenuController
   ) { }
@@ -66,7 +68,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   private getData() {
     return this.authService.fetchUser().pipe(
-      catchError(() => this.authService.getUserFromStorage()),
+      switchMap(() => this.coursesService.fetchCourses()),
       switchMap(() => this.newsService.fetchNewsArticles()),
       catchError(() => this.newsService.getNewsArticlesFromStorage())
     );

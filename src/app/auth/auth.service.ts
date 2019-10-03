@@ -95,7 +95,7 @@ export class AuthService {
       map(user => {
         this._user.next(user);
         this.saveUserToStorage(user);
-        return true;
+        return user;
       })
     );
   }

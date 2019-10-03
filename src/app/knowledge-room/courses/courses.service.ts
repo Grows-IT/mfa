@@ -157,8 +157,8 @@ export class CoursesService {
     );
   }
 
-  fetchEnrolledCourses(userId: number) {
-    return this.coreEnrolGetUsersCourses(userId).pipe(
+  fetchCourses() {
+    return this.coreEnrolGetUsersCourses().pipe(
       switchMap(resArr => {
         return from(resArr);
       }),
@@ -182,32 +182,6 @@ export class CoursesService {
       })
     );
   }
-
-  // fetchCourses() {
-  //   return this.coreEnrolGetUsersCourses().pipe(
-  //     switchMap(resArr => {
-  //       return from(resArr);
-  //     }),
-  //     withLatestFrom(this.authService.token),
-  //     concatMap(([res, token]) => {
-  //       if (!res.overviewfiles || res.overviewfiles.length === 0) {
-  //         return of(new Course(res.id, res.category, res.shortname));
-  //       }
-  //       const imgUrl = `${res.overviewfiles[0].fileurl}?token=${token}&offline=1`;
-  //       return this.getBinaryFile(imgUrl).pipe(
-  //         map(imgData => {
-  //           return new Course(res.id, res.category, res.shortname, imgUrl, imgData);
-  //         })
-  //       );
-  //     }),
-  //     toArray(),
-  //     map(courses => {
-  //       this._courses.next(courses);
-  //       this.saveCoursestoStorage(courses);
-  //       return courses;
-  //     })
-  //   );
-  // }
 
   fetchTopics(courseId: number) {
     return this.coreCourseGetContents(courseId).pipe(
@@ -270,10 +244,11 @@ export class CoursesService {
     );
   }
 
-  private coreEnrolGetUsersCourses(userId: number) {
+  private coreEnrolGetUsersCourses() {
     return this.authService.token.pipe(
       first(),
-      switchMap(token => {
+      withLatestFrom(this.authService.userId),
+      switchMap(([token, userId]) => {
         const params = new HttpParams({
           fromObject: {
             userid: userId.toString(),
