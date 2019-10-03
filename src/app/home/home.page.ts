@@ -5,7 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { NewsArticle } from '../news/news.model';
-import { catchError, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { MenuController } from '@ionic/angular';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
 
@@ -40,30 +40,12 @@ export class HomePage implements OnInit, OnDestroy {
   ionViewWillEnter() {
     this.isLoading = true;
     this.menuCtrl.enable(true);
-    this.getData().subscribe(
-      () => {
-        this.isLoading = false;
-      },
-      error => {
-        console.log('[ERROR] home.page.ts#getData', error.message);
-        this.isLoading = false;
-      }
-    );
+    this.getData().subscribe(() => this.isLoading = false);
   }
 
   ngOnDestroy() {
     this.userSub.unsubscribe();
     this.newsSub.unsubscribe();
-  }
-
-  doRefresh(event: any) {
-    this.getData().subscribe(
-      () => event.target.complete(),
-      error => {
-        console.log('[ERROR] home.page.ts#doRefresh', error.message);
-        event.target.complete();
-      }
-    );
   }
 
   private getData() {

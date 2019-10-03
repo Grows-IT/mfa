@@ -3,25 +3,25 @@
     <ion-buttons slot="start">
       <ion-back-button [defaultHref]="prevUrl"></ion-back-button>
     </ion-buttons>
-    <ion-item *ngIf="!isLoading" color="medium">
+    <ion-item color="medium">
       <ion-thumbnail class="banner" slot="start">
-        <img *ngIf="!isLoading" [src]="course.imgData" />
+        <img [src]="course.imgData" />
       </ion-thumbnail>
       <ion-label>
-        <h1 *ngIf="!isLoading">{{ course.name }}</h1>
+        <h1>{{ course.name }}</h1>
       </ion-label>
     </ion-item>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div text-center>
-    <ion-spinner *ngIf="isLoading"></ion-spinner>
+  <div text-center *ngIf="isLoading">
+    <ion-spinner></ion-spinner>
   </div>
   <ion-text text-center *ngIf="!isLoading && errorMessage">
     <h1>{{ errorMessage }}</h1>
   </ion-text>
-  <ion-grid class="topics" *ngIf="!isLoading">
+  <ion-grid class="topics" *ngIf="!isLoading && !errorMessage">
     <ion-row>
       <ion-col>
         <ion-button *ngFor="let topic of topics" margin size="large" expand="full" shape="round"

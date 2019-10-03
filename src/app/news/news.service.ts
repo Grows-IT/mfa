@@ -22,14 +22,6 @@ export class NewsService {
     return this._newsArticles.asObservable();
   }
 
-  getNewsArticleById(articleId: number) {
-    return this.newsArticles.pipe(
-      map(articles => {
-        return articles.find(article => article.id === articleId);
-      })
-    );
-  }
-
   fetchNewsArticles() {
     let courseId: number;
     return this.coursesService.courses.pipe(
@@ -77,11 +69,18 @@ export class NewsService {
         return this.coursesService.getTopicsFromStorage();
       }),
       map(topics => {
-        const newsTopics = topics.filter(topic => topic.courseId === courseId);
-        const pages = newsTopics[0].activities as Page[];
-        const newsArticles = this.createNewsArticlesFromPages(pages);
-        this._newsArticles.next(newsArticles);
-        return newsArticles;
+        if (topics) {
+          const newsTopics = topics.filter(topic => topic.courseId === courseId);
+          if (newsTopics.length > 0) {
+            const pages = newsTopics[0].activities as Page[];
+            if (pages) {
+              const newsArticles = this.createNewsArticlesFromPages(pages);
+              this._newsArticles.next(newsArticles);
+              return newsArticles;
+            }
+          }
+        }
+        return null;
       })
     );
   }

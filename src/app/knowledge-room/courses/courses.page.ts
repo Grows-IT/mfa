@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { CoursesService } from './courses.service';
 import { Course, Category } from './course.model';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-courses',
@@ -41,24 +42,21 @@ export class CoursesPage implements OnInit, OnDestroy {
     });
   }
 
-  ionViewWillEnter() {
-    this.isLoading = true;
-    this.coursesService.fetchCourses().subscribe(
-      () => this.isLoading = false,
-      () => {
-        this.coursesService.getCoursesFromStorage().subscribe(
-          () => this.isLoading = false,
-          storageError => {
-            this.errorMessage = storageError;
-            this.isLoading = false;
-          }
-        );
-      }
-    );
-  }
-
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
     this.categoriesSub.unsubscribe();
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.getCourses().subscribe(
+      () => this.isLoading = false
+    );
+  }
+
+  private getCourses() {
+    return this.coursesService.getCoursesFromStorage().pipe(
+      switchMap(() => this.coursesService.fetchCourses())
+    );
   }
 }

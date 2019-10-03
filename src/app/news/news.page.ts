@@ -40,7 +40,7 @@ export class NewsPage implements OnInit, OnDestroy {
     );
   }
 
-  private getNewsArticles(): Observable<NewsArticle[]> {
+  private getNewsArticles() {
     return this.newsService.getNewsArticlesFromStorage().pipe(
       switchMap(() => this.newsService.fetchNewsArticles())
     );
