@@ -5,6 +5,7 @@ import { TabsPage } from './tabs.page';
 import { UserGuard } from '../auth/user.guard';
 import { CategoriesGuard } from '../knowledge-room/categories.guard';
 import { CoursesGuard } from '../knowledge-room/courses/courses.guard';
+import { NewsGuard } from '../news/news.guard';
 
 const routes: Routes = [
   {
@@ -60,15 +61,21 @@ const routes: Routes = [
       },
       {
         path: 'news',
+        canActivate: [CoursesGuard],
         children: [
           {
             path: '',
-            loadChildren: '../news/news.module#NewsPageModule',
-            canActivate: [CoursesGuard]
+            loadChildren: '../news/news.module#NewsPageModule'
           },
           {
             path: ':id',
-            loadChildren: '../news/news-detail/news-detail.module#NewsDetailPageModule'
+            children: [
+              {
+                path: '',
+                loadChildren: '../news/news-detail/news-detail.module#NewsDetailPageModule',
+                canActivate: [NewsGuard]
+              }
+            ]
           }
         ]
       },
