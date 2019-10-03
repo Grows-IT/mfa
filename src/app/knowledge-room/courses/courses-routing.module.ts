@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { CoursesPage } from './courses.page';
 import { CoursesGuard } from './courses.guard';
+import { TopicsGuard } from './topics/topics.guard';
 
 const routes: Routes = [
   {
@@ -28,7 +29,8 @@ const routes: Routes = [
                 children: [
                   {
                     path: '',
-                    loadChildren: './topics/activities/activities.module#ActivitiesPageModule'
+                    loadChildren: './topics/activities/activities.module#ActivitiesPageModule',
+                    canActivate: [TopicsGuard]
                   },
                   {
                     path: ':activityId',
