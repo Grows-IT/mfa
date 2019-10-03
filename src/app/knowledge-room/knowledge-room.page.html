@@ -8,9 +8,6 @@
 </ion-header>
 
 <ion-content>
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
   <div text-center>
     <ion-spinner *ngIf="isLoading"></ion-spinner>
   </div>
@@ -22,13 +19,6 @@
         </ion-avatar>
         <ion-text class="ion-text-center">
           <h3>{{ user.firstName }} {{user.lastName }}</h3>
-        </ion-text>
-      </ion-col>
-    </ion-row>
-    <ion-row *ngIf="errorMessage">
-      <ion-col>
-        <ion-text text-center>
-          <h1>{{ errorMessage }}</h1>
         </ion-text>
       </ion-col>
     </ion-row>

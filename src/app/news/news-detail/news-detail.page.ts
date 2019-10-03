@@ -26,10 +26,12 @@ export class NewsDetailPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     const newsArticleId = +this.activatedRoute.snapshot.paramMap.get('id');
-    this.newsSub = this.newsService.getNewsArticleById(newsArticleId).subscribe(article => {
-      this.newsArticle = article;
-      this.indexHtml = this.sanitizer.bypassSecurityTrustHtml(article.content);
-      this.isLoading = false;
+    this.newsSub = this.newsService.newsArticles.subscribe(articles => {
+      this.newsArticle = articles.find(article => article.id === newsArticleId);
+      if (this.newsArticle) {
+        this.indexHtml = this.sanitizer.bypassSecurityTrustHtml(this.newsArticle.content);
+        this.isLoading = false;
+      }
     });
   }
 

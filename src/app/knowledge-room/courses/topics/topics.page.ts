@@ -36,11 +36,6 @@ export class TopicsPage implements OnInit, OnDestroy {
       if (topics) {
         this.topics = topics.filter(topic => topic.courseId === this.courseId);
       }
-      if (!this.topics || this.topics.length === 0) {
-        this.errorMessage = 'Coming soon';
-        return;
-      }
-      this.errorMessage = null;
     });
   }
 
