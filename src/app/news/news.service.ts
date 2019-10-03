@@ -32,17 +32,11 @@ export class NewsService {
 
   fetchNewsArticles() {
     let courseId: number;
-    return this.coursesService.getCourseByName(newsCourseName).pipe(
+    return this.coursesService.courses.pipe(
       first(),
-      switchMap(course => {
-        if (!course) {
-          return this.coursesService.fetchCourses().pipe(
-            map(courses => {
-              return courses.find(c => c.name === newsCourseName);
-            })
-          );
-        }
-        return of(course);
+      map(courses => {
+        const newsCourse = courses.find(course => course.name === newsCourseName);
+        return newsCourse;
       }),
       switchMap(course => {
         courseId = course.id;

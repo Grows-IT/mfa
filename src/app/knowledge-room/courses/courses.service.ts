@@ -11,7 +11,8 @@ import { AuthService } from '../../auth/auth.service';
 const { Storage } = Plugins;
 const duration = environment.timeoutDuration;
 const siteUrl = environment.siteUrl;
-const getCoursesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses';
+const coreEnrolGetUsersCoursesWsUrl = siteUrl +
+  '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses';
 const coreCourseGetContentsWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_contents';
 const coreCourseGetCategoriesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_categories';
 
@@ -22,7 +23,7 @@ const httpOptions = {
   })
 };
 
-export interface CoursesResponseData {
+export interface CoreEnrolResponseData {
   id: number;
   shortname: string;
   category: number;
@@ -156,8 +157,8 @@ export class CoursesService {
     );
   }
 
-  fetchCourses() {
-    return this.coreEnrolGetUsersCourses().pipe(
+  fetchEnrolledCourses(userId: number) {
+    return this.coreEnrolGetUsersCourses(userId).pipe(
       switchMap(resArr => {
         return from(resArr);
       }),
@@ -181,6 +182,32 @@ export class CoursesService {
       })
     );
   }
+
+  // fetchCourses() {
+  //   return this.coreEnrolGetUsersCourses().pipe(
+  //     switchMap(resArr => {
+  //       return from(resArr);
+  //     }),
+  //     withLatestFrom(this.authService.token),
+  //     concatMap(([res, token]) => {
+  //       if (!res.overviewfiles || res.overviewfiles.length === 0) {
+  //         return of(new Course(res.id, res.category, res.shortname));
+  //       }
+  //       const imgUrl = `${res.overviewfiles[0].fileurl}?token=${token}&offline=1`;
+  //       return this.getBinaryFile(imgUrl).pipe(
+  //         map(imgData => {
+  //           return new Course(res.id, res.category, res.shortname, imgUrl, imgData);
+  //         })
+  //       );
+  //     }),
+  //     toArray(),
+  //     map(courses => {
+  //       this._courses.next(courses);
+  //       this.saveCoursestoStorage(courses);
+  //       return courses;
+  //     })
+  //   );
+  // }
 
   fetchTopics(courseId: number) {
     return this.coreCourseGetContents(courseId).pipe(
@@ -243,18 +270,17 @@ export class CoursesService {
     );
   }
 
-  private coreEnrolGetUsersCourses() {
+  private coreEnrolGetUsersCourses(userId: number) {
     return this.authService.token.pipe(
       first(),
-      withLatestFrom(this.authService.userId),
-      switchMap(([token, userId]) => {
+      switchMap(token => {
         const params = new HttpParams({
           fromObject: {
             userid: userId.toString(),
             wstoken: token
           }
         });
-        return this.http.post<CoursesResponseData[]>(getCoursesWsUrl, params, httpOptions);
+        return this.http.post<CoreEnrolResponseData[]>(coreEnrolGetUsersCoursesWsUrl, params, httpOptions);
       }),
       timeout(duration)
     );
@@ -366,7 +392,8 @@ export class CoursesService {
   getCategoriesFromStorage() {
     return from(Storage.get({ key: 'categories' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        throw new Error('ไม่มีข้อมูล');
+        this._categories.next(null);
+        throw new Error('ไม่มีข้อมูล กรุณาเชื่อมต่อ internet');
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number,
@@ -390,7 +417,8 @@ export class CoursesService {
   getTopicsFromStorage(courseId: number) {
     return from(Storage.get({ key: `course${courseId}` })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        throw new Error('โปรดเชื่อมต่อ internet.');
+        this._topics.next(null);
+        throw new Error('ไม่มีข้อมูล กรุณาเชื่อมต่อ internet');
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number;
@@ -442,7 +470,8 @@ export class CoursesService {
   getCoursesFromStorage() {
     return from(Storage.get({ key: 'courses' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
-        throw new Error('โปรดเชื่อมต่อ internet.');
+        this._courses.next(null);
+        throw new Error('ไม่มีข้อมูล กรุณาเชื่อมต่อ internet');
       }
       const parsedData = JSON.parse(storedData.value) as {
         id: number;
