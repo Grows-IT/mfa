@@ -16,23 +16,25 @@ export class ActivitiesGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const courseId = +route.paramMap.get('courseId');
+    const topicId = +route.paramMap.get('topicId');
     return this.coursesService.topics.pipe(
       first(),
       switchMap(topics => {
         if (topics) {
-          return of(!!topics);
+          const currentTopic = topics.find(topic => topic.id === topicId);
+          return of(!!currentTopic.activities);
         }
-        return this.coursesService.getTopicsFromStorage(courseId).pipe(
+        return this.coursesService.getTopicsFromStorage().pipe(
           map(storedTopics => {
-            return !!storedTopics;
+            const storedTopic = storedTopics.find(topic => topic.id === topicId);
+            return !!storedTopic.activities;
           })
         );
       }),
-      tap(topicsExist => {
-        if (!topicsExist) {
+      tap(activitiesExist => {
+        if (!activitiesExist) {
           const categoryId = +route.paramMap.get('categoryId');
-          const topicId = +route.paramMap.get('topicId');
+          const courseId = +route.paramMap.get('courseId');
           this.router.navigateByUrl(`/tabs/knowledge-room/${categoryId}/courses/${courseId}/topics/${topicId}/activities`);
         }
       })

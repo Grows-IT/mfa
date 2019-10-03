@@ -67,10 +67,12 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   private getData() {
-    return this.authService.fetchUser().pipe(
+    return this.authService.getUserFromStorage().pipe(
+      switchMap(() => this.authService.fetchUser()),
+      switchMap(() => this.coursesService.getCoursesFromStorage()),
       switchMap(() => this.coursesService.fetchCourses()),
+      switchMap(() => this.newsService.getNewsArticlesFromStorage()),
       switchMap(() => this.newsService.fetchNewsArticles()),
-      catchError(() => this.newsService.getNewsArticlesFromStorage())
     );
   }
 }

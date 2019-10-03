@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CoursesService } from '../courses.service';
 import { Topic, Course } from '../course.model';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-topics',
@@ -32,10 +33,13 @@ export class TopicsPage implements OnInit, OnDestroy {
       this.course = courses.find(course => course.id === this.courseId);
     });
     this.topicsSub = this.coursesService.topics.subscribe(topics => {
-      if (!topics || topics.length === 0) {
-        return this.errorMessage = 'Coming soon';
+      if (topics) {
+        this.topics = topics.filter(topic => topic.courseId === this.courseId);
       }
-      this.topics = topics;
+      if (!this.topics || this.topics.length === 0) {
+        this.errorMessage = 'Coming soon';
+        return;
+      }
       this.errorMessage = null;
     });
   }
@@ -46,19 +50,18 @@ export class TopicsPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.isLoading = true;
-    this.coursesService.fetchTopics(this.courseId).subscribe(
+    this.getTopics();
+  }
+
+  private getTopics() {
+    this.coursesService.getTopicsFromStorage().pipe(
+      switchMap(() => {
+        return this.coursesService.fetchTopics(this.courseId);
+      })
+    ).subscribe(
       topics => {
         this.isLoading = false;
-        this.coursesService.downloadResources(this.courseId, topics).subscribe();
-      }, () => {
-        this.coursesService.getTopicsFromStorage(this.courseId).subscribe(
-          () => this.isLoading = false,
-          storageError => {
-            this.errorMessage = storageError.message;
-            this.isLoading = false;
-          }
-        );
+        this.coursesService.downloadResources(topics).subscribe();
       }
     );
   }

@@ -190,7 +190,7 @@ export class CoursesService {
       }),
       concatMap(res => {
         if (!res.modules && res.modules.length === 0) {
-          return of(new Topic(res.id, res.name, null));
+          return of(new Topic(res.id, courseId, res.name, null));
         }
         return from(res.modules).pipe(
           concatMap(mod => {
@@ -198,17 +198,83 @@ export class CoursesService {
           }),
           toArray(),
           map(activities => {
-            return new Topic(res.id, res.name, activities);
+            return new Topic(res.id, courseId, res.name, activities);
           }),
         );
       }),
       toArray(),
-      map(topics => {
-        this._topics.next(topics);
-        this.saveTopicsToStorage(courseId, topics);
-        return topics;
+      withLatestFrom(this.topics),
+      map(([newTopics, oldTopics]) => {
+        this.updateTopics(newTopics, oldTopics);
+        return newTopics;
       })
     );
+  }
+
+  downloadResources(topics: Topic[]) {
+    return from(topics).pipe(
+      concatMap(topic => {
+        if (!topic.activities || topic.activities.length === 0) {
+          return of(topic);
+        }
+        return from(topic.activities).pipe(
+          concatMap(activity => {
+            if (activity instanceof Page) {
+              const page = activity as Page;
+              let savedResource: PageResource;
+              return from(page.resources).pipe(
+                concatMap(resource => {
+                  savedResource = resource;
+                  if (resource.name === 'index.html') {
+                    return this.http.get(resource.url, { responseType: 'text' });
+                  }
+                  return this.http.get(resource.url, { responseType: 'blob' }).pipe(
+                    flatMap(blob => {
+                      return this.readFile(blob);
+                    })
+                  );
+                }),
+                map(data => {
+                  savedResource.data = data;
+                  return savedResource;
+                }),
+                toArray(),
+                map(resources => {
+                  page.resources = resources;
+                  return page;
+                })
+              );
+            }
+            return of(activity);
+          }),
+          toArray(),
+          map(activities => {
+            topic.activities = activities;
+            return topic;
+          }),
+        );
+      }),
+      toArray(),
+      withLatestFrom(this.topics),
+      map(([topicsWithResources, oldTopics]) => {
+        this.updateTopics(topicsWithResources, oldTopics);
+        return topicsWithResources;
+      })
+    );
+  }
+
+  private updateTopics(newTopics: Topic[], oldTopics: Topic[]) {
+    let updatedTopics: Topic[];
+    if (!oldTopics) {
+      updatedTopics = newTopics;
+    } else {
+      const courseId = newTopics[0].courseId;
+      const filteredTopics = oldTopics.filter(topic => topic.courseId !== courseId);
+      updatedTopics = filteredTopics.concat(newTopics);
+    }
+    this._topics.next(updatedTopics);
+    this.saveTopicsToStorage(updatedTopics);
+    return updatedTopics;
   }
 
   delete() {
@@ -294,58 +360,6 @@ export class CoursesService {
     }
   }
 
-  downloadResources(courseId: number, topics: Topic[]) {
-    return from(topics).pipe(
-      concatMap(topic => {
-        if (!topic.activities || topic.activities.length === 0) {
-          return of(topic);
-        }
-        return from(topic.activities).pipe(
-          concatMap(activity => {
-            if (activity instanceof Page) {
-              const page = activity as Page;
-              let savedResource: PageResource;
-              return from(page.resources).pipe(
-                concatMap(resource => {
-                  savedResource = resource;
-                  if (resource.name === 'index.html') {
-                    return this.http.get(resource.url, { responseType: 'text' });
-                  }
-                  return this.http.get(resource.url, { responseType: 'blob' }).pipe(
-                    flatMap(blob => {
-                      return this.readFile(blob);
-                    })
-                  );
-                }),
-                map(data => {
-                  savedResource.data = data;
-                  return savedResource;
-                }),
-                toArray(),
-                map(resources => {
-                  page.resources = resources;
-                  return page;
-                })
-              );
-            }
-            return of(activity);
-          }),
-          toArray(),
-          map(activities => {
-            topic.activities = activities;
-            return topic;
-          }),
-        );
-      }),
-      toArray(),
-      map(updatedTopics => {
-        this._topics.next(updatedTopics);
-        this.saveTopicsToStorage(courseId, updatedTopics);
-        return updatedTopics;
-      })
-    );
-  }
-
   private getBinaryFile(url: string) {
     return this.http.get(url, { responseType: 'blob' }).pipe(
       switchMap(blob => {
@@ -380,18 +394,19 @@ export class CoursesService {
     }));
   }
 
-  private saveTopicsToStorage(courseId: number, topics: Topic[]) {
+  private saveTopicsToStorage(topics: Topic[]) {
     const data = JSON.stringify(topics.map(course => course.toObject()));
-    Storage.set({ key: `course${courseId}`, value: data });
+    Storage.set({ key: 'topics', value: data });
   }
 
-  getTopicsFromStorage(courseId: number) {
-    return from(Storage.get({ key: `course${courseId}` })).pipe(map(storedData => {
+  getTopicsFromStorage() {
+    return from(Storage.get({ key: 'topics' })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
         return null;
       }
       const parsedData = JSON.parse(storedData.value) as {
-        id: number;
+        id: number,
+        courseId: number,
         name: string,
         activities: [{
           id: number,
@@ -425,7 +440,7 @@ export class CoursesService {
             }
           });
         }
-        return new Topic(topicData.id, topicData.name, activities);
+        return new Topic(topicData.id, topicData.courseId, topicData.name, activities);
       });
       this._topics.next(topics);
       return topics;
