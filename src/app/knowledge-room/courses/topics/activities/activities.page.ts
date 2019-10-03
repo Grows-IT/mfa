@@ -34,6 +34,7 @@ export class ActivitiesPage implements OnInit, OnDestroy {
       }
       this.pages = this.topic.activities.filter(activity => activity instanceof Page);
       this.quiz = this.topic.activities.find(activity => activity instanceof Quiz);
+      this.errorMessage = null;
       this.isLoading = false;
     });
   }

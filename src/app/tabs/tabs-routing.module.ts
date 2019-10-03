@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 import { UserGuard } from '../auth/user.guard';
 import { CategoriesGuard } from '../knowledge-room/categories.guard';
+import { CoursesGuard } from '../knowledge-room/courses/courses.guard';
 
 const routes: Routes = [
   {
@@ -62,7 +63,8 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: '../news/news.module#NewsPageModule'
+            loadChildren: '../news/news.module#NewsPageModule',
+            canActivate: [CoursesGuard]
           },
           {
             path: ':id',

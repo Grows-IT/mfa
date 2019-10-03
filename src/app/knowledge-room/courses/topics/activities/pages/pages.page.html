@@ -13,6 +13,9 @@
   <div text-center *ngIf="isLoading">
     <ion-spinner></ion-spinner>
   </div>
+  <ion-text text-center *ngIf="!isLoading && errorMessage">
+      <h1>{{ errorMessage }}</h1>
+    </ion-text>
   <ion-slides pager *ngIf="!isLoading">
     <ion-slide text-start *ngFor="let content of slideContents">
       <ion-grid>

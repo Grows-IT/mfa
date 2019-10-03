@@ -15,14 +15,13 @@ export class TopicsGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const courseId = +route.paramMap.get('courseId');
     return this.coursesService.topics.pipe(
       first(),
       switchMap(topics => {
         if (topics) {
           return of(!!topics);
         }
-        return this.coursesService.getTopicsFromStorage(courseId).pipe(
+        return this.coursesService.getTopicsFromStorage().pipe(
           map(storedTopics => {
             return !!storedTopics;
           })
@@ -31,6 +30,7 @@ export class TopicsGuard implements CanActivate {
       tap(topicsExist => {
         if (!topicsExist) {
           const categoryId = +route.paramMap.get('categoryId');
+          const courseId = +route.paramMap.get('courseId');
           this.router.navigateByUrl(`/tabs/knowledge-room/${categoryId}/courses/${courseId}/topics`);
         }
       })

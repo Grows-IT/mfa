@@ -39,6 +39,7 @@ export class Course {
 export class Topic {
   constructor(
     public id: number,
+    public courseId: number,
     public name: string,
     public activities: any[]
   ) { }
@@ -46,6 +47,7 @@ export class Topic {
   toObject() {
     return {
       id: this.id,
+      courseId: this.courseId,
       name: this.name,
       activities: this.activities ? this.activities.map(activity => {
         return activity.toObject();

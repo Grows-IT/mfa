@@ -3,7 +3,7 @@ import { Subscription, Observable } from 'rxjs';
 
 import { NewsService } from './news.service';
 import { NewsArticle } from './news.model';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-news',
@@ -41,8 +41,8 @@ export class NewsPage implements OnInit, OnDestroy {
   }
 
   private getNewsArticles(): Observable<NewsArticle[]> {
-    return this.newsService.fetchNewsArticles().pipe(
-      catchError(() => this.newsService.getNewsArticlesFromStorage())
+    return this.newsService.getNewsArticlesFromStorage().pipe(
+      switchMap(() => this.newsService.fetchNewsArticles())
     );
   }
 }

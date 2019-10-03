@@ -13,9 +13,11 @@
   </div>
   <ion-grid *ngIf=!isLoading>
     <ion-row *ngFor="let article of newsArticles">
-      <ion-col size="10" offset="1">
+      <ion-col>
         <ion-card [routerLink]="article.id">
-          <img *ngIf="article.imgUrl" [src]="article.imgData" />
+          <div align="center">
+            <img *ngIf="article.imgUrl" class="card-img" [src]="article.imgData" />
+          </div>
           <ion-card-header>
             <ion-card-title>{{ article.name }}</ion-card-title>
           </ion-card-header>
