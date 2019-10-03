@@ -16,15 +16,17 @@ export class ActivitiesPage implements OnInit, OnDestroy {
   pages: Page[];
   quiz: Quiz;
   errorMessage: string;
-  private coursesSub: Subscription;
+  prevUrl: string;
+  private topicsSub: Subscription;
 
   constructor(private activatedRoute: ActivatedRoute, private coursesService: CoursesService) { }
 
   ngOnInit() {
     this.isLoading = true;
+    this.setPrevUrl();
     const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
-    this.coursesSub = this.coursesService.getTopicById(topicId).subscribe(topics => {
-      this.topic = topics;
+    this.topicsSub = this.coursesService.topics.subscribe(topics => {
+      this.topic = topics.find(topic => topic.id === topicId);
       if (!this.topic.activities || this.topic.activities.length === 0) {
         this.errorMessage = 'Coming Soon';
         this.isLoading = false;
@@ -37,6 +39,12 @@ export class ActivitiesPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.coursesSub.unsubscribe();
+    this.topicsSub.unsubscribe();
+  }
+
+  private setPrevUrl() {
+    const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
+    const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
+    this.prevUrl = `/tabs/knowledge-room/${categoryId}/courses/${courseId}/topics`;
   }
 }
