@@ -15,7 +15,6 @@ export class CoursesPage implements OnInit, OnDestroy {
   category: Category;
   errorMessage: string;
   isLoading = false;
-  private categoryId: number;
   private coursesSub: Subscription;
   private categoriesSub: Subscription;
 
@@ -25,14 +24,18 @@ export class CoursesPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
+    const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
     this.categoriesSub = this.coursesService.categories.subscribe(categories => {
-      this.category = categories.find(category => category.id === this.categoryId);
+      if (categories && categories.length > 0) {
+        this.category = categories.find(category => category.id === categoryId);
+      }
     });
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
-      this.courses = courses.filter(course => course.categoryId === this.categoryId);
-      if (!this.courses || this.courses.length === 0) {
-        this.errorMessage = 'Coming soon';
+      if (courses) {
+        this.courses = courses.filter(course => course.categoryId === categoryId);
+        if (this.courses.length === 0) {
+          this.errorMessage = 'Coming soon';
+        }
       }
     });
   }
