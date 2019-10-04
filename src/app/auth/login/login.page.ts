@@ -6,6 +6,9 @@ import { MenuController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '../auth.service';
+import { switchMap } from 'rxjs/operators';
+import { CoursesService } from 'src/app/knowledge-room/courses/courses.service';
+import { NewsService } from 'src/app/news/news.service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +18,7 @@ import { AuthService } from '../auth.service';
 export class LoginPage implements OnInit, OnDestroy {
   errorMessage: string;
   loginForm: FormGroup;
+  loadingEl: HTMLIonLoadingElement;
   private loginSub: Subscription;
 
   constructor(
@@ -22,6 +26,8 @@ export class LoginPage implements OnInit, OnDestroy {
     private authService: AuthService,
     private loadingCtrl: LoadingController,
     private menuCtrl: MenuController,
+    private coursesService: CoursesService,
+    private newsService: NewsService
   ) { }
 
   ngOnInit() {
@@ -40,22 +46,44 @@ export class LoginPage implements OnInit, OnDestroy {
     this.loginSub.unsubscribe();
   }
 
-  async onSubmitLoginForm() {
+  onSubmitLoginForm() {
+    this.startLoading();
     if (!this.loginForm.valid) {
       return;
     }
-    const loadingEl = await this.loadingCtrl.create({
+    this.loginSub = this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(
+      () => {
+        this.errorMessage = null;
+        this.fetchData().subscribe();
+        this.menuCtrl.enable(true);
+        this.stopLoading();
+        this.router.navigateByUrl('/tabs/home');
+      },
+      error => {
+        this.errorMessage = error;
+        this.stopLoading();
+      }
+    );
+  }
+
+  private fetchData() {
+    return this.authService.fetchUser().pipe(
+      switchMap(() => this.coursesService.fetchCourses()),
+      switchMap(() => this.newsService.fetchNewsArticles()),
+    );
+  }
+
+  private startLoading() {
+    this.loadingCtrl.create({
       keyboardClose: true,
       message: 'กำลังเข้าระบบ...'
+    }).then(loadingEl => {
+      this.loadingEl = loadingEl;
+      this.loadingEl.present();
     });
-    loadingEl.present();
-    this.loginSub = this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
-      this.errorMessage = null;
-      this.router.navigateByUrl('/tabs/home');
-      loadingEl.dismiss();
-    }, error => {
-      this.errorMessage = error;
-      loadingEl.dismiss();
-    });
+  }
+
+  private stopLoading() {
+    this.loadingEl.dismiss();
   }
 }
