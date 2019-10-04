@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of, of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { switchMap, map, first, tap } from 'rxjs/operators';
 
 import { Page } from '../knowledge-room/courses/course.model';

@@ -34,7 +34,7 @@ export class HomeGuard implements CanLoad {
       }),
       tap(dataLoaded => {
         if (!dataLoaded) {
-          this.router.navigateByUrl('/tabs/login');
+          this.router.navigateByUrl('/auth/login');
         }
       })
     );
