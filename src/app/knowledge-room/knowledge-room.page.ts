@@ -29,6 +29,7 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
     this.categoriesSub = this.coursesService.categories.subscribe(categories => {
       if (categories && categories.length > 0) {
         this.categories = categories.slice(1);
+        this.isLoading = false;
       }
     });
   }
@@ -39,12 +40,12 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.getCategories().subscribe(() => this.isLoading = false);
-  }
-
-  private getCategories() {
-    return this.coursesService.getCategoriesFromStorage().pipe(
-      switchMap(() => this.coursesService.fetchCategories())
-    );
+    this.isLoading = true;
+    if (this.categories) {
+      this.isLoading = false;
+    } else {
+      this.coursesService.getCategoriesFromStorage().subscribe();
+    }
+    this.coursesService.fetchCategories().subscribe();
   }
 }

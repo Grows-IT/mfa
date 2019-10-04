@@ -3,7 +3,6 @@ import { Subscription, Observable } from 'rxjs';
 
 import { NewsService } from './news.service';
 import { NewsArticle } from './news.model';
-import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-news',
@@ -23,6 +22,10 @@ export class NewsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.newsSub = this.newsService.newsArticles.subscribe(articles => {
       this.newsArticles = articles;
+      if (!this.newsArticles || this.newsArticles.length === 0) {
+        this.errorMessage = 'Coming soon';
+      }
+      this.isLoading = false;
     });
   }
 
@@ -31,18 +34,12 @@ export class NewsPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.getNewsArticles().subscribe(
-      () => this.isLoading = false,
-      error => {
-        this.errorMessage = error.message;
-        this.isLoading = false;
-      }
-    );
-  }
-
-  private getNewsArticles() {
-    return this.newsService.getNewsArticlesFromStorage().pipe(
-      switchMap(() => this.newsService.fetchNewsArticles())
-    );
+    this.isLoading = true;
+    if (this.newsArticles) {
+      this.isLoading = false;
+    } else {
+      this.newsService.getNewsArticlesFromStorage().subscribe();
+    }
+    this.newsService.fetchNewsArticles().subscribe();
   }
 }

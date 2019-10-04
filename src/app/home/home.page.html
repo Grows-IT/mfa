@@ -15,10 +15,7 @@
 </ion-header>
 
 <ion-content>
-  <div text-center>
-    <ion-spinner *ngIf="isLoading"></ion-spinner>
-  </div>
-  <ion-grid no-padding *ngIf="!isLoading">
+  <ion-grid no-padding>
     <ion-row>
       <ion-col no-padding>
         <ion-button size="large" color="black" no-margin expand="full">
@@ -43,6 +40,13 @@
           </ion-thumbnail>
           QR CODE
         </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+          <div text-center>
+              <ion-spinner *ngIf="isLoading"></ion-spinner>
+            </div>
       </ion-col>
     </ion-row>
     <ion-row *ngIf="newsArticles">
