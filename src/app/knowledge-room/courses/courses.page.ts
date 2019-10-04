@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { CoursesService } from './courses.service';
 import { Course, Category } from './course.model';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-courses',
@@ -39,20 +40,13 @@ export class CoursesPage implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     });
+    this.coursesService.fetchCourses().pipe(
+      catchError(() => this.coursesService.getCoursesFromStorage)
+    ).subscribe();
   }
 
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
     this.categoriesSub.unsubscribe();
-  }
-
-  ionViewWillEnter() {
-    this.isLoading = true;
-    if (this.category && this.courses) {
-      this.isLoading = false;
-    } else {
-      this.coursesService.getCoursesFromStorage().subscribe();
-    }
-    this.coursesService.fetchCourses().subscribe();
   }
 }

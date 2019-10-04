@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
-import { Subscription } from 'rxjs';
+import { Subscription, from } from 'rxjs';
 
 import { AuthService } from '../auth.service';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, concatMap, toArray } from 'rxjs/operators';
 import { CoursesService } from 'src/app/knowledge-room/courses/courses.service';
 import { NewsService } from 'src/app/news/news.service';
 
@@ -54,10 +54,13 @@ export class LoginPage implements OnInit, OnDestroy {
     this.loginSub = this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(
       () => {
         this.errorMessage = null;
-        this.fetchData().subscribe();
-        this.menuCtrl.enable(true);
-        this.stopLoading();
-        this.router.navigateByUrl('/tabs/home');
+        this.fetchData().subscribe(
+          data => {
+            this.menuCtrl.enable(true);
+            this.stopLoading();
+            this.router.navigateByUrl('/tabs/home');
+          }
+        );
       },
       error => {
         this.errorMessage = error;
@@ -69,6 +72,15 @@ export class LoginPage implements OnInit, OnDestroy {
   private fetchData() {
     return this.authService.fetchUser().pipe(
       switchMap(() => this.coursesService.fetchCourses()),
+      switchMap(courses => {
+        return from(courses);
+      }),
+      concatMap(course => {
+        return this.coursesService.fetchTopics(course.id);
+      }),
+      concatMap(topics => {
+        return this.coursesService.downloadResources(topics);
+      }),
       switchMap(() => this.newsService.fetchNewsArticles()),
     );
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { CoursesService } from '../courses.service';
@@ -11,7 +11,7 @@ import { switchMap, catchError } from 'rxjs/operators';
   templateUrl: './topics.page.html',
   styleUrls: ['./topics.page.scss'],
 })
-export class TopicsPage implements OnInit, OnDestroy {
+export class TopicsPage implements OnInit, OnDestroy, AfterViewInit {
   isLoading = false;
   topics: Topic[];
   course: Course;
@@ -42,12 +42,14 @@ export class TopicsPage implements OnInit, OnDestroy {
         }
       }
     });
-    this.fetchSub = this.coursesService.fetchTopics(this.courseId).pipe(
-      switchMap(topics => this.coursesService.downloadResources(topics)),
-      catchError(() => this.coursesService.getTopicsFromStorage())
-    ).subscribe(() => this.isLoading = false);
-
   }
+
+  // ngAfterViewInit() {
+  //   this.fetchSub = this.coursesService.fetchTopics(this.courseId).pipe(
+  //     // switchMap(topics => this.coursesService.downloadResources(topics)),
+  //     catchError(() => this.coursesService.getTopicsFromStorage())
+  //   ).subscribe(() => this.isLoading = false);
+  // }
 
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
