@@ -90,6 +90,22 @@ export class AuthService {
     );
   }
 
+  isUserAvailable() {
+    return this.user.pipe(
+      first(),
+      switchMap(user => {
+        if (user) {
+          return of(!!user);
+        }
+        return this.getUserFromStorage().pipe(
+          map(storedUser => {
+            return !!storedUser;
+          })
+        );
+      })
+    );
+  }
+
   fetchUser() {
     return this.coreWebserviceGetSiteInfo().pipe(
       map(user => {

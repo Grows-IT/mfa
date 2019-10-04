@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of, of } from 'rxjs';
 import { switchMap, map, first, tap } from 'rxjs/operators';
 
 import { Page } from '../knowledge-room/courses/course.model';
@@ -20,6 +20,22 @@ export class NewsService {
 
   get newsArticles() {
     return this._newsArticles.asObservable();
+  }
+
+  areNewsArticlesLoaded() {
+    return this.newsArticles.pipe(
+      first(),
+      switchMap(newsArticles => {
+        if (newsArticles) {
+          return of(!!newsArticles);
+        }
+        return this.getNewsArticlesFromStorage().pipe(
+          map(storedNewsArticles => {
+            return !!storedNewsArticles;
+          })
+        );
+      })
+    );
   }
 
   fetchNewsArticles() {

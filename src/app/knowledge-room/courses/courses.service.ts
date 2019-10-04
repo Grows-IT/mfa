@@ -89,6 +89,22 @@ export class CoursesService {
     return this._activities.asObservable().pipe();
   }
 
+  areCoursesLoaded() {
+    return this.courses.pipe(
+      first(),
+      switchMap(courses => {
+        if (courses) {
+          return of(!!courses);
+        }
+        return this.getCoursesFromStorage().pipe(
+          map(storedCourses => {
+            return !!storedCourses;
+          })
+        );
+      }),
+    );
+  }
+
   getCourseById(courseId: number) {
     return this.courses.pipe(
       map(courses => {

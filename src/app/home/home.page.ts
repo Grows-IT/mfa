@@ -36,16 +36,16 @@ export class HomePage implements OnInit, OnDestroy {
     });
   }
 
-  ionViewWillEnter() {
-    this.menuCtrl.enable(true);
-    this.authService.fetchUser().pipe(
-      catchError(() => this.authService.getUserFromStorage()),
-      switchMap(() => this.coursesService.fetchCourses()),
-      catchError(() => this.coursesService.getCoursesFromStorage()),
-      switchMap(() => this.newsService.fetchNewsArticles()),
-      catchError(() => this.newsService.getNewsArticlesFromStorage())
-    ).subscribe();
-  }
+  // ionViewWillEnter() {
+  //   this.menuCtrl.enable(true);
+  //   this.authService.fetchUser().pipe(
+  //     catchError(() => this.authService.getUserFromStorage()),
+  //     switchMap(() => this.coursesService.fetchCourses()),
+  //     catchError(() => this.coursesService.getCoursesFromStorage()),
+  //     switchMap(() => this.newsService.fetchNewsArticles()),
+  //     catchError(() => this.newsService.getNewsArticlesFromStorage())
+  //   ).subscribe();
+  // }
 
   ngOnDestroy() {
     this.userSub.unsubscribe();

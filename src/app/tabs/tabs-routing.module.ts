@@ -6,6 +6,7 @@ import { UserGuard } from '../auth/user.guard';
 import { CategoriesGuard } from '../knowledge-room/categories.guard';
 import { CoursesGuard } from '../knowledge-room/courses/courses.guard';
 import { NewsGuard } from '../news/news.guard';
+import { HomeGuard } from '../home/home.guard';
 
 const routes: Routes = [
   {
@@ -17,7 +18,8 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: '../home/home.module#HomePageModule'
+            loadChildren: '../home/home.module#HomePageModule',
+            canLoad: [HomeGuard]
           }
         ]
       },
