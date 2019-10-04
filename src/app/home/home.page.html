@@ -15,7 +15,24 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid no-padding>
+  <div text-center>
+    <ion-spinner *ngIf="!newsArticles"></ion-spinner>
+  </div>
+    <!-- <ion-segment color="danger">
+        <ion-segment-button layout="icon-start">
+          <ion-label>Favorite</ion-label>
+          <ion-icon name="heart"></ion-icon>
+        </ion-segment-button>
+        <ion-segment-button layout="icon-start">
+            <ion-label>Note</ion-label>
+            <ion-icon name="paper"></ion-icon>
+          </ion-segment-button>
+        <ion-segment-button layout="icon-start">
+          <ion-label>QR Code</ion-label>
+          <ion-icon name="barcode"></ion-icon>
+        </ion-segment-button>
+      </ion-segment> -->
+  <ion-grid no-padding *ngIf="newsArticles">
     <ion-row>
       <ion-col no-padding>
         <ion-button size="large" color="black" no-margin expand="full">
@@ -43,13 +60,6 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col>
-          <div text-center>
-              <ion-spinner *ngIf="isLoading"></ion-spinner>
-            </div>
-      </ion-col>
-    </ion-row>
-    <ion-row *ngIf="newsArticles">
       <ion-col margin-start>
         <ion-text>
           <h1>NEWS UPDATES</h1>
@@ -61,7 +71,7 @@
         </ion-text>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="newsArticles">
+    <ion-row>
       <ion-slides pager>
         <ion-slide *ngFor="let article of newsArticles">
           <ion-card [routerLink]="['/tabs/news/', article.id]">
