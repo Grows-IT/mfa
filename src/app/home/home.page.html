@@ -15,47 +15,21 @@
 </ion-header>
 
 <ion-content>
-    <!-- <ion-segment color="danger">
-        <ion-segment-button layout="icon-start">
-          <ion-label>Favorite</ion-label>
-          <ion-icon name="heart"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button layout="icon-start">
-            <ion-label>Note</ion-label>
-            <ion-icon name="paper"></ion-icon>
-          </ion-segment-button>
-        <ion-segment-button layout="icon-start">
-          <ion-label>QR Code</ion-label>
-          <ion-icon name="barcode"></ion-icon>
-        </ion-segment-button>
-      </ion-segment> -->
+  <ion-segment>
+    <ion-segment-button layout="icon-start">
+      <ion-label color="light">Favorite</ion-label>
+      <ion-icon src="assets/home/favorite.svg"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button layout="icon-start">
+      <ion-label color="light">Note</ion-label>
+      <ion-icon src="assets/home/note.svg"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button layout="icon-start">
+      <ion-label color="light">QR Code</ion-label>
+      <ion-icon src="assets/home/qr.svg"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
   <ion-grid no-padding *ngIf="newsArticles">
-    <ion-row>
-      <ion-col no-padding>
-        <ion-button size="large" color="black" no-margin expand="full">
-          <ion-thumbnail slot="start">
-            <img src="assets/home/favorite.png" />
-          </ion-thumbnail>
-          FAVORITE
-        </ion-button>
-      </ion-col>
-      <ion-col no-padding>
-        <ion-button size="large" no-margin color="black" expand="full">
-          <ion-thumbnail slot="start">
-            <img src="assets/home/note.png" />
-          </ion-thumbnail>
-          NOTE
-        </ion-button>
-      </ion-col>
-      <ion-col no-padding>
-        <ion-button size="large" no-margin color="black" expand="full">
-          <ion-thumbnail slot="start">
-            <img src="assets/home/qr.png" />
-          </ion-thumbnail>
-          QR CODE
-        </ion-button>
-      </ion-col>
-    </ion-row>
     <ion-row>
       <ion-col margin-start>
         <ion-text>

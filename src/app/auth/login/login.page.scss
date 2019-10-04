@@ -1,16 +1,16 @@
-.login-input-text{
-    color: white; 
-    text-align:center; 
-    background-color: #0d708d; 
+.banner {
+    margin-top: 200px;
+    margin-bottom: 100px;
+}
+
+ion-input {
+    color: var(--ion-color-light); 
+    text-align: center; 
+    background-color: var(--ion-color-primary);
     border-width:0px;
     border-radius: 15px;
-    font-size:18px; 
-    font-family:WorkSans-Medium, "Work Sans"; 
-    font-weight:500;
 }
-.login-button{
-    height:50px; 
-    font-size:18px; 
-    font-family:WorkSans-Medium, "Work Sans"; 
-    font-weight:bold;
+
+ion-button {
+    margin-top: 100px;
 }
