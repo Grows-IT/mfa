@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CoursesService } from '../courses.service';
 import { Topic, Course } from '../course.model';
 import { Subscription, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-topics',
@@ -20,6 +20,7 @@ export class TopicsPage implements OnInit, OnDestroy {
   private courseId: number;
   private coursesSub: Subscription;
   private topicsSub: Subscription;
+  private fetchSub: Subscription;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -33,43 +34,25 @@ export class TopicsPage implements OnInit, OnDestroy {
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
       this.course = courses.find(course => course.id === this.courseId);
     });
-    this.topicsSub = this.getTopics().subscribe(
-      topics => {
-        if (topics) {
-          this.topics = topics;
-          if (this.topics.length === 0) {
-            this.errorMessage = 'Coming soon';
-          }
-          this.isLoading = false;
+    this.topicsSub = this.coursesService.topics.subscribe(topics => {
+      if (topics) {
+        this.topics = topics.filter(topic => topic.courseId === this.courseId);
+        if (!this.isLoading && this.topics.length === 0) {
+          this.errorMessage = 'Coming soon';
         }
-        this.fetchTopics().subscribe();
       }
-    );
-  }
+    });
+    this.fetchSub = this.coursesService.fetchTopics(this.courseId).pipe(
+      switchMap(topics => this.coursesService.downloadResources(topics)),
+      catchError(() => this.coursesService.getTopicsFromStorage())
+    ).subscribe(() => this.isLoading = false);
 
-  private fetchTopics() {
-    return this.coursesService.fetchTopics(this.courseId).pipe(
-      switchMap(topics => this.coursesService.downloadResources(topics))
-    );
-  }
-
-  private getTopics() {
-    return this.coursesService.topics.pipe(
-      switchMap(topics => {
-        if (topics) {
-          const filteredTopics = topics.filter(topic => topic.courseId === this.courseId);
-          if (filteredTopics) {
-            return of(filteredTopics);
-          }
-        }
-        return this.coursesService.getTopicsFromStorage();
-      })
-    );
   }
 
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
     this.topicsSub.unsubscribe();
+    this.fetchSub.unsubscribe();
   }
 
   private setPrevUrl() {

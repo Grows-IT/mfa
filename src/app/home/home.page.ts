@@ -5,7 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { NewsArticle } from '../news/news.model';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 import { MenuController } from '@ionic/angular';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
 
@@ -17,7 +17,6 @@ import { CoursesService } from '../knowledge-room/courses/courses.service';
 export class HomePage implements OnInit, OnDestroy {
   user: User;
   newsArticles: NewsArticle[];
-  isLoading = false;
   private newsSub: Subscription;
   private userSub: Subscription;
 
@@ -34,47 +33,22 @@ export class HomePage implements OnInit, OnDestroy {
     });
     this.newsSub = this.newsService.newsArticles.subscribe(articles => {
       this.newsArticles = articles;
-      this.isLoading = false;
     });
   }
 
   ionViewWillEnter() {
-    this.isLoading = true;
     this.menuCtrl.enable(true);
-    if (this.user && this.newsArticles) {
-      this.isLoading = false;
-    } else {
-      this.getDataFromStorage().subscribe();
-    }
-    this.fetchData().subscribe();
+    this.authService.fetchUser().pipe(
+      catchError(() => this.authService.getUserFromStorage()),
+      switchMap(() => this.coursesService.fetchCourses()),
+      catchError(() => this.coursesService.getCoursesFromStorage()),
+      switchMap(() => this.newsService.fetchNewsArticles()),
+      catchError(() => this.newsService.getNewsArticlesFromStorage())
+    ).subscribe();
   }
 
   ngOnDestroy() {
     this.userSub.unsubscribe();
     this.newsSub.unsubscribe();
-  }
-
-  private getDataFromStorage() {
-    return this.authService.getUserFromStorage().pipe(
-      switchMap(user => {
-        if (user) {
-          return this.coursesService.getCoursesFromStorage();
-        }
-        return of(null);
-      }),
-      switchMap(courses => {
-        if (courses) {
-          return this.newsService.getNewsArticlesFromStorage();
-        }
-        return of(null);
-      }),
-    );
-  }
-
-  private fetchData() {
-    return this.authService.fetchUser().pipe(
-      switchMap(() => this.coursesService.fetchCourses()),
-      switchMap(() => this.newsService.fetchNewsArticles()),
-    );
   }
 }
