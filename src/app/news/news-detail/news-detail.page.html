@@ -8,8 +8,8 @@
 </ion-header>
 
 <ion-content>
-  <div text-center *ngIf="isLoading">
-    <ion-spinner></ion-spinner>
+  <div text-center>
+    <ion-spinner *ngIf="isLoading"></ion-spinner>
   </div>
   <div *ngIf="!isLoading" [innerHTML]="indexHtml"></div>
 </ion-content>

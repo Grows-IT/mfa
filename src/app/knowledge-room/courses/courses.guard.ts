@@ -11,9 +11,7 @@ export class CoursesGuard implements CanActivate {
   constructor(
     private router: Router,
     private coursesService: CoursesService
-  ) {
-
-  }
+  ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {

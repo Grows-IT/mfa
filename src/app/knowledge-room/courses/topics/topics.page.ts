@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { CoursesService } from '../courses.service';
 import { Topic, Course } from '../course.model';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
@@ -27,38 +27,49 @@ export class TopicsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.setPrevUrl();
     this.courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
       this.course = courses.find(course => course.id === this.courseId);
     });
-    this.topicsSub = this.coursesService.topics.subscribe(topics => {
-      if (topics) {
-        this.topics = topics.filter(topic => topic.courseId === this.courseId);
+    this.topicsSub = this.getTopics().subscribe(
+      topics => {
+        if (topics) {
+          this.topics = topics;
+          if (this.topics.length === 0) {
+            this.errorMessage = 'Coming soon';
+          }
+          this.isLoading = false;
+        }
+        this.fetchTopics().subscribe();
       }
-    });
+    );
+  }
+
+  private fetchTopics() {
+    return this.coursesService.fetchTopics(this.courseId).pipe(
+      switchMap(topics => this.coursesService.downloadResources(topics))
+    );
+  }
+
+  private getTopics() {
+    return this.coursesService.topics.pipe(
+      switchMap(topics => {
+        if (topics) {
+          const filteredTopics = topics.filter(topic => topic.courseId === this.courseId);
+          if (filteredTopics) {
+            return of(filteredTopics);
+          }
+        }
+        return this.coursesService.getTopicsFromStorage();
+      })
+    );
   }
 
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
     this.topicsSub.unsubscribe();
-  }
-
-  ionViewWillEnter() {
-    this.getTopics();
-  }
-
-  private getTopics() {
-    this.coursesService.getTopicsFromStorage().pipe(
-      switchMap(() => {
-        return this.coursesService.fetchTopics(this.courseId);
-      })
-    ).subscribe(
-      topics => {
-        this.isLoading = false;
-        this.coursesService.downloadResources(topics).subscribe();
-      }
-    );
   }
 
   private setPrevUrl() {
