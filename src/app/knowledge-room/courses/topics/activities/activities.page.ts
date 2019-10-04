@@ -23,20 +23,19 @@ export class ActivitiesPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.setPrevUrl();
     const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
     this.topicsSub = this.coursesService.topics.subscribe(topics => {
       this.topic = topics.find(topic => topic.id === topicId);
       if (!this.topic.activities || this.topic.activities.length === 0) {
         this.errorMessage = 'Coming Soon';
-        this.isLoading = false;
-        return;
+      } else {
+        this.pages = this.topic.activities.filter(activity => activity instanceof Page);
+        this.quiz = this.topic.activities.find(activity => activity instanceof Quiz);
+        this.errorMessage = null;
       }
-      this.pages = this.topic.activities.filter(activity => activity instanceof Page);
-      this.quiz = this.topic.activities.find(activity => activity instanceof Quiz);
-      this.errorMessage = null;
       this.isLoading = false;
     });
+    this.setPrevUrl();
   }
 
   ngOnDestroy() {

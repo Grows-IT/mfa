@@ -11,7 +11,7 @@ import { switchMap, catchError } from 'rxjs/operators';
   templateUrl: './topics.page.html',
   styleUrls: ['./topics.page.scss'],
 })
-export class TopicsPage implements OnInit, OnDestroy, AfterViewInit {
+export class TopicsPage implements OnInit, OnDestroy {
   isLoading = false;
   topics: Topic[];
   course: Course;
@@ -29,7 +29,6 @@ export class TopicsPage implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.isLoading = true;
-    this.setPrevUrl();
     this.courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
       this.course = courses.find(course => course.id === this.courseId);
@@ -42,14 +41,12 @@ export class TopicsPage implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     });
+    this.fetchSub = this.coursesService.fetchTopics(this.courseId).pipe(
+      switchMap(topics => this.coursesService.downloadResources(topics)),
+      catchError(() => this.coursesService.getTopicsFromStorage())
+    ).subscribe(() => this.isLoading = false);
+    this.setPrevUrl();
   }
-
-  // ngAfterViewInit() {
-  //   this.fetchSub = this.coursesService.fetchTopics(this.courseId).pipe(
-  //     // switchMap(topics => this.coursesService.downloadResources(topics)),
-  //     catchError(() => this.coursesService.getTopicsFromStorage())
-  //   ).subscribe(() => this.isLoading = false);
-  // }
 
   ngOnDestroy() {
     this.coursesSub.unsubscribe();

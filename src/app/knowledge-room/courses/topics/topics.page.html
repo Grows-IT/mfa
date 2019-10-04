@@ -11,15 +11,17 @@
         <h1>{{ course.name }}</h1>
       </ion-label>
     </ion-item>
-    <ion-progress-bar *ngIf="!topics"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-text text-center *ngIf="!topics && errorMessage">
+  <!-- <div text-center>
+    <ion-spinner *ngIf="isLoading"></ion-spinner>
+  </div> -->
+  <ion-text text-center *ngIf="!isLoading && errorMessage">
     <h1>{{ errorMessage }}</h1>
   </ion-text>
-  <ion-grid class="topics" *ngIf="topics && !errorMessage">
+  <ion-grid class="topics" *ngIf="!errorMessage && topics">
     <ion-row>
       <ion-col>
         <ion-button *ngFor="let topic of topics" margin size="large" expand="full" shape="round"

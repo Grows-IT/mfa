@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
@@ -16,6 +16,7 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
   user: User;
   categories: Category[];
   isLoading = false;
+  errorMessage: string;
   private userSub: Subscription;
   private categoriesSub: Subscription;
 
@@ -27,9 +28,12 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.userSub = this.authService.user.subscribe(user => this.user = user);
     this.categoriesSub = this.coursesService.categories.subscribe(categories => {
-      if (categories && categories.length > 0) {
+      if (categories) {
+        if (categories.length === 0) {
+          this.errorMessage = 'Coming soon';
+          return;
+        }
         this.categories = categories.slice(1);
-        this.isLoading = false;
       }
     });
   }
@@ -41,11 +45,8 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.isLoading = true;
-    if (this.categories) {
-      this.isLoading = false;
-    } else {
-      this.coursesService.getCategoriesFromStorage().subscribe();
-    }
-    this.coursesService.fetchCategories().subscribe();
+    this.coursesService.fetchCategories().pipe(
+      catchError(() => this.coursesService.getCategoriesFromStorage())
+    ).subscribe(() => this.isLoading = false);
   }
 }

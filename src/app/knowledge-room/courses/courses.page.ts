@@ -18,6 +18,7 @@ export class CoursesPage implements OnInit, OnDestroy {
   isLoading = false;
   private coursesSub: Subscription;
   private categoriesSub: Subscription;
+  private fetchSub: Subscription;
 
   constructor(
     private coursesService: CoursesService,
@@ -25,6 +26,7 @@ export class CoursesPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
     this.categoriesSub = this.coursesService.categories.subscribe(categories => {
       if (categories && categories.length > 0) {
@@ -37,16 +39,16 @@ export class CoursesPage implements OnInit, OnDestroy {
         if (this.courses.length === 0) {
           this.errorMessage = 'Coming soon';
         }
-        this.isLoading = false;
       }
     });
-    this.coursesService.fetchCourses().pipe(
-      catchError(() => this.coursesService.getCoursesFromStorage)
-    ).subscribe();
+    this.fetchSub = this.coursesService.fetchCourses().pipe(
+      catchError(() => this.coursesService.getCoursesFromStorage())
+    ).subscribe(() => this.isLoading = false);
   }
 
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
     this.categoriesSub.unsubscribe();
+    this.fetchSub.unsubscribe();
   }
 }
