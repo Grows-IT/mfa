@@ -1,13 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { NewsArticle } from '../news/news.model';
-import { switchMap, catchError } from 'rxjs/operators';
-import { MenuController } from '@ionic/angular';
-import { CoursesService } from '../knowledge-room/courses/courses.service';
 
 @Component({
   selector: 'app-home',
@@ -17,14 +14,13 @@ import { CoursesService } from '../knowledge-room/courses/courses.service';
 export class HomePage implements OnInit, OnDestroy {
   user: User;
   newsArticles: NewsArticle[];
+  isLoading = false;
   private newsSub: Subscription;
   private userSub: Subscription;
 
   constructor(
     private authService: AuthService,
-    private coursesService: CoursesService,
-    private newsService: NewsService,
-    private menuCtrl: MenuController
+    private newsService: NewsService
   ) { }
 
   ngOnInit() {
@@ -36,16 +32,11 @@ export class HomePage implements OnInit, OnDestroy {
     });
   }
 
-  // ionViewWillEnter() {
-  //   this.menuCtrl.enable(true);
-  //   this.authService.fetchUser().pipe(
-  //     catchError(() => this.authService.getUserFromStorage()),
-  //     switchMap(() => this.coursesService.fetchCourses()),
-  //     catchError(() => this.coursesService.getCoursesFromStorage()),
-  //     switchMap(() => this.newsService.fetchNewsArticles()),
-  //     catchError(() => this.newsService.getNewsArticlesFromStorage())
-  //   ).subscribe();
-  // }
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.authService.fetchUser().subscribe();
+    this.newsService.fetchNewsArticles().subscribe(() => this.isLoading = false);
+  }
 
   ngOnDestroy() {
     this.userSub.unsubscribe();
