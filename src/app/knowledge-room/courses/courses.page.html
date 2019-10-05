@@ -26,12 +26,12 @@
   <ion-grid *ngIf="!errorMessage && courses">
     <ion-row>
       <ion-col text-center size="4" *ngFor="let course of courses">
-        <a [routerLink]="[course.id, 'topics']">
+        <ion-card [routerLink]="[course.id, 'topics']">
             <img [src]="course.imgData" />
-            <ion-text color="black">
-              <h3>{{ course.name }}</h3>
-            </ion-text>
-        </a>
+            <ion-card-header>
+              <ion-card-title>{{ course.name }}</ion-card-title>
+            </ion-card-header>
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
