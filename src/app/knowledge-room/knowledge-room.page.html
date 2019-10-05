@@ -17,20 +17,24 @@
   <ion-grid *ngIf="!errorMessage && categories && user">
     <ion-row>
       <ion-col size="4" offset="4">
-        <ion-avatar>
-          <ion-img [src]="user.imgUrl" routerLink="/auth/profile"></ion-img>
-        </ion-avatar>
-        <ion-text class="ion-text-center">
-          <h3>{{ user.firstName }} {{user.lastName }}</h3>
-        </ion-text>
+        <a routerLink="/auth/profile">
+          <ion-avatar>
+            <img [src]="user.imgUrl" />
+          </ion-avatar>
+          <ion-text color="black">
+            <h3>{{ user.firstName }} {{user.lastName }}</h3>
+          </ion-text>
+        </a>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col text-center size="6" *ngFor="let category of categories" [routerLink]="[category.id, 'courses']">
-        <img [src]="category.imgData" />
-        <ion-text>
-          <h3>{{ category.name }}</h3>
-        </ion-text>
+      <ion-col text-center size="6" *ngFor="let category of categories">
+        <a [routerLink]="[category.id, 'courses']">
+          <img [src]="category.imgData" />
+          <ion-text color="black">
+            <h3 class="category-title">{{ category.name }}</h3>
+          </ion-text>
+        </a>
       </ion-col>
     </ion-row>
   </ion-grid>
