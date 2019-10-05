@@ -7,9 +7,11 @@
       Modern Farm Academy
     </ion-title>
     <ion-buttons slot="primary">
-      <ion-avatar padding routerLink="/auth/profile">
-        <ion-img *ngIf="user" [src]="user.imgData"></ion-img>
-      </ion-avatar>
+      <a routerLink="/auth/profile">
+        <ion-avatar padding>
+          <img *ngIf="user" [src]="user.imgData" />
+        </ion-avatar>
+      </a>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -36,10 +38,10 @@
           <h1>NEWS UPDATES</h1>
         </ion-text>
       </ion-col>
-      <ion-col class="see-more" margin-end text-end routerLink="/tabs/news">
-        <ion-text color="medium">
-          <p>SEE MORE</p>
-        </ion-text>
+      <ion-col class="see-more" margin-end text-end>
+        <a underlines="none" routerLink="/tabs/news">
+          <ion-text color="medium">SEE MORE</ion-text>
+        </a>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -65,24 +67,24 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <div align="center">
-          <img src="assets/home/knowledge.png" routerLink="/tabs/knowledge-room" />
-        </div>
+        <a routerLink="/tabs/knowledge-room">
+          <img src="assets/home/knowledge.png" />
+        </a>
       </ion-col>
       <ion-col>
-        <div align="center">
-          <img src="assets/home/calculator.png" routerLink="/tabs/calculators" />
-        </div>
+        <a routerLink="/tabs/calculators">
+          <img src="assets/home/calculator.png" />
+        </a>
       </ion-col>
       <ion-col>
-        <div align="center">
-          <img src="assets/home/sugar.png" routerLink="/sugar-price" />
-        </div>
+        <a routerLink="/sugar-price">
+          <img src="assets/home/sugar.png" />
+        </a>
       </ion-col>
       <ion-col>
-        <div align="center">
-          <img src="assets/home/weather.png" routerLink="/weather" />
-        </div>
+        <a routerLink="/weather">
+          <img src="assets/home/weather.png" />
+        </a>
       </ion-col>
     </ion-row>
   </ion-grid>
