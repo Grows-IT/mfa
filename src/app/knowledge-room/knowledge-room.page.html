@@ -14,27 +14,31 @@
   <ion-text text-center *ngIf="!isLoading && errorMessage">
     <h1>{{ errorMessage }}</h1>
   </ion-text>
-  <ion-grid *ngIf="!errorMessage && categories && user">
+  <ion-grid fixed="true" *ngIf="!errorMessage && categories && user">
     <ion-row>
-      <ion-col size="4" offset="4">
-        <a routerLink="/auth/profile">
-          <ion-avatar>
-            <img [src]="user.imgUrl" />
-          </ion-avatar>
-          <ion-text color="black">
-            <h3>{{ user.firstName }} {{user.lastName }}</h3>
-          </ion-text>
-        </a>
+      <ion-col text-center>
+          <div align="center">
+              <ion-card routerLink="/auth/profile">
+                <ion-avatar>
+                  <img [src]="user.imgUrl" />
+                </ion-avatar>
+                <ion-card-header>
+                  <ion-card-title>{{ user.firstName }} {{user.lastName }}</ion-card-title>
+                </ion-card-header>
+              </ion-card>
+            </div>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col text-center size="6" *ngFor="let category of categories">
-        <a [routerLink]="[category.id, 'courses']">
-          <img [src]="category.imgData" />
-          <ion-text color="black">
-            <h3 class="category-title">{{ category.name }}</h3>
-          </ion-text>
-        </a>
+      <ion-col size="6" *ngFor="let category of categories">
+        <div align="center">
+          <ion-card [routerLink]="[category.id, 'courses']">
+            <img [src]="category.imgData" />
+            <ion-card-header>
+              <ion-card-title>{{ category.name }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </div>
       </ion-col>
     </ion-row>
   </ion-grid>
