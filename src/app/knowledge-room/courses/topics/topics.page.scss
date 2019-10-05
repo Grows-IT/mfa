@@ -6,14 +6,15 @@ ion-button {
     height: 80px;
 }
 
-ion-grid.topics {
-    background-color: var(--ion-color-secondary);
-}
-
-ion-content{
+ion-content {
     --ion-background-color: var(--ion-color-secondary);
 }
 
-.banner {
-    margin-left: 100px;
+ion-toolbar {
+    --min-height: 120px;
+}
+
+.title-image {
+    vertical-align: middle;
+    height: 100px;
 }

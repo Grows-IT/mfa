@@ -31,7 +31,8 @@
       <ion-icon src="assets/home/qr.svg"></ion-icon>
     </ion-segment-button>
   </ion-segment>
-  <ion-grid no-padding *ngIf="newsArticles">
+
+  <ion-grid *ngIf="newsArticles">
     <ion-row>
       <ion-col margin-start>
         <ion-text>
@@ -58,6 +59,7 @@
         </ion-slide>
       </ion-slides>
     </ion-row>
+
     <ion-row>
       <ion-col margin-start>
         <ion-text>
@@ -67,22 +69,22 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-card class="directory-card" routerLink="/tabs/knowledge-room">
+        <ion-card class="directory-card" button="true" routerLink="/tabs/knowledge-room">
           <img src="assets/home/knowledge.png" />
         </ion-card>
       </ion-col>
       <ion-col>
-        <ion-card class="directory-card" routerLink="/tabs/calculators">
+        <ion-card class="directory-card" button="true" routerLink="/tabs/calculators">
           <img src="assets/home/calculator.png" />
         </ion-card>
       </ion-col>
       <ion-col>
-        <ion-card class="directory-card" routerLink="/sugar-price">
+        <ion-card class="directory-card" button="true" routerLink="/sugar-price">
           <img src="assets/home/sugar.png" />
         </ion-card>
       </ion-col>
       <ion-col>
-        <ion-card class="directory-card" routerLink="/weather">
+        <ion-card class="directory-card" button="true" routerLink="/weather">
           <img src="assets/home/weather.png" />
         </ion-card>
       </ion-col>
