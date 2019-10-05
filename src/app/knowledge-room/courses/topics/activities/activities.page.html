@@ -15,8 +15,8 @@
     <h1>{{ errorMessage }}</h1>
   </ion-text>
   <ion-list *ngIf="!errorMessage && pages">
-    <div align="center" *ngFor="let page of pages" [routerLink]="[page.id, 'pages']">
-      <ion-item lines="none" button="true" class="ion-padding">
+    <div align="center" *ngFor="let page of pages">
+      <ion-item lines="none" button="true" class="ion-padding" [routerLink]="[page.id, 'pages']">
         <ion-label class="ion-padding" class="ion-text-center">
           <h1>{{ page.name }}</h1>
         </ion-label>
