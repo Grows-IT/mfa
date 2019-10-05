@@ -1,16 +1,12 @@
-.banner {
-    margin-left: 100px;
-}
-
-ion-thumbnail {
-    height: 100px;
-    width: 100px;
-}
-
-ion-item {
-    --min-height: 100px;
-}
-
 ion-card {
     box-shadow: none;
+}
+
+ion-toolbar {
+    --min-height: 120px;
+}
+
+.title-image {
+    vertical-align: middle;
+    height: 100px;
 }

@@ -1,16 +1,14 @@
 <ion-header>
-  <ion-toolbar color="medium">
+  <ion-toolbar mode="ios" color="medium">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/knowledge-room"></ion-back-button>
     </ion-buttons>
-    <ion-item color="medium">
-      <ion-thumbnail class="banner">
-        <img [src]="category.imgData" />
-      </ion-thumbnail>
-      <ion-label>
-        <h1>{{ category.name }}</h1>
-      </ion-label>
-    </ion-item>
+    <ion-title>
+      <h1>
+        <img class="title-image" [src]="category.imgData" />
+        {{ category.name }}
+      </h1>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -26,11 +24,11 @@
   <ion-grid *ngIf="!errorMessage && courses">
     <ion-row>
       <ion-col text-center size="4" *ngFor="let course of courses">
-        <ion-card [routerLink]="[course.id, 'topics']">
-            <img [src]="course.imgData" />
-            <ion-card-header>
-              <ion-card-title>{{ course.name }}</ion-card-title>
-            </ion-card-header>
+        <ion-card button="true" [routerLink]="[course.id, 'topics']">
+          <img [src]="course.imgData" />
+          <ion-card-header>
+            <ion-card-title>{{ course.name }}</ion-card-title>
+          </ion-card-header>
         </ion-card>
       </ion-col>
     </ion-row>

@@ -1,16 +1,14 @@
 <ion-header>
-  <ion-toolbar color="medium">
+  <ion-toolbar mode="ios" color="medium">
     <ion-buttons slot="start">
       <ion-back-button [defaultHref]="prevUrl"></ion-back-button>
     </ion-buttons>
-    <ion-item color="medium">
-      <ion-thumbnail class="banner" slot="start">
-        <img [src]="course.imgData" />
-      </ion-thumbnail>
-      <ion-label>
-        <h1>{{ course.name }}</h1>
-      </ion-label>
-    </ion-item>
+    <ion-title>
+      <h1>
+        <img class="title-image" [src]="course.imgData" />
+        {{ course.name }}
+      </h1>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -21,14 +19,10 @@
   <ion-text text-center *ngIf="!isLoading && errorMessage">
     <h1>{{ errorMessage }}</h1>
   </ion-text>
-  <ion-grid class="topics" *ngIf="!errorMessage && topics">
-    <ion-row>
-      <ion-col>
-        <ion-button *ngFor="let topic of topics" margin size="large" expand="full" shape="round"
-          [routerLink]="[topic.id, 'activities']">
-          {{ topic.name }}
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-list>
+    <ion-button margin expand="block" shape="round" *ngFor="let topic of topics"
+      [routerLink]="[topic.id, 'activities']">
+      <h4>{{ topic.name }}</h4>
+    </ion-button>
+  </ion-list>
 </ion-content>
