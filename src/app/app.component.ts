@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController, AlertController } from '@ionic/angular';
+import { MenuController, AlertController, LoadingController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
 import { Plugins, Capacitor, PluginListenerHandle } from '@capacitor/core';
 import { AppMinimize } from '@ionic-native/app-minimize/ngx';
@@ -52,7 +52,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private appMinimize: AppMinimize,
     private alertCtrl: AlertController,
     private coursesService: CoursesService,
-    private newsService: NewsService
+    private newsService: NewsService,
+    private loadingCtrl: LoadingController
   ) { }
 
   ngOnInit() {
@@ -85,13 +86,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   navigate(p: any) {
     if (p.title === 'Logout') {
-      this.authService.logout();
-      this.coursesService.delete();
-      this.newsService.delete();
-      this.menuCtrl.close();
-      this.menuCtrl.enable(false);
+      this.logout();
+    } else {
+      this.router.navigateByUrl(p.url);
     }
-    this.router.navigateByUrl(p.url);
   }
 
   private showAlert(message: string) {
@@ -104,5 +102,22 @@ export class AppComponent implements OnInit, OnDestroy {
       .then(alertEl => {
         alertEl.present();
       });
+  }
+
+  private async logout() {
+    const loadingEl = await this.loadingCtrl.create({
+      keyboardClose: true,
+      message: 'กำลังออกจากระบบ...'
+    });
+    loadingEl.present();
+    setTimeout(() => {
+      this.authService.logout();
+      this.coursesService.delete();
+      this.newsService.delete();
+      this.menuCtrl.close();
+      this.menuCtrl.enable(false);
+      loadingEl.dismiss();
+      this.router.navigateByUrl('/auth/login');
+    }, 2000);
   }
 }
