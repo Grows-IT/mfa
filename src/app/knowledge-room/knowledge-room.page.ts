@@ -26,6 +26,7 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.userSub = this.authService.user.subscribe(user => this.user = user);
     this.categoriesSub = this.coursesService.categories.subscribe(categories => {
       if (categories) {
@@ -36,22 +37,14 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
         this.categories = categories.slice(1);
       }
     });
-  }
-
-  ionViewWillEnter() {
-    this.isLoading = true;
-  }
-
-  ionViewDidEnter() {
     this.coursesService.fetchCategories().pipe(
       catchError(() => this.coursesService.getCategoriesFromStorage())
-    ).subscribe(
-      categories => {
-        this.isLoading = false;
-        if (!categories) {
-          this.errorMessage = 'network ขัดข้อง และไม่มีข้อมูล offline';
-        }
-      });
+    ).subscribe(categories => {
+      this.isLoading = false;
+      if (!categories) {
+        this.errorMessage = 'network ขัดข้อง และไม่มีข้อมูล offline';
+      }
+    });
   }
 
   ngOnDestroy() {

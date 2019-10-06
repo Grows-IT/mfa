@@ -8,13 +8,13 @@
 </ion-header>
 
 <ion-content>
-  <!-- <div text-center>
+  <div text-center>
     <ion-spinner *ngIf="isLoading"></ion-spinner>
-  </div> -->
-  <ion-text text-center *ngIf="!isLoading && errorMessage">
+  </div>
+  <ion-text text-center *ngIf="!isLoading && errorMessage && !pages">
     <h1>{{ errorMessage }}</h1>
   </ion-text>
-  <ion-list *ngIf="!errorMessage && pages">
+  <ion-list *ngIf="!isLoading && pages">
     <ion-item padding lines="none" button="true" *ngFor="let page of pages" [routerLink]="[page.id, 'pages']">
       <ion-label text-center>
         <h1>{{ page.name }}</h1>

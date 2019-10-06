@@ -35,9 +35,6 @@ export class HomePage implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.isLoading = true;
-  }
-
-  ionViewDidEnter() {
     this.authService.fetchUser().pipe(
       switchMap(() => this.newsService.fetchNewsArticles()),
     ).subscribe(() => this.isLoading = false);
