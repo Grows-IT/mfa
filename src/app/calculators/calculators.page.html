@@ -18,8 +18,8 @@
     </ion-row>
     <ion-row margin-top>
       <ion-col size="10" offset="1" *ngFor="let calculator of calculators">
-        <ion-card button="true">
-          <img [src]="calculator.img" [routerLink]="calculator.url"/>
+        <ion-card button="true" [routerLink]="calculator.url">
+          <img [src]="calculator.img"/>
         </ion-card>
       </ion-col>
     </ion-row>
