@@ -5,6 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { NewsArticle } from '../news/news.model';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -37,8 +38,9 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   ionViewDidEnter() {
-    this.authService.fetchUser().subscribe();
-    this.newsService.fetchNewsArticles().subscribe(() => this.isLoading = false);
+    this.authService.fetchUser().pipe(
+      switchMap(() => this.newsService.fetchNewsArticles()),
+    ).subscribe(() => this.isLoading = false);
   }
 
   ngOnDestroy() {
