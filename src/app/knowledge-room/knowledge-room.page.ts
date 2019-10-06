@@ -45,7 +45,13 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
   ionViewDidEnter() {
     this.coursesService.fetchCategories().pipe(
       catchError(() => this.coursesService.getCategoriesFromStorage())
-    ).subscribe(() => this.isLoading = false);
+    ).subscribe(
+      categories => {
+        this.isLoading = false;
+        if (!categories) {
+          this.errorMessage = 'network ขัดข้อง และไม่มีข้อมูล offline';
+        }
+      });
   }
 
   ngOnDestroy() {
