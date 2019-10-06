@@ -9,13 +9,13 @@
 
 <ion-content>
   <div text-center>
-    <ion-spinner *ngIf="isLoading && !categories"></ion-spinner>
+    <ion-spinner *ngIf="isLoading && !categories && !errorMessage"></ion-spinner>
   </div>
-  <ion-text text-center *ngIf="!isLoading && errorMessage">
-    <h1>{{ errorMessage }}</h1>
+  <ion-text text-center>
+    <h1 *ngIf="!isLoading && errorMessage && !categories">{{ errorMessage }}</h1>
   </ion-text>
-  <ion-grid fixed="true" *ngIf="!errorMessage && categories && user">
-    <ion-row>
+  <ion-grid fixed="true">
+    <ion-row *ngIf="user">
       <ion-col text-center>
           <div align="center">
               <ion-card button="true" routerLink="/auth/profile">
@@ -29,7 +29,7 @@
             </div>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row  *ngIf="categories">
       <ion-col size="6" *ngFor="let category of categories">
         <div align="center">
           <ion-card button="true" [routerLink]="[category.id, 'courses']">

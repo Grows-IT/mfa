@@ -16,12 +16,10 @@
   <div text-center>
     <ion-spinner *ngIf="isLoading && !courses"></ion-spinner>
   </div>
-  <div text-center *ngIf="!isLoading && errorMessage">
-    <ion-text>
-      <h1>{{ errorMessage }}</h1>
+    <ion-text text-center>
+      <h1 *ngIf="!isLoading && errorMessage && !courses">{{ errorMessage }}</h1>
     </ion-text>
-  </div>
-  <ion-grid fixed="true" *ngIf="!errorMessage && courses">
+  <ion-grid fixed="true" *ngIf="courses">
     <ion-row>
       <ion-col text-center size="4" *ngFor="let course of courses">
         <ion-card button="true" [routerLink]="[course.id, 'topics']">

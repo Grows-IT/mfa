@@ -52,7 +52,7 @@ export class TopicsPage implements OnInit, OnDestroy {
     ).subscribe(
       () => this.isLoading = false,
       () => {
-        this.errorMessage = 'มีปัญหาในการเชื่อมต่อ network';
+        this.errorMessage = 'ไม่มีข้อมูล';
         this.isLoading = false;
       });
   }

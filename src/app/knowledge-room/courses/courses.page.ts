@@ -50,7 +50,13 @@ export class CoursesPage implements OnInit, OnDestroy {
   ionViewDidEnter() {
     this.coursesService.fetchCourses().pipe(
       catchError(() => this.coursesService.getCoursesFromStorage())
-    ).subscribe(() => this.isLoading = false);
+    ).subscribe(courses => {
+      this.isLoading = false;
+      if (!courses) {
+        this.errorMessage = 'ไม่มีข้อมูล';
+        this.isLoading = false;
+      }
+    });
   }
 
   ngOnDestroy() {
