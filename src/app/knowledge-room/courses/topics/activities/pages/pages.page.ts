@@ -33,7 +33,7 @@ export class PagesPage implements OnInit, OnDestroy {
       const currentTopic = topics.find(topic => topic.id === this.topicId);
       this.page = currentTopic.activities.find(activity => activity.id === activityId);
       const htmlResource = this.page.resources.find(resource => resource.name === 'index.html');
-      let htmlContent = htmlResource.data;
+      let htmlContent = decodeURI(htmlResource.data);
       const otherResources = this.page.resources.filter(resource => resource.type);
       otherResources.forEach(resource => {
         htmlContent = htmlContent.replace(resource.name, resource.data);

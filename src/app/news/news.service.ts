@@ -52,7 +52,7 @@ export class NewsService {
           const contentRes = page.resources.find(resource => resource.name === 'index.html');
           const imgRes = page.resources.find(resource => resource.type && resource.type.includes('image'));
           const otherRes = page.resources.filter(resource => resource.type);
-          let content = contentRes.data;
+          let content = decodeURI(contentRes.data);
           otherRes.forEach(resource => {
             content = content.replace(resource.name, resource.data);
           });
