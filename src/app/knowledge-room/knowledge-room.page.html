@@ -17,19 +17,19 @@
   <ion-grid fixed="true" *ngIf="!isLoading && categories">
     <ion-row>
       <ion-col text-center>
-          <div align="center">
-              <ion-card button="true" routerLink="/auth/profile">
-                <ion-avatar>
-                  <img [src]="user.imgUrl" />
-                </ion-avatar>
-                <ion-card-header>
-                  <ion-card-title>{{ user.firstName }} {{user.lastName }}</ion-card-title>
-                </ion-card-header>
-              </ion-card>
-            </div>
+        <div align="center">
+          <ion-card button="true" routerLink="/auth/profile">
+            <ion-avatar>
+              <img [src]="user.imgUrl" />
+            </ion-avatar>
+            <ion-card-header>
+              <ion-card-title>{{ user.firstName }} {{user.lastName }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </div>
       </ion-col>
     </ion-row>
-    <ion-row >
+    <ion-row>
       <ion-col size="6" *ngFor="let category of categories">
         <div align="center">
           <ion-card button="true" [routerLink]="[category.id, 'courses']">

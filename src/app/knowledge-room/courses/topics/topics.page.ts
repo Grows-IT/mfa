@@ -27,6 +27,7 @@ export class TopicsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
       this.course = courses.find(course => course.id === this.courseId);
@@ -42,10 +43,6 @@ export class TopicsPage implements OnInit, OnDestroy {
     this.setPrevUrl();
   }
 
-  ionViewWillEnter() {
-    this.isLoading = true;
-  }
-
   ionViewDidEnter() {
     this.coursesService.fetchTopics(this.courseId).pipe(
       switchMap(topics => this.coursesService.downloadResources(topics))
@@ -54,7 +51,8 @@ export class TopicsPage implements OnInit, OnDestroy {
       () => {
         this.errorMessage = 'ไม่มีข้อมูล';
         this.isLoading = false;
-      });
+      }
+    );
   }
 
   ngOnDestroy() {

@@ -25,6 +25,7 @@ export class CoursesPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
     this.categoriesSub = this.coursesService.categories.subscribe(categories => {
       if (categories && categories.length > 0) {
@@ -41,13 +42,6 @@ export class CoursesPage implements OnInit, OnDestroy {
         }
       }
     });
-  }
-
-  ionViewWillEnter() {
-    this.isLoading = true;
-  }
-
-  ionViewDidEnter() {
     this.coursesService.fetchCourses().pipe(
       catchError(() => this.coursesService.getCoursesFromStorage())
     ).subscribe(courses => {

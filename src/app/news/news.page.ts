@@ -35,7 +35,7 @@ export class NewsPage implements OnInit, OnDestroy {
     this.newsSub.unsubscribe();
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.isLoading = true;
     this.newsService.fetchNewsArticles().pipe(
       catchError(() => this.newsService.getNewsArticlesFromStorage())
