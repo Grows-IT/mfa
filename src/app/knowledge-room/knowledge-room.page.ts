@@ -38,15 +38,18 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    this.userSub.unsubscribe();
-    this.categoriesSub.unsubscribe();
-  }
-
   ionViewWillEnter() {
     this.isLoading = true;
+  }
+
+  ionViewDidEnter() {
     this.coursesService.fetchCategories().pipe(
       catchError(() => this.coursesService.getCategoriesFromStorage())
     ).subscribe(() => this.isLoading = false);
+  }
+
+  ngOnDestroy() {
+    this.userSub.unsubscribe();
+    this.categoriesSub.unsubscribe();
   }
 }

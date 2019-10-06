@@ -13,9 +13,9 @@
 </ion-header>
 
 <ion-content>
-  <!-- <div text-center>
-    <ion-spinner *ngIf="isLoading"></ion-spinner>
-  </div> -->
+  <div text-center>
+    <ion-spinner *ngIf="isLoading && !courses"></ion-spinner>
+  </div>
   <div text-center *ngIf="!isLoading && errorMessage">
     <ion-text>
       <h1>{{ errorMessage }}</h1>

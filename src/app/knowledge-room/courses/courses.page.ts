@@ -18,7 +18,6 @@ export class CoursesPage implements OnInit, OnDestroy {
   isLoading = false;
   private coursesSub: Subscription;
   private categoriesSub: Subscription;
-  private fetchSub: Subscription;
 
   constructor(
     private coursesService: CoursesService,
@@ -26,7 +25,6 @@ export class CoursesPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.isLoading = true;
     const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
     this.categoriesSub = this.coursesService.categories.subscribe(categories => {
       if (categories && categories.length > 0) {
@@ -35,13 +33,22 @@ export class CoursesPage implements OnInit, OnDestroy {
     });
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
       if (courses) {
-        this.courses = courses.filter(course => course.categoryId === categoryId);
-        if (this.courses.length === 0) {
+        const filteredCourses = courses.filter(course => course.categoryId === categoryId);
+        if (filteredCourses.length > 0) {
+          this.courses = filteredCourses;
+        } else {
           this.errorMessage = 'Coming soon';
         }
       }
     });
-    this.fetchSub = this.coursesService.fetchCourses().pipe(
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+  }
+
+  ionViewDidEnter() {
+    this.coursesService.fetchCourses().pipe(
       catchError(() => this.coursesService.getCoursesFromStorage())
     ).subscribe(() => this.isLoading = false);
   }
@@ -49,6 +56,5 @@ export class CoursesPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
     this.categoriesSub.unsubscribe();
-    this.fetchSub.unsubscribe();
   }
 }
