@@ -1,10 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
-import { Subscription, from } from 'rxjs';
-import { switchMap, concatMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 import { AuthService } from '../auth.service';
 import { CoursesService } from 'src/app/knowledge-room/courses/courses.service';
@@ -41,25 +40,29 @@ export class LoginPage implements OnInit {
     });
   }
 
-  onSubmitLoginForm() {
-    this.startLoading();
+  async onSubmitLoginForm() {
     if (!this.loginForm.valid) {
       return;
     }
+    const loadingEl = await this.loadingCtrl.create({
+      keyboardClose: true,
+      message: 'กำลังเข้าสู่ระบบ...'
+    });
+    loadingEl.present();
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(
       () => {
         this.errorMessage = null;
         this.fetchData().subscribe(
           () => {
             this.menuCtrl.enable(true);
-            this.stopLoading();
+            loadingEl.dismiss();
             this.router.navigateByUrl('/tabs/home');
           }
         );
       },
       error => {
         this.errorMessage = error;
-        this.stopLoading();
+        loadingEl.dismiss();
       }
     );
   }
@@ -73,19 +76,5 @@ export class LoginPage implements OnInit {
       // concatMap(topics => this.coursesService.downloadResources(topics)),
       switchMap(() => this.newsService.fetchNewsArticles()),
     );
-  }
-
-  private startLoading() {
-    this.loadingCtrl.create({
-      keyboardClose: true,
-      message: 'กำลังเข้าระบบ...'
-    }).then(loadingEl => {
-      this.loadingEl = loadingEl;
-      this.loadingEl.present();
-    });
-  }
-
-  private stopLoading() {
-    this.loadingEl.dismiss();
   }
 }

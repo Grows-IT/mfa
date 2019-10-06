@@ -21,7 +21,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col>
+        <ion-col text-center>
           <ion-text color="danger">
             {{ errorMessage }}
           </ion-text>
@@ -29,8 +29,10 @@
       </ion-row>
       <ion-row>
         <ion-col offset="3" size="6">
-          <ion-button class="login-button" expand="full" shape="round" color="danger" [disabled]="!loginForm.valid"
-            (click)="onSubmitLoginForm()">
+          <ion-button expand="full" shape="round" color="danger" 
+            [disabled]="!loginForm.valid"
+            (click)="onSubmitLoginForm()"
+            >
             Log in
           </ion-button>
         </ion-col>

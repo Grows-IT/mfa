@@ -16,9 +16,11 @@
         </ion-text>
       </ion-col>
     </ion-row>
-    <ion-row margin-top *ngFor="let calculator of calculators">
-      <ion-col size="10" offset="1">
-        <ion-img [src]="calculator.img" [routerLink]="calculator.url"></ion-img>
+    <ion-row margin-top>
+      <ion-col size="10" offset="1" *ngFor="let calculator of calculators">
+        <ion-card button="true">
+          <img [src]="calculator.img" [routerLink]="calculator.url"/>
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
