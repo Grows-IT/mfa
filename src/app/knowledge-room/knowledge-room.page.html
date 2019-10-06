@@ -14,7 +14,7 @@
   <ion-text text-center *ngIf="!isLoading && errorMessage">
     <h1>{{ errorMessage }}</h1>
   </ion-text>
-  <ion-grid *ngIf="!errorMessage && categories && user">
+  <ion-grid fixed="true" *ngIf="!errorMessage && categories && user">
     <ion-row>
       <ion-col text-center>
           <div align="center">
