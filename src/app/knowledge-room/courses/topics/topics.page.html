@@ -14,12 +14,12 @@
 
 <ion-content>
   <div text-center>
-    <ion-spinner *ngIf="isLoading && !topics && !errorMessage"></ion-spinner>
+    <ion-spinner *ngIf="isLoading"></ion-spinner>
   </div>
   <ion-text text-center>
     <h1 *ngIf="!isLoading && errorMessage && !topics">{{ errorMessage }}</h1>
   </ion-text>
-  <ion-list>
+  <ion-list *ngIf="!isLoading && topics">
     <ion-button margin expand="block" shape="round" *ngFor="let topic of topics"
       [routerLink]="[topic.id, 'activities']">
       <h4>{{ topic.name }}</h4>
