@@ -9,12 +9,12 @@
 
 <ion-content>
   <div text-center>
-    <ion-spinner *ngIf="isLoading && !newsArticles"></ion-spinner>
+    <ion-spinner *ngIf="isLoading"></ion-spinner>
   </div>
-  <ion-text *ngIf="errorMessage && !isLoading">
+  <ion-text *ngIf="errorMessage && !isLoading && !newsArticles">
       <h1>{{ errorMessage }}</h1>
     </ion-text>
-  <ion-grid *ngIf="!errorMessage && newsArticles">
+  <ion-grid *ngIf="!isLoading && newsArticles">
     <ion-row *ngFor="let article of newsArticles">
       <ion-col>
         <ion-card [routerLink]="article.id">
