@@ -138,6 +138,8 @@ export class AuthService {
         uploadData.append('file', file);
         return this.http.post<any>(uploadImageWsUrl, uploadData);
       }),
+      catchError(() => throwError('อัพโหลดไฟล์ล้มเหลว โปรดลองใหม่อีกครั้ง')),
+      timeout(duration),
       map(res => {
         if (res.errorcode === 'upload_error_ini_size') {
           throw new Error('ไฟล์ขนาดใหญ่ไป');
@@ -157,10 +159,11 @@ export class AuthService {
         formData.append('draftitemid', itemId);
         return this.http.post<{ profileimageurl: string }>(coreUserUpdatePictureWsUrl, formData);
       }),
+      catchError(() => throwError('การเชื่อมต่อ server ล้มเหลว')),
       timeout(duration),
       map(res => {
         if (!res.profileimageurl) {
-          throw new Error('อัพโหลดรูปภาพล้มเหลว');
+          throw new Error('การเปลี่ยนรูปโปรไฟล์ล้มเหลว');
         }
         return res.profileimageurl;
       })

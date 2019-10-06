@@ -20,7 +20,6 @@ export class TopicsPage implements OnInit, OnDestroy {
   private courseId: number;
   private coursesSub: Subscription;
   private topicsSub: Subscription;
-  private fetchSub: Subscription;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -41,9 +40,8 @@ export class TopicsPage implements OnInit, OnDestroy {
         }
       }
     });
-    this.fetchSub = this.coursesService.fetchTopics(this.courseId).pipe(
-      switchMap(topics => this.coursesService.downloadResources(topics)),
-      catchError(() => this.coursesService.getTopicsFromStorage())
+    this.coursesService.fetchTopics(this.courseId).pipe(
+      switchMap(topics => this.coursesService.downloadResources(topics))
     ).subscribe(() => this.isLoading = false);
     this.setPrevUrl();
   }
@@ -51,7 +49,6 @@ export class TopicsPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.coursesSub.unsubscribe();
     this.topicsSub.unsubscribe();
-    this.fetchSub.unsubscribe();
   }
 
   private setPrevUrl() {

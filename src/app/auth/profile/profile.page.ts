@@ -39,6 +39,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   private imgUpdateSub: Subscription;
   user: User;
   usePicker = false;
+  isLoading = false;
   errorMessage: string;
 
   constructor(
@@ -90,12 +91,19 @@ export class ProfilePage implements OnInit, OnDestroy {
   }
 
   updateProfilePicture(file: Blob | File) {
+    this.isLoading = true;
     if (this.imgUpdateSub) {
       this.imgUpdateSub.unsubscribe();
     }
     this.imgUpdateSub = this.authService.updateProfilePicture(file).subscribe(
-      () => this.errorMessage = null,
-      error => this.errorMessage = error.message
+      () => {
+        this.errorMessage = null;
+        this.isLoading = false;
+      },
+      error => {
+        this.errorMessage = error.message;
+        this.isLoading = false;
+      }
     );
   }
 }

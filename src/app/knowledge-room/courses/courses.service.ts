@@ -105,6 +105,22 @@ export class CoursesService {
     );
   }
 
+  areTopicsLoaded() {
+    return this.topics.pipe(
+      first(),
+      switchMap(topics => {
+        if (topics) {
+          return of(!!topics);
+        }
+        return this.getTopicsFromStorage().pipe(
+          map(storedTopics => {
+            return !!storedTopics;
+          })
+        );
+      }),
+    );
+  }
+
   getCourseById(courseId: number) {
     return this.courses.pipe(
       map(courses => {

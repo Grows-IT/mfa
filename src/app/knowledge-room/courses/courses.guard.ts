@@ -15,17 +15,14 @@ export class CoursesGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.coursesService.courses.pipe(
-      first(),
-      switchMap(courses => {
-        if (courses) {
-          return of(!!courses);
+    return this.coursesService.areCoursesLoaded().pipe(
+      switchMap(coursesExist => {
+        if (coursesExist) {
+          return this.coursesService.areTopicsLoaded().pipe(
+            map(() => true)
+          );
         }
-        return this.coursesService.getCoursesFromStorage().pipe(
-          map(storedCourses => {
-            return !!storedCourses;
-          })
-        );
+        return of(coursesExist);
       }),
       tap(coursesExist => {
         if (!coursesExist) {
@@ -33,7 +30,7 @@ export class CoursesGuard implements CanActivate {
           const url = `/tabs/knowledge-room/${categoryId}/courses`;
           this.router.navigateByUrl(url);
         }
-      })
+      }),
     );
   }
 }
