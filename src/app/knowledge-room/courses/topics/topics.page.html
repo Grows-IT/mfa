@@ -13,11 +13,11 @@
 </ion-header>
 
 <ion-content>
-  <!-- <div text-center>
-    <ion-spinner *ngIf="isLoading"></ion-spinner>
-  </div> -->
-  <ion-text text-center *ngIf="!isLoading && errorMessage">
-    <h1>{{ errorMessage }}</h1>
+  <div text-center>
+    <ion-spinner *ngIf="isLoading && !topics && !errorMessage"></ion-spinner>
+  </div>
+  <ion-text text-center>
+    <h1 *ngIf="!isLoading && errorMessage && !topics">{{ errorMessage }}</h1>
   </ion-text>
   <ion-list>
     <ion-button margin expand="block" shape="round" *ngFor="let topic of topics"

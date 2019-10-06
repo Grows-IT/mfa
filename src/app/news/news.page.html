@@ -8,9 +8,9 @@
 </ion-header>
 
 <ion-content>
-  <!-- <div text-center>
-    <ion-spinner *ngIf="isLoading"></ion-spinner>
-  </div> -->
+  <div text-center>
+    <ion-spinner *ngIf="isLoading && !newsArticles"></ion-spinner>
+  </div>
   <ion-text *ngIf="errorMessage && !isLoading">
       <h1>{{ errorMessage }}</h1>
     </ion-text>

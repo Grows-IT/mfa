@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { CoursesService } from '../courses.service';
 import { Topic, Course } from '../course.model';
-import { Subscription, of } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-topics',
@@ -27,23 +27,34 @@ export class TopicsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.isLoading = true;
     this.courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
       this.course = courses.find(course => course.id === this.courseId);
     });
     this.topicsSub = this.coursesService.topics.subscribe(topics => {
       if (topics) {
-        this.topics = topics.filter(topic => topic.courseId === this.courseId);
-        if (!this.isLoading && this.topics.length === 0) {
-          this.errorMessage = 'Coming soon';
+        const filteredTopics = topics.filter(topic => topic.courseId === this.courseId);
+        if (filteredTopics.length > 0) {
+          this.topics = filteredTopics;
         }
       }
     });
+    this.setPrevUrl();
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+  }
+
+  ionViewDidEnter() {
     this.coursesService.fetchTopics(this.courseId).pipe(
       switchMap(topics => this.coursesService.downloadResources(topics))
-    ).subscribe(() => this.isLoading = false);
-    this.setPrevUrl();
+    ).subscribe(
+      () => this.isLoading = false,
+      () => {
+        this.errorMessage = 'มีปัญหาในการเชื่อมต่อ network';
+        this.isLoading = false;
+      });
   }
 
   ngOnDestroy() {
