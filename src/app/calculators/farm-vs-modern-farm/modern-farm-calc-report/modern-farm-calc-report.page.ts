@@ -20,6 +20,10 @@ export class ModernFarmCalcReportPage implements OnInit {
     const id = +this.activatedRoute.snapshot.paramMap.get('id');
     if (id === 1) {
       this.result = this.calculatorsService.farmModernFarmData1Rai;
+      const calculatedResult = this.calculatorsService.farmModernFarmData;
+      if (!calculatedResult || calculatedResult.landSize === 1) {
+        this.lastPage = true;
+      }
     } else {
       this.result = this.calculatorsService.farmModernFarmData;
       this.lastPage = true;
