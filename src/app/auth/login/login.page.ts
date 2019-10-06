@@ -15,11 +15,10 @@ import { NewsService } from 'src/app/news/news.service';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit, OnDestroy {
+export class LoginPage implements OnInit {
   errorMessage: string;
   loginForm: FormGroup;
   loadingEl: HTMLIonLoadingElement;
-  private loginSub: Subscription;
 
   constructor(
     private router: Router,
@@ -42,16 +41,12 @@ export class LoginPage implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    this.loginSub.unsubscribe();
-  }
-
   onSubmitLoginForm() {
     this.startLoading();
     if (!this.loginForm.valid) {
       return;
     }
-    this.loginSub = this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(
+    this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(
       () => {
         this.errorMessage = null;
         this.fetchData().subscribe(
@@ -71,11 +66,11 @@ export class LoginPage implements OnInit, OnDestroy {
 
   private fetchData() {
     return this.authService.fetchUser().pipe(
-      switchMap(() => this.coursesService.fetchCategories()),
+      // switchMap(() => this.coursesService.fetchCategories()),
       switchMap(() => this.coursesService.fetchCourses()),
-      switchMap(courses => from(courses)),
-      concatMap(course => this.coursesService.fetchTopics(course.id)),
-      concatMap(topics => this.coursesService.downloadResources(topics)),
+      // switchMap(courses => from(courses)),
+      // concatMap(course => this.coursesService.fetchTopics(course.id)),
+      // concatMap(topics => this.coursesService.downloadResources(topics)),
       switchMap(() => this.newsService.fetchNewsArticles()),
     );
   }

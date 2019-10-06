@@ -3,37 +3,36 @@
     <ion-buttons slot="start">
       <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/calculators"></ion-back-button>
     </ion-buttons>
-    <ion-title>การประเมินปริมาณอ้อย</ion-title>
   </ion-toolbar>
+  <ion-title>
+    <ion-text color="light" class="ion-text-center">
+      <h1>การประเมินปริมาณอ้อย</h1>
+      <h4>Assessment of Sugarcane Quantity</h4>
+    </ion-text>
+  </ion-title>
 </ion-header>
 
 <ion-content>
-  <div class="title">
-    <ion-text color="light" class="ion-text-center">
-      <h3 class="title-en">Assessment of Sugarcane Quantity</h3>
-      <h1 class="title-th">การประเมินปริมาณอ้อย</h1>
-    </ion-text>
-  </div>
   <!-- Input -->
   <form [formGroup]="inputForm" (keyup.enter)="calculateTotalWeight(inputForm.value)">
-  <ion-grid class="ion-margin-top">
-    <ion-row>
-      <ion-col size="1"></ion-col>
-      <ion-col size="4">
-        <ion-text color="light" class="ion-float-right">
-          <h4>พื้นที่ชาวไร่</h4>
-        </ion-text>
-      </ion-col>
-      <ion-col size="3">
+    <ion-grid class="ion-margin-top">
+      <ion-row>
+        <ion-col size="1"></ion-col>
+        <ion-col size="4">
+          <ion-text color="light" class="ion-float-right">
+            <h4>พื้นที่ชาวไร่</h4>
+          </ion-text>
+        </ion-col>
+        <ion-col size="3">
           <input class="mfa-input-number" formControlName="area" type="number">
-      </ion-col>
-      <ion-col size="2">
-        <ion-text color="light">
-          <h4> ไร่</h4>
-        </ion-text>
-      </ion-col>
-    </ion-row>
-    <ion-row>
+        </ion-col>
+        <ion-col size="2">
+          <ion-text color="light">
+            <h4> ไร่</h4>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
         <ion-col size="1"></ion-col>
         <ion-col size="4">
           <ion-text color="light" class="ion-float-right">
@@ -41,7 +40,7 @@
           </ion-text>
         </ion-col>
         <ion-col size="3">
-            <input class="mfa-input-number" formControlName="areaWidth" type="number">
+          <input class="mfa-input-number" formControlName="areaWidth" type="number">
         </ion-col>
         <ion-col size="2">
           <ion-text color="light">
@@ -50,41 +49,42 @@
         </ion-col>
       </ion-row>
       <ion-row>
-          <ion-col size="1"></ion-col>
-          <ion-col size="4">
-            <ion-text color="light" class="ion-float-right">
-              <h4>ระยะร่องปลูก</h4>
-            </ion-text>
-          </ion-col>
-          <ion-col size="3">
-              <input class="mfa-input-number" formControlName="gap" type="number">
-          </ion-col>
-          <ion-col size="2">
-            <ion-text color="light">
-              <h4> เมตร</h4>
-            </ion-text>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col size="1"></ion-col>
-            <ion-col size="4">
-              <ion-text color="light" class="ion-float-right">
-                <h4>จำนวนหน่ออ้อย</h4>
-              </ion-text>
-            </ion-col>
-            <ion-col size="3">
-                <input class="mfa-input-number" formControlName="caneBlock" type="number">
-            </ion-col>
-            <ion-col size="2">
-              <ion-text color="light">
-                <h4> หน่อ</h4>
-              </ion-text>
-            </ion-col>
-          </ion-row>
-  </ion-grid>
-  <div padding align="center">
-    <ion-button color="primary" shape="round" size="large" (click)="calculateTotalWeight(inputForm.value)" [disabled]="inputForm.invalid">คำนวณ</ion-button>
-  </div>
+        <ion-col size="1"></ion-col>
+        <ion-col size="4">
+          <ion-text color="light" class="ion-float-right">
+            <h4>ระยะร่องปลูก</h4>
+          </ion-text>
+        </ion-col>
+        <ion-col size="3">
+          <input class="mfa-input-number" formControlName="gap" type="number">
+        </ion-col>
+        <ion-col size="2">
+          <ion-text color="light">
+            <h4> เมตร</h4>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="1"></ion-col>
+        <ion-col size="4">
+          <ion-text color="light" class="ion-float-right">
+            <h4>จำนวนหน่ออ้อย</h4>
+          </ion-text>
+        </ion-col>
+        <ion-col size="3">
+          <input class="mfa-input-number" formControlName="caneBlock" type="number">
+        </ion-col>
+        <ion-col size="2">
+          <ion-text color="light">
+            <h4> หน่อ</h4>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div padding align="center">
+      <ion-button color="primary" shape="round" size="large" (click)="calculateTotalWeight(inputForm.value)"
+        [disabled]="inputForm.invalid">คำนวณ</ion-button>
+    </div>
   </form>
 
   <!-- Output -->

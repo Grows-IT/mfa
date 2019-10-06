@@ -121,17 +121,6 @@ export class CoursesService {
     );
   }
 
-  getCourseById(courseId: number) {
-    return this.courses.pipe(
-      map(courses => {
-        if (!courses) {
-          return null;
-        }
-        return courses.find(course => course.id === courseId);
-      })
-    );
-  }
-
   getCourseByName(courseName: string) {
     return this.courses.pipe(
       map(courses => {

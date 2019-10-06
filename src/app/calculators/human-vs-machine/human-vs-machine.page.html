@@ -5,10 +5,11 @@
     </ion-buttons>
     <ion-buttons *ngIf="showResult" slot="primary">
       <ion-button routerLink="machine-calc-report">
-        <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+        ต่อไป
+        <ion-icon name="ios-arrow-forward"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Human vs Machine</ion-title>
+    <ion-title>คนตัด กับ รถตัด</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -169,28 +170,28 @@
       </svg>
     </div>
     <!-- Output results -->
-    <ion-grid fixed>
+    <ion-grid>
       <ion-row>
         <ion-col size="8" offset="2">
           <ion-text color="tertiary">
-            <p class="result-text">ใช้คนตัดจ่ายเงิน</p>
-            <h1 class="result-text">{{ result.burnedSugarTotalCost | number }} บาท</h1>
+            <p no-margin class="result-text">ใช้คนตัดจ่ายเงิน</p>
+            <h1 no-margin margin-bottom class="result-text">{{ result.burnedSugarTotalCost | number }} บาท</h1>
           </ion-text>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col size="8" offset="2">
           <ion-text color="warning">
-            <p class="result-text">ใช้รถตัดจ่ายเงิน</p>
-            <h1 class="result-text">{{ result.machineTotalCost | number }} บาท</h1>
+            <p no-margin class="result-text">ใช้รถตัดจ่ายเงิน</p>
+            <h1 no-margin margin-bottom class="result-text">{{ result.machineTotalCost | number }} บาท</h1>
           </ion-text>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col size="8" offset="2">
           <ion-text color="primary">
-            <p class="result-text">ประหยัดเงิน</p>
-            <h1 class="result-text" style="font-size: 2.2em">
+            <p no-margin class="result-text">ประหยัดเงิน</p>
+            <h1 no-margin class="result-text" style="font-size: 2.2em">
               {{ (result.burnedSugarTotalCost - result.machineTotalCost) | number }} บาท</h1>
           </ion-text>
         </ion-col>

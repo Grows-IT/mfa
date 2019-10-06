@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './auth.guard';
+
+import { UserGuard } from './user.guard';
 
 const routes: Routes = [{
   path: '',
@@ -12,7 +13,7 @@ const routes: Routes = [{
 }, {
   path: 'profile',
   loadChildren: './profile/profile.module#ProfilePageModule',
-  canLoad: [AuthGuard]
+  canLoad: [UserGuard]
 }];
 
 @NgModule({

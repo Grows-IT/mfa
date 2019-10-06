@@ -1,23 +1,19 @@
 <ion-header>
   <ion-toolbar color="warning">
     <ion-buttons slot="start">
-      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/calculators/farm-vs-modern-farm"></ion-back-button>
+      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/calculators/farm-vs-modern-farm">
+      </ion-back-button>
     </ion-buttons>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-text text-center color="light">
-            <h1 class="header">ตารางค่าใช้จ่าย : {{ result.landSize | number }} ไร่</h1>
-          </ion-text>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
     <ion-buttons slot="primary">
       <ion-button *ngIf="!lastPage" routerLink="/tabs/calculators/farm-vs-modern-farm/modern-farm-calc-report/2">
-        <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+        ต่อไป
+        <ion-icon name="ios-arrow-forward"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+  <ion-title text-center>
+    ตารางค่าใช้จ่าย: <ion-text color="light">{{ result.landSize | number }} ไร่</ion-text>
+  </ion-title>
 </ion-header>
 
 <ion-content>

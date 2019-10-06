@@ -1,28 +1,13 @@
-<!-- <ion-header>
-  <ion-toolbar color="warning">
-    <ion-buttons slot="start">
-      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/calculators"></ion-back-button>
-    </ion-buttons>
-    <ion-grid>
-        <ion-row>
-          <ion-col>
-            <ion-text text-center color="light">
-              <h1 class="header">ตารางค่าใช้จ่าย : {{ result1Rai.sugarcaneWeight | number }} ตัน</h1>
-            </ion-text>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-  </ion-toolbar>
-</ion-header> -->
-
-<ion-content>
+<ion-content no-padding no-margin>
   <table style="width:100%">
     <tr>
       <td class="tdhead" colspan="4">
         <ion-buttons slot="start">
-          <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/calculators/human-vs-machine"></ion-back-button>
+          <ion-back-button color="black" icon="ios-arrow-back" text="ย้อนกลับ"
+            defaultHref="/tabs/calculators/human-vs-machine">
+          </ion-back-button>
         </ion-buttons>
-        ตารางค่าใช้จ่าย : {{ result1Rai.sugarcaneWeight | number }} ตัน
+        ตารางค่าใช้จ่าย: <ion-text color="light">{{ result1Rai.sugarcaneWeight | number }} ตัน</ion-text>
       </td>
     </tr>
     <tr>
@@ -70,7 +55,9 @@
   </table>
   <table style="width:100%">
     <tr>
-      <td class="tdhead" colspan="4">ตารางค่าใช้จ่าย : {{ result.sugarcaneWeight | number }} ตัน</td>
+      <td class="tdhead" colspan="4">
+        ตารางค่าใช้จ่าย: <ion-text color="light">{{ result.sugarcaneWeight | number }} ตัน</ion-text>
+      </td>
     </tr>
     <tr>
       <td rowspan=2 class="tdtopic" style="font-size:29px; height:100px;">รายละเอียดกิจกรรม</td>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
-import { switchMap, map, first, tap } from 'rxjs/operators';
+import { switchMap, map, first, tap, withLatestFrom } from 'rxjs/operators';
 
 import { Page } from '../knowledge-room/courses/course.model';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
@@ -39,15 +39,8 @@ export class NewsService {
   }
 
   fetchNewsArticles() {
-    let courseId: number;
-    return this.coursesService.courses.pipe(
-      first(),
-      map(courses => {
-        const newsCourse = courses.find(course => course.name === newsCourseName);
-        return newsCourse;
-      }),
-      switchMap(course => {
-        courseId = course.id;
+    return this.getNewsCourseId().pipe(
+      switchMap(courseId => {
         return this.coursesService.fetchTopics(courseId);
       }),
       switchMap(topics => {
@@ -77,14 +70,9 @@ export class NewsService {
   }
 
   getNewsArticlesFromStorage() {
-    let courseId: number;
-    return this.coursesService.getCourseByName(newsCourseName).pipe(
-      first(),
-      switchMap(course => {
-        courseId = course.id;
-        return this.coursesService.getTopicsFromStorage();
-      }),
-      map(topics => {
+    return this.coursesService.getTopicsFromStorage().pipe(
+      withLatestFrom(this.getNewsCourseId()),
+      map(([topics, courseId]) => {
         if (topics) {
           const newsTopics = topics.filter(topic => topic.courseId === courseId);
           if (newsTopics.length > 0) {
@@ -103,6 +91,16 @@ export class NewsService {
 
   delete() {
     this._newsArticles.next(null);
+  }
+
+  private getNewsCourseId() {
+    return this.coursesService.courses.pipe(
+      first(),
+      map(courses => {
+        const newsCourse = courses.find(course => course.name === newsCourseName);
+        return newsCourse.id;
+      }),
+    );
   }
 
   private createNewsArticlesFromPages(pages: Page[]) {

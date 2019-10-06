@@ -21,7 +21,7 @@
       <h1>{{ errorMessage }}</h1>
     </ion-text>
   </div>
-  <ion-grid *ngIf="!errorMessage && courses">
+  <ion-grid fixed="true" *ngIf="!errorMessage && courses">
     <ion-row>
       <ion-col text-center size="4" *ngFor="let course of courses">
         <ion-card button="true" [routerLink]="[course.id, 'topics']">
