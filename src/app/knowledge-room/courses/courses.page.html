@@ -13,12 +13,18 @@
 </ion-header>
 
 <ion-content>
-  <div text-center>
-    <ion-spinner *ngIf="isLoading"></ion-spinner>
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <ion-spinner *ngIf="isLoading"></ion-spinner>
+      </div>
+    </div>
   </div>
-    <ion-text text-center>
-      <h1 *ngIf="!isLoading && errorMessage && !courses">{{ errorMessage }}</h1>
-    </ion-text>
+
+  <ion-text text-center>
+    <h1 *ngIf="!isLoading && errorMessage && !courses">{{ errorMessage }}</h1>
+  </ion-text>
+  
   <ion-grid fixed="true" *ngIf="!isLoading && courses">
     <ion-row>
       <ion-col text-center size="4" *ngFor="let course of courses">

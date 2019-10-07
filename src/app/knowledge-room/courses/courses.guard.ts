@@ -16,14 +16,6 @@ export class CoursesGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return this.coursesService.areCoursesLoaded().pipe(
-      switchMap(coursesExist => {
-        if (coursesExist) {
-          return this.coursesService.areTopicsLoaded().pipe(
-            map(() => true)
-          );
-        }
-        return of(coursesExist);
-      }),
       tap(coursesExist => {
         if (!coursesExist) {
           const categoryId = +route.paramMap.get('categoryId');
