@@ -32,10 +32,15 @@
 </ion-header>
 
 <ion-content>
-  <div text-center>
-    <ion-spinner *ngIf="isLoading"></ion-spinner>
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <ion-spinner *ngIf="isLoading && !newsArticles"></ion-spinner>
+      </div>
+    </div>
   </div>
-  <ion-grid fixed="true" *ngIf="!isLoading">
+  
+  <ion-grid fixed="true" *ngIf="newsArticles">
     <ion-row>
       <ion-col margin-start>
         <ion-text>

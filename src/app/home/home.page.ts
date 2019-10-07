@@ -25,6 +25,7 @@ export class HomePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.userSub = this.authService.user.subscribe(user => {
       this.user = user;
     });
@@ -34,10 +35,13 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.isLoading = true;
     this.authService.fetchUser().pipe(
       switchMap(() => this.newsService.fetchNewsArticles()),
-    ).subscribe(() => this.isLoading = false);
+    ).subscribe(
+      () => this.isLoading = false,
+      () => {
+        this.isLoading = false;
+      });
   }
 
   ngOnDestroy() {
