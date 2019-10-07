@@ -44,7 +44,8 @@ export class TopicsPage implements OnInit, OnDestroy {
   }
 
   ionViewDidEnter() {
-    this.coursesService.fetchTopics(this.courseId).pipe(
+    this.coursesService.getTopicsFromStorage().pipe(
+      switchMap(() => this.coursesService.fetchTopics(this.courseId)),
       switchMap(topics => this.coursesService.downloadResources(topics))
     ).subscribe(
       () => this.isLoading = false,
