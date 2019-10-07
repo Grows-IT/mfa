@@ -226,8 +226,8 @@ export class CoursesService {
       toArray(),
       withLatestFrom(this.topics),
       map(([newTopics, oldTopics]) => {
-        const updatedTopics = this.updateTopics(newTopics, oldTopics);
-        return updatedTopics;
+        this.updateTopics(newTopics, oldTopics);
+        return newTopics;
       })
     );
   }
@@ -278,8 +278,8 @@ export class CoursesService {
       toArray(),
       withLatestFrom(this.topics),
       map(([topicsWithResources, oldTopics]) => {
-        const updatedTopics = this.updateTopics(topicsWithResources, oldTopics);
-        return updatedTopics;
+        this.updateTopics(topicsWithResources, oldTopics);
+        return topicsWithResources;
       })
     );
   }
