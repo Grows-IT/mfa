@@ -66,7 +66,6 @@ export class CoursesService {
   private _categories = new BehaviorSubject<Category[]>(null);
   private _courses = new BehaviorSubject<Course[]>(null);
   private _topics = new BehaviorSubject<Topic[]>(null);
-  private _activities = new BehaviorSubject<any[]>(null);
 
   constructor(
     private http: HttpClient,
@@ -83,10 +82,6 @@ export class CoursesService {
 
   get topics() {
     return this._topics.asObservable().pipe();
-  }
-
-  get activities() {
-    return this._activities.asObservable().pipe();
   }
 
   areCoursesLoaded() {
@@ -118,36 +113,6 @@ export class CoursesService {
           })
         );
       }),
-    );
-  }
-
-  getCourseByName(courseName: string) {
-    return this.courses.pipe(
-      map(courses => {
-        if (!courses) {
-          return null;
-        }
-        return courses.find(course => course.name === courseName);
-      })
-    );
-  }
-
-  getTopicById(topicId: number) {
-    return this.topics.pipe(
-      map(topics => {
-        return topics.find(topic => topic.id === topicId);
-      }),
-      tap(topic => {
-        this._activities.next(topic.activities);
-      })
-    );
-  }
-
-  getActivityById(activityId: number) {
-    return this.activities.pipe(
-      map(activities => {
-        return activities.find(activity => activity.id === activityId);
-      })
     );
   }
 
@@ -284,6 +249,12 @@ export class CoursesService {
     );
   }
 
+  delete() {
+    this._categories.next(null);
+    this._courses.next(null);
+    this._topics.next(null);
+  }
+
   private updateTopics(newTopics: Topic[], oldTopics: Topic[]) {
     let updatedTopics: Topic[];
     if (!oldTopics) {
@@ -296,13 +267,6 @@ export class CoursesService {
     this._topics.next(updatedTopics);
     this.saveTopicsToStorage(updatedTopics);
     return updatedTopics;
-  }
-
-  delete() {
-    this._categories.next(null);
-    this._courses.next(null);
-    this._topics.next(null);
-    this._activities.next(null);
   }
 
   private readFile(blob: Blob): Observable<string> {
