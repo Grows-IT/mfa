@@ -243,7 +243,9 @@ export class CoursesService {
       toArray(),
       withLatestFrom(this.topics),
       map(([topicsWithResources, oldTopics]) => {
-        this.updateTopics(topicsWithResources, oldTopics);
+        const updatedTopics = this.updateTopics(topicsWithResources, oldTopics);
+        this._topics.next(updatedTopics);
+        this.saveTopicsToStorage(updatedTopics);
         return topicsWithResources;
       })
     );
@@ -264,8 +266,6 @@ export class CoursesService {
       const filteredTopics = oldTopics.filter(topic => topic.courseId !== courseId);
       updatedTopics = filteredTopics.concat(newTopics);
     }
-    this._topics.next(updatedTopics);
-    this.saveTopicsToStorage(updatedTopics);
     return updatedTopics;
   }
 
