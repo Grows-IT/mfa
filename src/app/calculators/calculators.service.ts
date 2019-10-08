@@ -93,18 +93,9 @@ export class CalculatorsService {
     this.humanMachineData.freshSugarTotalCost *= sugarcaneWeight;
     this.humanMachineData.machineCutCost *= sugarcaneWeight;
     this.humanMachineData.machineTotalCost *= sugarcaneWeight;
-    this.humanMachineData.machineCutTime *= sugarcaneWeight;
-    this.humanMachineData.burnedSugarCutTime *= sugarcaneWeight;
-    this.humanMachineData.freshSugarCutTime *= sugarcaneWeight;
-    if (this.humanMachineData.machineCutTime < 1) {
-      this.humanMachineData.machineCutTime = 1;
-    }
-    if (this.humanMachineData.burnedSugarCutTime < 1) {
-      this.humanMachineData.burnedSugarCutTime = 1;
-    }
-    if (this.humanMachineData.freshSugarCutTime < 1) {
-      this.humanMachineData.freshSugarCutTime = 1;
-    }
+    this.humanMachineData.machineCutTime =  Math.ceil(this.humanMachineData.machineCutTime * sugarcaneWeight);
+    this.humanMachineData.burnedSugarCutTime = Math.ceil(this.humanMachineData.burnedSugarCutTime * sugarcaneWeight);
+    this.humanMachineData.freshSugarCutTime = Math.ceil(this.humanMachineData.freshSugarCutTime * sugarcaneWeight);
     return this.humanMachineData;
   }
 }
