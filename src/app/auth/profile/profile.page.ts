@@ -6,6 +6,7 @@ import fixOrientation from 'fix-orientation-capacitor';
 
 import { AuthService } from '../auth.service';
 import { User } from '../user.model';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 function base64toBlob(base64Data: string, contentType: string) {
   contentType = contentType || '';
@@ -38,16 +39,29 @@ export class ProfilePage implements OnInit, OnDestroy {
   private userSub: Subscription;
   private imgUpdateSub: Subscription;
   user: User;
+  profileForm: FormGroup;
   usePicker = false;
   isLoading = false;
   errorMessage: string;
+  successMessage: string;
 
   constructor(
     private platform: Platform,
-    private authService: AuthService
+    private authService: AuthService,
   ) { }
 
   ngOnInit() {
+    this.profileForm = new FormGroup({
+      username: new FormControl(),
+      email: new FormControl(),
+      password: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      rePassword: new FormControl(null, {
+        validators: [Validators.required]
+      })
+    });
+
     if ((this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop')) {
       this.usePicker = true;
     }
@@ -63,6 +77,25 @@ export class ProfilePage implements OnInit, OnDestroy {
     if (this.imgUpdateSub) {
       this.imgUpdateSub.unsubscribe();
     }
+  }
+
+  onSubmitProfileChange() {
+    if (!this.profileForm.valid) {
+      return;
+    }
+    if (this.profileForm.value.password !== this.profileForm.value.rePassword) {
+      this.errorMessage = 'Password กับ ยืนยันPassword ไม่เหมือนกัน โปรดลองใหม่อีกครั้ง';
+      return;
+    }
+    this.authService.updateUserProfile(this.profileForm.value.password).subscribe(isSuccessful => {
+      if (isSuccessful) {
+        this.successMessage = 'แก้ไขโปรไฟล์สำเร็จแล้ว';
+        this.errorMessage = null;
+      } else {
+        this.errorMessage = 'Password ต้องมีความยาวไม่น้อยกว่า 8 ตัวอักษร, มีอักษรตัวเล็กและตัวใหญ่, \
+                             และมีเครื่องหมายที่ไม่ใช่ตัวอักษร';
+      }
+    });
   }
 
   async onPickImage() {
@@ -90,7 +123,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     this.updateProfilePicture(pickedFile);
   }
 
-  updateProfilePicture(file: Blob | File) {
+  private updateProfilePicture(file: Blob | File) {
     this.isLoading = true;
     if (this.imgUpdateSub) {
       this.imgUpdateSub.unsubscribe();

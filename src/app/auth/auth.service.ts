@@ -9,6 +9,7 @@ import { User } from './user.model';
 
 const duration = environment.timeoutDuration;
 const siteUrl = environment.siteUrl;
+const webserviceUrl = siteUrl + '/webservice/rest/server.php';
 const loginWsUrl = siteUrl + '/login/token.php';
 const getSiteInfoWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_webservice_get_site_info';
 const uploadImageWsUrl = siteUrl + '/webservice/upload.php';
@@ -56,7 +57,10 @@ export class AuthService {
   }
 
   get userId() {
-    return this.user.pipe(map(user => user ? user.id : null));
+    return this.user.pipe(
+      first(),
+      map(user => user ? user.id : null)
+    );
   }
 
   login(username: string, password: string) {
@@ -123,6 +127,26 @@ export class AuthService {
       }),
       switchMap(() => {
         return this.fetchUser();
+      })
+    );
+  }
+
+  updateUserProfile(password: string) {
+    return this.userId.pipe(
+      switchMap(userId => {
+        const data = new FormData();
+        data.append('wsfunction', 'core_user_update_users');
+        data.append('moodlewsrestformat', 'json');
+        data.append('wstoken', environment.apiKey);
+        data.append('users[0][id]', userId.toString());
+        data.append('users[0][password]', password);
+        return this.http.post<{ errorcode: string }>(webserviceUrl, data);
+      }),
+      map(res => {
+        if (res && res.errorcode) {
+          return false;
+        }
+        return true;
       })
     );
   }
