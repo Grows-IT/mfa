@@ -16,7 +16,6 @@ export class CoursesPage implements OnInit, OnDestroy {
   category: Category;
   errorMessage: string;
   isLoading = false;
-  private coursesSub: Subscription;
   private categoriesSub: Subscription;
 
   constructor(
@@ -32,29 +31,24 @@ export class CoursesPage implements OnInit, OnDestroy {
         this.category = categories.find(category => category.id === categoryId);
       }
     });
-    this.coursesSub = this.coursesService.courses.subscribe(courses => {
-      if (courses) {
-        const filteredCourses = courses.filter(course => course.categoryId === categoryId);
-        if (filteredCourses.length > 0) {
-          this.courses = filteredCourses;
-        } else {
-          this.errorMessage = 'Coming soon';
-        }
-      }
-    });
     this.coursesService.fetchCourses().pipe(
       catchError(() => this.coursesService.getCoursesFromStorage())
     ).subscribe(courses => {
       this.isLoading = false;
       if (!courses) {
         this.errorMessage = 'ไม่มีข้อมูล';
-        this.isLoading = false;
+        return;
       }
+      const filteredCourses = courses.filter(course => course.categoryId === categoryId);
+      if (filteredCourses.length === 0) {
+        this.errorMessage = 'Coming soon';
+        return;
+      }
+      this.courses = filteredCourses;
     });
   }
 
   ngOnDestroy() {
-    this.coursesSub.unsubscribe();
     this.categoriesSub.unsubscribe();
   }
 }
