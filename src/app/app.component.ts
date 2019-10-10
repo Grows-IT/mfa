@@ -65,21 +65,25 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   initializeApp() {
+    // Launch Splashscreen
     this.platform.ready().then(() => {
       if (Capacitor.isPluginAvailable('SplashScreen')) {
         SplashScreen.hide();
       }
     });
+    // Android back-button minimizes the app. Other tabs navigate to home.
     App.addListener('backButton', () => {
       if (window.location.pathname === '/tabs/home' || window.location.pathname === '/auth/login') {
         this.appMinimize.minimize();
-      } else {
-        window.history.back();
+      } else if (window.location.pathname === '/tabs/qa' || window.location.pathname === '/tabs/knowledge-room' ||
+                window.location.pathname === '/tabs/calculators' || window.location.pathname === '/tabs/news') {
+        this.router.navigateByUrl('/tabs/home');
       }
     });
+    // Show alert when offline
     this.networkHandler = Network.addListener('networkStatusChange', status => {
       if (!status.connected) {
-        this.showAlert('ไม่มีัญญาณ Internet');
+        this.showAlert('ไม่มีสัญญาณ Internet');
       }
     });
   }
