@@ -74,6 +74,15 @@
   --ion-color-black-tint: #1b1b1b;
 
   --ion-font-family: "Kanit", "Work Sans";
+
+  ion-back-button {
+    --icon-font-size: 32px;
+    font-size: 20px;
+  }
+  
+  ion-buttons ion-button {
+    font-size: 20px;
+  }
 }
 
 .ion-color-black {

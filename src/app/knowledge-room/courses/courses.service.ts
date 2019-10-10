@@ -27,6 +27,7 @@ export interface CoreEnrolResponseData {
   id: number;
   shortname: string;
   category: number;
+  visible: number;
   overviewfiles: OverviewFile[];
 }
 
@@ -146,7 +147,8 @@ export class CoursesService {
   fetchCourses() {
     return this.coreEnrolGetUsersCourses().pipe(
       switchMap(resArr => {
-        return from(resArr);
+        const courseDataArray = resArr.filter(courseData => courseData.visible === 1);
+        return from(courseDataArray);
       }),
       withLatestFrom(this.authService.token),
       concatMap(([res, token]) => {
