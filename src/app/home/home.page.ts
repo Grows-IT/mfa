@@ -37,11 +37,7 @@ export class HomePage implements OnInit, OnDestroy {
   ionViewWillEnter() {
     this.authService.fetchUser().pipe(
       switchMap(() => this.newsService.fetchNewsArticles()),
-    ).subscribe(
-      () => this.isLoading = false,
-      () => {
-        this.isLoading = false;
-      });
+    ).subscribe(() => this.isLoading = false);
   }
 
   ngOnDestroy() {

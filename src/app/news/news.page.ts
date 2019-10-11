@@ -21,13 +21,9 @@ export class NewsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.newsSub = this.newsService.newsArticles.subscribe(articles => {
-      if (articles) {
-        this.newsArticles = articles;
-        if (!this.isLoading && this.newsArticles.length === 0) {
-          this.errorMessage = 'Coming soon';
-        }
-      }
+      this.newsArticles = articles;
     });
   }
 
@@ -36,7 +32,6 @@ export class NewsPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.isLoading = true;
     this.newsService.fetchNewsArticles().pipe(
       catchError(() => this.newsService.getNewsArticlesFromStorage())
     ).subscribe(() => this.isLoading = false);

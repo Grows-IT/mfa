@@ -31,7 +31,7 @@ const routes: Routes = [
                   {
                     path: '',
                     loadChildren: './topics/activities/activities.module#ActivitiesPageModule',
-                    canActivate: [TopicsGuard]
+                    // canActivate: [TopicsGuard]
                   },
                   {
                     path: ':activityId',
@@ -39,7 +39,7 @@ const routes: Routes = [
                       {
                         path: 'pages',
                         loadChildren: './topics/activities/pages/pages.module#PagesPageModule',
-                        canActivate: [ActivitiesGuard]
+                        // canActivate: [ActivitiesGuard]
                       },
                       {
                         path: '',

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
-import { switchMap, map, first, tap, withLatestFrom } from 'rxjs/operators';
+import { switchMap, map, first, tap } from 'rxjs/operators';
 
 import { Page } from '../knowledge-room/courses/course.model';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
@@ -70,21 +70,20 @@ export class NewsService {
   }
 
   getNewsArticlesFromStorage() {
-    return this.coursesService.getTopicsFromStorage().pipe(
-      withLatestFrom(this.getNewsCourseId()),
-      map(([topics, courseId]) => {
-        if (topics) {
-          const newsTopics = topics.filter(topic => topic.courseId === courseId);
-          if (newsTopics.length > 0) {
-            const pages = newsTopics[0].activities as Page[];
+    return this.getNewsCourseId().pipe(
+      switchMap(newsCourseId => {
+        return this.coursesService.getTopicsFromStorage(newsCourseId);
+      }),
+      map(topics => {
+          if (topics && topics.length > 0) {
+            const pages = topics[0].activities as Page[];
             if (pages) {
               const newsArticles = this.createNewsArticlesFromPages(pages);
               this._newsArticles.next(newsArticles);
               return newsArticles;
             }
           }
-        }
-        return null;
+          return null;
       })
     );
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap, catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 import { CoursesService } from '../courses.service';
@@ -33,21 +33,31 @@ export class TopicsPage implements OnInit, OnDestroy {
     });
     this.setPrevUrl();
     this.coursesService.fetchTopics(this.courseId).pipe(
-      switchMap(topics => this.coursesService.downloadResources(topics)),
-      catchError(() => this.coursesService.getTopicsFromStorage())
-    ).subscribe(topics => {
-      this.isLoading = false;
-      if (!topics) {
-        this.errorMessage = 'ไม่มีข้อมูล';
-        return;
+      // switchMap(topics => this.coursesService.downloadResources(topics)),
+      // catchError(() => this.coursesService.getTopicsFromStorage(this.courseId))
+    ).subscribe(
+      topics => {
+        this.isLoading = false;
+        if (!topics) {
+          this.errorMessage = 'ไม่มีข้อมูล';
+          return;
+        }
+        this.topics = topics;
+        this.coursesService.downloadResources(topics).subscribe(topicsWithResources => {
+          this.coursesService.setTopics(this.courseId, topics);
+        });
+      },
+      error => {
+        this.coursesService.getTopicsFromStorage(this.courseId).subscribe(topics => {
+          this.isLoading = false;
+          if (!topics) {
+            this.errorMessage = 'ไม่มีข้อมูล offline';
+            return;
+          }
+          this.topics = topics;
+        });
       }
-      const filteredTopics = topics.filter(topic => topic.courseId === this.courseId);
-      if (filteredTopics.length === 0) {
-        this.errorMessage = 'Coming soon';
-        return;
-      }
-      this.topics = filteredTopics;
-    });
+    );
   }
 
   ngOnDestroy() {

@@ -70,11 +70,11 @@ export class LoginPage implements OnInit {
 
   private fetchData() {
     return this.authService.fetchUser().pipe(
-      switchMap(() => this.coursesService.fetchCategories()),
+      // switchMap(() => this.coursesService.fetchCategories()),
       switchMap(() => this.coursesService.fetchCourses()),
-      switchMap(courses => from(courses)),
-      concatMap(course => this.coursesService.fetchTopics(course.id)),
-      concatMap(topics => this.coursesService.downloadResources(topics)),
+      // switchMap(courses => from(courses)),
+      // concatMap(course => this.coursesService.fetchTopics(course.id)),
+      // concatMap(topics => this.coursesService.downloadResources(topics)),
       switchMap(() => this.newsService.fetchNewsArticles()),
     );
   }
