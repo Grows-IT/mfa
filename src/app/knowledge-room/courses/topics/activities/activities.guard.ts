@@ -16,28 +16,30 @@ export class ActivitiesGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const topicId = +route.paramMap.get('topicId');
-    return this.coursesService.topics.pipe(
-      first(),
-      switchMap(topics => {
-        if (topics) {
-          const currentTopic = topics.find(topic => topic.id === topicId);
-          return of(!!currentTopic.activities);
-        }
-        return this.coursesService.getTopicsFromStorage().pipe(
-          map(storedTopics => {
-            const storedTopic = storedTopics.find(topic => topic.id === topicId);
-            return !!storedTopic.activities;
-          })
-        );
-      }),
-      tap(activitiesExist => {
-        if (!activitiesExist) {
-          const categoryId = +route.paramMap.get('categoryId');
-          const courseId = +route.paramMap.get('courseId');
-          this.router.navigateByUrl(`/tabs/knowledge-room/${categoryId}/courses/${courseId}/topics/${topicId}/activities`);
-        }
-      })
-    );
+      return true;
+
+    // const topicId = +route.paramMap.get('topicId');
+    // return this.coursesService.topics.pipe(
+    //   first(),
+    //   switchMap(topics => {
+    //     if (topics) {
+    //       const currentTopic = topics.find(topic => topic.id === topicId);
+    //       return of(!!currentTopic.activities);
+    //     }
+    //     return this.coursesService.getTopicsFromStorage().pipe(
+    //       map(storedTopics => {
+    //         const storedTopic = storedTopics.find(topic => topic.id === topicId);
+    //         return !!storedTopic.activities;
+    //       })
+    //     );
+    //   }),
+    //   tap(activitiesExist => {
+    //     if (!activitiesExist) {
+    //       const categoryId = +route.paramMap.get('categoryId');
+    //       const courseId = +route.paramMap.get('courseId');
+    //       this.router.navigateByUrl(`/tabs/knowledge-room/${categoryId}/courses/${courseId}/topics/${topicId}/activities`);
+    //     }
+    //   })
+    // );
   }
 }

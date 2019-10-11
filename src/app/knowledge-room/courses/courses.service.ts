@@ -101,22 +101,6 @@ export class CoursesService {
     );
   }
 
-  areTopicsLoaded() {
-    return this.topics.pipe(
-      first(),
-      switchMap(topics => {
-        if (topics) {
-          return of(!!topics);
-        }
-        return this.getTopicsFromStorage().pipe(
-          map(storedTopics => {
-            return !!storedTopics;
-          })
-        );
-      }),
-    );
-  }
-
   fetchCategories() {
     return this.coreCourseGetCategories().pipe(
       switchMap(resArr => from(resArr)),
@@ -190,13 +174,13 @@ export class CoursesService {
           }),
         );
       }),
-      toArray(),
-      withLatestFrom(this.topics),
-      map(([newTopics, oldTopics]) => {
-        this.updateTopics(newTopics, oldTopics);
-        return newTopics;
-      })
+      toArray()
     );
+  }
+
+  setTopics(courseId: number, topics: Topic[]) {
+    this._topics.next(topics);
+    this.saveTopicsToStorage(courseId, topics);
   }
 
   downloadResources(topics: Topic[]) {
@@ -242,14 +226,7 @@ export class CoursesService {
           }),
         );
       }),
-      toArray(),
-      withLatestFrom(this.topics),
-      map(([topicsWithResources, oldTopics]) => {
-        const updatedTopics = this.updateTopics(topicsWithResources, oldTopics);
-        this._topics.next(updatedTopics);
-        this.saveTopicsToStorage(updatedTopics);
-        return topicsWithResources;
-      })
+      toArray()
     );
   }
 
@@ -381,13 +358,13 @@ export class CoursesService {
     }));
   }
 
-  private saveTopicsToStorage(topics: Topic[]) {
+  private saveTopicsToStorage(courseId: number, topics: Topic[]) {
     const data = JSON.stringify(topics.map(course => course.toObject()));
-    Storage.set({ key: 'topics', value: data });
+    Storage.set({ key: `course_${courseId}_topics`, value: data });
   }
 
-  getTopicsFromStorage() {
-    return from(Storage.get({ key: 'topics' })).pipe(map(storedData => {
+  getTopicsFromStorage(courseId: number) {
+    return from(Storage.get({ key: `course_${courseId}_topics` })).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
         return null;
       }
@@ -429,7 +406,6 @@ export class CoursesService {
         }
         return new Topic(topicData.id, topicData.courseId, topicData.name, activities);
       });
-      this._topics.next(topics);
       return topics;
     }));
   }
