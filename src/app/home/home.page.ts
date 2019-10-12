@@ -5,7 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { NewsArticle } from '../news/news.model';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap, map, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +16,7 @@ export class HomePage implements OnInit, OnDestroy {
   user: User;
   newsArticles: NewsArticle[];
   isLoading = false;
+  errorMessage: string;
   private newsSub: Subscription;
   private userSub: Subscription;
 
@@ -36,8 +37,16 @@ export class HomePage implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.authService.fetchUser().pipe(
-      switchMap(() => this.newsService.fetchNewsArticles()),
-    ).subscribe(() => this.isLoading = false);
+      catchError(() => this.authService.getUserFromStorage())
+    );
+    this.newsService.fetchNewsArticles().pipe(
+      catchError(() => this.newsService.getNewsArticlesFromStorage())
+    ).subscribe(newsArticles => {
+      this.isLoading = false;
+      if (!newsArticles) {
+        this.errorMessage = 'การเชื่อมต่อล้มเหลว';
+      }
+    });
   }
 
   ngOnDestroy() {

@@ -6,7 +6,6 @@ import { UserGuard } from '../auth/user.guard';
 import { CategoriesGuard } from '../knowledge-room/categories.guard';
 import { CoursesGuard } from '../knowledge-room/courses/courses.guard';
 import { NewsGuard } from '../news/news.guard';
-import { HomeGuard } from '../home/home.guard';
 
 const routes: Routes = [
   {
@@ -19,7 +18,6 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: '../home/home.module#HomePageModule',
-            // canLoad: [HomeGuard]
           }
         ]
       },
@@ -75,7 +73,7 @@ const routes: Routes = [
               {
                 path: '',
                 loadChildren: '../news/news-detail/news-detail.module#NewsDetailPageModule',
-                canActivate: [NewsGuard]
+                canLoad: [NewsGuard]
               }
             ]
           }

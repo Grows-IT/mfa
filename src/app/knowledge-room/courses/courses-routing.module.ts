@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { CoursesPage } from './courses.page';
 import { CoursesGuard } from './courses.guard';
 import { TopicsGuard } from './topics/topics.guard';
-import { ActivitiesGuard } from './topics/activities/activities.guard';
 
 const routes: Routes = [
   {
@@ -16,14 +15,15 @@ const routes: Routes = [
     children: [
       {
         path: 'topics',
+        canActivate: [CoursesGuard],
         children: [
           {
             path: '',
             loadChildren: './topics/topics.module#TopicsPageModule',
-            canActivate: [CoursesGuard]
           },
           {
             path: ':topicId',
+            canActivate: [TopicsGuard],
             children: [
               {
                 path: 'activities',
@@ -31,7 +31,6 @@ const routes: Routes = [
                   {
                     path: '',
                     loadChildren: './topics/activities/activities.module#ActivitiesPageModule',
-                    // canActivate: [TopicsGuard]
                   },
                   {
                     path: ':activityId',
@@ -39,7 +38,6 @@ const routes: Routes = [
                       {
                         path: 'pages',
                         loadChildren: './topics/activities/pages/pages.module#PagesPageModule',
-                        // canActivate: [ActivitiesGuard]
                       },
                       {
                         path: '',

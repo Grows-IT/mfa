@@ -1,6 +1,6 @@
 {
-  "name": "MfaMobileApp",
-  "version": "0.1.4",
+  "name": "mfa-mobile-app",
+  "version": "0.2.2",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {
@@ -30,7 +30,6 @@
     "@ionic/angular": "^4.7.1",
     "@ionic/pwa-elements": "^1.3.0",
     "@ionic/storage": "^2.2.0",
-    "chart.js": "^2.8.0",
     "cordova-plugin-appminimize": "^1.0.1",
     "core-js": "^2.5.4",
     "fix-orientation-capacitor": "^0.1.1",
@@ -64,5 +63,5 @@
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
   },
-  "description": "An Ionic project"
+  "description": "Mitrphol's Modern Farm Academy mobile app"
 }

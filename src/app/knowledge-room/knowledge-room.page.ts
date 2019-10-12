@@ -35,7 +35,7 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
     ).subscribe(categories => {
       this.isLoading = false;
       if (!categories) {
-        return this.errorMessage = 'network ขัดข้อง และไม่มีข้อมูล offline';
+        return this.errorMessage = 'การเชื่อมต่อล้มเหลว';
       }
       if (categories.length === 0) {
         this.errorMessage = 'Coming soon';
