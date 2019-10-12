@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, tap, switchMap, timeout, first, withLatestFrom, toArray, flatMap, concatMap } from 'rxjs/operators';
+import { map, switchMap, timeout, first, withLatestFrom, toArray, flatMap, concatMap, tap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
-import { from, BehaviorSubject, Observable, throwError, of } from 'rxjs';
+import { from, BehaviorSubject, Observable, of } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { Course, Topic, Page, Quiz, PageResource, Category } from './course.model';
@@ -15,6 +15,7 @@ const coreEnrolGetUsersCoursesWsUrl = siteUrl +
   '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses';
 const coreCourseGetContentsWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_contents';
 const coreCourseGetCategoriesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_categories';
+const newsCourseName = 'News and Update';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -101,6 +102,59 @@ export class CoursesService {
     );
   }
 
+  areTopicsLoaded(courseId: number) {
+    return this.topics.pipe(
+      switchMap(topics => {
+        if (topics) {
+          return of(!!topics);
+        }
+        return this.getTopicsFromStorage(courseId).pipe(map(storedTopics => {
+          return !!storedTopics;
+        }));
+      })
+    );
+  }
+
+  // Return courses in memory, in storage or from fetching.
+  getCourses() {
+    return this.courses.pipe(
+      first(),
+      switchMap(courses => {
+        if (courses) {
+          return of(courses);
+        }
+        return this.getCoursesFromStorage().pipe(
+          switchMap(storedCourses => {
+            if (storedCourses) {
+              return of(storedCourses);
+            }
+            return this.fetchCourses();
+          })
+        );
+      })
+    );
+  }
+
+  // Return topics in memory, in storage, or from fetching.
+  getTopics(courseId: number) {
+    return this.topics.pipe(
+      first(),
+      switchMap(topics => {
+        if (topics) {
+          return of(topics);
+        }
+        return this.getTopicsFromStorage(courseId).pipe(
+          switchMap(storedTopics => {
+            if (storedTopics) {
+              return of(storedTopics);
+            }
+            return this.fetchTopics(courseId);
+          })
+        );
+      })
+    );
+  }
+
   fetchCategories() {
     return this.coreCourseGetCategories().pipe(
       switchMap(resArr => from(resArr)),
@@ -155,7 +209,49 @@ export class CoursesService {
     );
   }
 
-  fetchTopics(courseId: number) {
+  fetchAndDownloadNewsTopics() {
+    return this.getCourses().pipe(
+      map(courses => {
+        const newsCourse = courses.find(course => course.name === newsCourseName);
+        return newsCourse.id;
+      }),
+      switchMap(courseId => {
+        return this.fetchTopics(courseId);
+      }),
+      switchMap(topics => {
+        return this.downloadResources(topics);
+      }),
+    );
+  }
+
+  fetchCourseTopics(courseId: number) {
+    return this.fetchTopics(courseId).pipe(
+      tap(topics => {
+        this._topics.next(topics);
+        this.saveTopicsToStorage(courseId, topics);
+      })
+    );
+  }
+
+  // Download topics's resources for offline use.
+  downloadCourseTopics(courseId: number) {
+    return this.getTopics(courseId).pipe(
+      first(),
+      switchMap(topics => this.downloadResources(topics)),
+      tap(topics => {
+        this._topics.next(topics);
+        this.saveTopicsToStorage(courseId, topics);
+      })
+    );
+  }
+
+  delete() {
+    this._categories.next(null);
+    this._courses.next(null);
+    this._topics.next(null);
+  }
+
+  private fetchTopics(courseId: number) {
     return this.coreCourseGetContents(courseId).pipe(
       concatMap(resArr => {
         return from(resArr);
@@ -178,12 +274,7 @@ export class CoursesService {
     );
   }
 
-  setTopics(courseId: number, topics: Topic[]) {
-    this._topics.next(topics);
-    this.saveTopicsToStorage(courseId, topics);
-  }
-
-  downloadResources(topics: Topic[]) {
+  private downloadResources(topics: Topic[]) {
     return from(topics).pipe(
       concatMap(topic => {
         if (!topic.activities || topic.activities.length === 0) {
@@ -228,24 +319,6 @@ export class CoursesService {
       }),
       toArray()
     );
-  }
-
-  delete() {
-    this._categories.next(null);
-    this._courses.next(null);
-    this._topics.next(null);
-  }
-
-  private updateTopics(newTopics: Topic[], oldTopics: Topic[]) {
-    let updatedTopics: Topic[];
-    if (!oldTopics) {
-      updatedTopics = newTopics;
-    } else {
-      const courseId = newTopics[0].courseId;
-      const filteredTopics = oldTopics.filter(topic => topic.courseId !== courseId);
-      updatedTopics = filteredTopics.concat(newTopics);
-    }
-    return updatedTopics;
   }
 
   private readFile(blob: Blob): Observable<string> {
@@ -406,6 +479,7 @@ export class CoursesService {
         }
         return new Topic(topicData.id, topicData.courseId, topicData.name, activities);
       });
+      this._topics.next(topics);
       return topics;
     }));
   }

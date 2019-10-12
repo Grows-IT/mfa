@@ -34,6 +34,11 @@ export class NewsPage implements OnInit, OnDestroy {
   ionViewWillEnter() {
     this.newsService.fetchNewsArticles().pipe(
       catchError(() => this.newsService.getNewsArticlesFromStorage())
-    ).subscribe(() => this.isLoading = false);
+    ).subscribe(newsArticles => {
+      this.isLoading = false;
+      if (!newsArticles) {
+        this.errorMessage = 'การเชื่อมต่อล้มเหลว';
+      }
+    });
   }
 }

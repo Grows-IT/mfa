@@ -32,26 +32,22 @@ export class TopicsPage implements OnInit, OnDestroy {
       this.course = courses.find(course => course.id === this.courseId);
     });
     this.setPrevUrl();
-    this.coursesService.fetchTopics(this.courseId).pipe(
-      // switchMap(topics => this.coursesService.downloadResources(topics)),
-      // catchError(() => this.coursesService.getTopicsFromStorage(this.courseId))
+    this.coursesService.fetchCourseTopics(this.courseId).pipe(
     ).subscribe(
       topics => {
         this.isLoading = false;
         if (!topics) {
-          this.errorMessage = 'ไม่มีข้อมูล';
+          this.errorMessage = 'Coming soon';
           return;
         }
         this.topics = topics;
-        this.coursesService.downloadResources(topics).subscribe(topicsWithResources => {
-          this.coursesService.setTopics(this.courseId, topics);
-        });
+        this.coursesService.downloadCourseTopics(this.courseId).subscribe();
       },
-      error => {
+      () => {
         this.coursesService.getTopicsFromStorage(this.courseId).subscribe(topics => {
           this.isLoading = false;
           if (!topics) {
-            this.errorMessage = 'ไม่มีข้อมูล offline';
+            this.errorMessage = 'การเชื่อมต่อล้มเหลว';
             return;
           }
           this.topics = topics;

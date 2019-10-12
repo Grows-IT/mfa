@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
-import { switchMap, concatMap } from 'rxjs/operators';
+import { switchMap, concatMap, map, tap } from 'rxjs/operators';
 
 import { AuthService } from '../auth.service';
 import { CoursesService } from 'src/app/knowledge-room/courses/courses.service';
@@ -71,11 +71,11 @@ export class LoginPage implements OnInit {
   private fetchData() {
     return this.authService.fetchUser().pipe(
       // switchMap(() => this.coursesService.fetchCategories()),
-      switchMap(() => this.coursesService.fetchCourses()),
+      // switchMap(() => this.coursesService.fetchCourses()),
       // switchMap(courses => from(courses)),
       // concatMap(course => this.coursesService.fetchTopics(course.id)),
       // concatMap(topics => this.coursesService.downloadResources(topics)),
-      switchMap(() => this.newsService.fetchNewsArticles()),
+      switchMap(() => this.newsService.fetchNewsArticles())
     );
   }
 }

@@ -6,4 +6,14 @@ export class NewsArticle {
     public imgUrl?: string,
     public imgData?: string
   ) {}
+
+  toObject() {
+    return {
+      id: this.id,
+      name: this.name,
+      content: this.content,
+      imgUrl: this.imgUrl,
+      imgData: this.imgData
+    };
+  }
 }

@@ -39,6 +39,10 @@
       </div>
     </div>
   </div>
+
+  <ion-text text-center>
+    <h1 *ngIf="!isLoading && errorMessage && !newsArticles">{{ errorMessage }}</h1>
+  </ion-text>
   
   <ion-grid fixed="true" *ngIf="newsArticles">
     <ion-row>

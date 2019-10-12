@@ -36,7 +36,7 @@ export class CoursesPage implements OnInit, OnDestroy {
     ).subscribe(courses => {
       this.isLoading = false;
       if (!courses) {
-        this.errorMessage = 'ไม่มีข้อมูล';
+        this.errorMessage = 'การเชื่อมต่อล้มเหลว';
         return;
       }
       const filteredCourses = courses.filter(course => course.categoryId === categoryId);
