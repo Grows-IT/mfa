@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanLoad, Route, U
 import { Observable, of } from 'rxjs';
 import { AuthService } from './auth.service';
 import { switchMap, first, catchError, map, tap } from 'rxjs/operators';
+import { NavController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { switchMap, first, catchError, map, tap } from 'rxjs/operators';
 export class UserGuard implements CanLoad {
   constructor(
     private router: Router,
+    private navCtrl: NavController,
     private authService: AuthService
   ) { }
 
@@ -28,7 +30,7 @@ export class UserGuard implements CanLoad {
       }),
       tap(userExist => {
         if (!userExist) {
-          this.router.navigateByUrl('/tabs/home');
+          this.navCtrl.navigateRoot('/tabs/home');
         }
       })
     );

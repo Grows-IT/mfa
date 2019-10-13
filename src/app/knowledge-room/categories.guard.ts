@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanLoad, UrlSegme
 import { Observable, of } from 'rxjs';
 import { CoursesService } from './courses/courses.service';
 import { first, switchMap, map, tap } from 'rxjs/operators';
+import { NavController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { first, switchMap, map, tap } from 'rxjs/operators';
 export class CategoriesGuard implements CanLoad  {
   constructor(
     private router: Router,
+    private navCtrl: NavController,
     private coursesService: CoursesService
   ) {}
 
@@ -28,7 +30,7 @@ export class CategoriesGuard implements CanLoad  {
       }),
       tap(categoriesExist => {
         if (!categoriesExist) {
-          this.router.navigateByUrl('/tabs/knowledge-room');
+          this.navCtrl.navigateBack('/tabs/knowledge-room');
         }
       })
     );

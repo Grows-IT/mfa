@@ -18,6 +18,22 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: '../home/home.module#HomePageModule',
+          },
+          {
+            path: 'news/:id',
+            children: [
+              {
+                path: '',
+                loadChildren: '../news/news-detail/news-detail.module#NewsDetailPageModule',
+                canLoad: [NewsGuard]
+              }
+            ]
+          },
+          {
+            path: 'weather', loadChildren: '../weather/weather.module#WeatherPageModule'
+          },
+          {
+            path: 'sugar-price', loadChildren: '../sugar-price/sugar-price.module#SugarPricePageModule'
           }
         ]
       },

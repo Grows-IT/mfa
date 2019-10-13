@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CanLoad, Route, UrlSegment, Router } from '@angular/router';
+import { CanLoad, Route, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
+import { NavController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +12,13 @@ import { AuthService } from './auth.service';
 export class AuthGuard implements CanLoad {
   constructor(
     private authService: AuthService,
-    private router: Router
+    private navCtrl: NavController
   ) { }
 
   canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
     return this.authService.isLoggedIn().pipe(tap(isLoggedIn => {
       if (!isLoggedIn) {
-        this.router.navigateByUrl('/auth/login');
+        this.navCtrl.navigateRoot('/auth/login');
       }
     }));
   }

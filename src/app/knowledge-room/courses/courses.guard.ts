@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActivate } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanActivate } from '@angular/router';
+import { Observable } from 'rxjs';
 import { CoursesService } from './courses.service';
-import { first, switchMap, map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { NavController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoursesGuard implements CanActivate {
   constructor(
-    private router: Router,
+    private navCtrl: NavController,
     private coursesService: CoursesService
   ) {}
 
@@ -20,7 +21,7 @@ export class CoursesGuard implements CanActivate {
         if (!coursesExist) {
           const categoryId = +route.paramMap.get('categoryId');
           const url = `/tabs/knowledge-room/${categoryId}/courses`;
-          this.router.navigateByUrl(url);
+          this.navCtrl.navigateBack(url);
         }
       }),
     );
