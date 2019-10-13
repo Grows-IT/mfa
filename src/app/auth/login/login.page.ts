@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
-import { switchMap, concatMap, map, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 import { AuthService } from '../auth.service';
-import { CoursesService } from 'src/app/knowledge-room/courses/courses.service';
 import { NewsService } from 'src/app/news/news.service';
-import { from } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -21,12 +18,11 @@ export class LoginPage implements OnInit {
   loadingEl: HTMLIonLoadingElement;
 
   constructor(
-    private router: Router,
     private authService: AuthService,
     private loadingCtrl: LoadingController,
     private menuCtrl: MenuController,
-    private coursesService: CoursesService,
-    private newsService: NewsService
+    private newsService: NewsService,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
@@ -57,7 +53,7 @@ export class LoginPage implements OnInit {
           () => {
             this.menuCtrl.enable(true);
             loadingEl.dismiss();
-            this.router.navigateByUrl('/tabs/home');
+            this.navCtrl.navigateRoot('/tabs/home');
           }
         );
       },
@@ -70,11 +66,6 @@ export class LoginPage implements OnInit {
 
   private fetchData() {
     return this.authService.fetchUser().pipe(
-      // switchMap(() => this.coursesService.fetchCategories()),
-      // switchMap(() => this.coursesService.fetchCourses()),
-      // switchMap(courses => from(courses)),
-      // concatMap(course => this.coursesService.fetchTopics(course.id)),
-      // concatMap(topics => this.coursesService.downloadResources(topics)),
       switchMap(() => this.newsService.fetchNewsArticles())
     );
   }

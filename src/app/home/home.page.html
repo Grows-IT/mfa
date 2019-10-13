@@ -8,8 +8,8 @@
     </ion-title>
     <ion-buttons slot="primary">
       <a routerLink="/auth/profile">
-        <ion-avatar padding>
-          <img *ngIf="user" [src]="user.imgData" />
+        <ion-avatar *ngIf="user" padding>
+          <img [src]="user.imgData" />
         </ion-avatar>
       </a>
     </ion-buttons>
@@ -60,7 +60,7 @@
     <ion-row>
       <ion-slides pager>
         <ion-slide *ngFor="let article of newsArticles">
-          <ion-card class="news-card" [routerLink]="['/tabs/news/', article.id]">
+          <ion-card class="news-card" [routerLink]="['news', article.id]">
             <div align="center">
               <img *ngIf="article.imgUrl" class="card-img" [src]="article.imgData" />
             </div>
@@ -91,12 +91,12 @@
         </ion-card>
       </ion-col>
       <ion-col>
-        <ion-card class="directory-card" button="true" routerLink="/sugar-price">
+        <ion-card class="directory-card" button="true" routerLink="sugar-price">
           <img src="assets/home/sugar.png" />
         </ion-card>
       </ion-col>
       <ion-col>
-        <ion-card class="directory-card" button="true" routerLink="/weather">
+        <ion-card class="directory-card" button="true" routerLink="weather">
           <img src="assets/home/weather.png" />
         </ion-card>
       </ion-col>

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController, AlertController, LoadingController } from '@ionic/angular';
+import { MenuController, AlertController, LoadingController, NavController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
 import { Plugins, Capacitor, PluginListenerHandle } from '@capacitor/core';
 import { AppMinimize } from '@ionic-native/app-minimize/ngx';
@@ -53,7 +53,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private alertCtrl: AlertController,
     private coursesService: CoursesService,
     private newsService: NewsService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
@@ -71,13 +72,13 @@ export class AppComponent implements OnInit, OnDestroy {
         SplashScreen.hide();
       }
     });
-    // Android back-button minimizes the app. Other tabs navigate to home.
+    // Set Android back-button to minimize the app.
     App.addListener('backButton', () => {
       if (window.location.pathname === '/tabs/home' || window.location.pathname === '/auth/login') {
         this.appMinimize.minimize();
       } else if (window.location.pathname === '/tabs/qa' || window.location.pathname === '/tabs/knowledge-room' ||
                 window.location.pathname === '/tabs/calculators' || window.location.pathname === '/tabs/news') {
-        this.router.navigateByUrl('/tabs/home');
+        this.navCtrl.navigateBack('/tabs/home');
       }
     });
     // Show alert when offline
@@ -92,7 +93,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (p.title === 'Logout') {
       this.logout();
     } else {
-      this.router.navigateByUrl(p.url);
+      this.navCtrl.navigateForward(p.url);
     }
   }
 
@@ -121,7 +122,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.menuCtrl.close();
       this.menuCtrl.enable(false);
       loadingEl.dismiss();
-      this.router.navigateByUrl('/auth/login');
-    }, 2000);
+      this.navCtrl.navigateRoot('/auth/login');
+    }, 1000);
   }
 }

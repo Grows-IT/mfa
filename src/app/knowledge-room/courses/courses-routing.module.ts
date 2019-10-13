@@ -23,10 +23,10 @@ const routes: Routes = [
           },
           {
             path: ':topicId',
-            canActivate: [TopicsGuard],
             children: [
               {
                 path: 'activities',
+                canActivate: [TopicsGuard],
                 children: [
                   {
                     path: '',

@@ -12,8 +12,8 @@ const routes: Routes = [
     // canActivate: [AuthGuard]
   },
   { path: 'static', loadChildren: './static/static.module#StaticPageModule' },
-  { path: 'weather', loadChildren: './weather/weather.module#WeatherPageModule' },
-  { path: 'sugar-price', loadChildren: './sugar-price/sugar-price.module#SugarPricePageModule' }
+  // { path: 'weather', loadChildren: './weather/weather.module#WeatherPageModule' },
+  // { path: 'sugar-price', loadChildren: './sugar-price/sugar-price.module#SugarPricePageModule' }
 ];
 
 @NgModule({
