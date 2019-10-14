@@ -14,6 +14,9 @@ import { NewsService } from 'src/app/news/news.service';
 })
 export class LoginPage implements OnInit {
   errorMessage: string;
+  isPasswordShown = false;
+  passwordIconName = 'eye-off';
+  passwordType = 'password';
   loginForm: FormGroup;
   loadingEl: HTMLIonLoadingElement;
 
@@ -62,6 +65,18 @@ export class LoginPage implements OnInit {
         loadingEl.dismiss();
       }
     );
+  }
+
+  onTogglePassword() {
+    if (this.isPasswordShown) {
+      this.isPasswordShown = false;
+      this.passwordIconName = 'eye-off';
+      this.passwordType = 'password';
+    } else {
+      this.isPasswordShown = true;
+      this.passwordIconName = 'eye';
+      this.passwordType = 'text';
+    }
   }
 
   private fetchData() {
