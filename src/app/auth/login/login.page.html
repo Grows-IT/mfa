@@ -9,6 +9,7 @@
           <ion-item lines="none">
             <ion-label position="fixed" color="danger">USERNAME</ion-label>
             <ion-input type="text" formControlName="username"></ion-input>
+            <!-- <ion-icon slot="end"></ion-icon> -->
           </ion-item>
         </ion-col>
       </ion-row>
@@ -16,7 +17,8 @@
         <ion-col offset="2" size="8">
           <ion-item lines="none">
             <ion-label position="fixed" color="danger">PASSWORD</ion-label>
-            <ion-input type="password" formControlName="password"></ion-input>
+            <ion-input [type]="passwordType" formControlName="password"></ion-input>
+            <!-- <ion-icon class="icon" [name]="passwordIconName" slot="end" (click)="onTogglePassword()"></ion-icon> -->
           </ion-item>
         </ion-col>
       </ion-row>
