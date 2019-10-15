@@ -8,12 +8,6 @@
 </ion-header>
 
 <ion-content>
-  <ion-text text-center color="danger" *ngIf="errorMessage">
-    <p>{{ errorMessage }}</p>
-  </ion-text>
-  <ion-text text-center color="primary" *ngIf="successMessage">
-      <p>{{ successMessage }}</p>
-    </ion-text>
   <ion-grid class="grid">
     <ion-row class="row">
       <ion-col margin class="background">
@@ -31,9 +25,11 @@
         </ion-text>
       </ion-col>
     </ion-row>
-    <ion-row justify-content-center>
-      <ion-col size="6" offset="3">
-        <ion-button color="light" shape="round">Edit Profile</ion-button>
+    <ion-row>
+      <ion-col>
+        <div align="center">
+          <ion-button color="light" shape="round" (click)="onToggleEdit()">Edit Profile</ion-button>
+        </div>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -41,11 +37,11 @@
         <form [formGroup]="profileForm">
           <ion-item>
             <ion-label position="stacked">Username</ion-label>
-            <ion-input [placeholder]="user.username" formControlName="username"></ion-input>
+            <ion-input formControlName="username"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="stacked">Email</ion-label>
-            <ion-input [placeholder]="user.username" formControlName="email"></ion-input>
+            <ion-input formControlName="email"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="stacked">Password</ion-label>
@@ -58,9 +54,21 @@
         </form>
       </ion-col>
     </ion-row>
-    <ion-row justify-content-center>
+    <ion-row>
+      <ion-col>
+        <ion-text text-center color="danger" *ngIf="errorMessage">
+          <p>{{ errorMessage }}</p>
+        </ion-text>
+        <ion-text text-center color="primary" *ngIf="successMessage">
+          <p>{{ successMessage }}</p>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="isEditing">
       <ion-col size="6" offset="3">
-        <ion-button color="dark" shape="round" [disabled]="!profileForm.valid" (click)="onSubmitProfileChange()">Enter</ion-button>
+        <ion-button margin color="light" shape="round" (click)="onCancelEdit()">Cancel</ion-button>
+        <ion-button margin color="dark" shape="round" [disabled]="!profileForm.valid" (click)="onSubmitProfileChange()">
+          Submit</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
