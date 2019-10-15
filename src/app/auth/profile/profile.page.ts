@@ -38,6 +38,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   @ViewChild('filePicker', { static: false }) filePickerRef: ElementRef<HTMLInputElement>;
   private userSub: Subscription;
   private imgUpdateSub: Subscription;
+  isEditing = false;
   user: User;
   profileForm: FormGroup;
   usePicker = false;
@@ -51,22 +52,17 @@ export class ProfilePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.profileForm = new FormGroup({
-      username: new FormControl(),
-      email: new FormControl(),
-      password: new FormControl(null, {
-        validators: [Validators.required]
-      }),
-      rePassword: new FormControl(null, {
-        validators: [Validators.required]
-      })
-    });
-
     if ((this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop')) {
       this.usePicker = true;
     }
     this.userSub = this.authService.user.subscribe(user => {
       this.user = user;
+      this.profileForm = new FormGroup({
+        username: new FormControl(this.user.username),
+        email: new FormControl(this.user.username),
+        password: new FormControl(''),
+        rePassword: new FormControl('')
+      });
     });
   }
 
@@ -79,6 +75,16 @@ export class ProfilePage implements OnInit, OnDestroy {
     }
   }
 
+  onToggleEdit() {
+    this.isEditing = !this.isEditing;
+  }
+
+  onCancelEdit() {
+    this.isEditing = false;
+    this.errorMessage = null;
+    this.successMessage = null;
+  }
+
   onSubmitProfileChange() {
     if (!this.profileForm.valid) {
       return;
@@ -87,13 +93,15 @@ export class ProfilePage implements OnInit, OnDestroy {
       this.errorMessage = 'Password กับ ยืนยันPassword ไม่เหมือนกัน โปรดลองใหม่อีกครั้ง';
       return;
     }
-    this.authService.updateUserProfile(this.profileForm.value.password).subscribe(isSuccessful => {
+    this.authService.updateUserProfile(this.profileForm.value).subscribe(isSuccessful => {
       if (isSuccessful) {
         this.successMessage = 'แก้ไขโปรไฟล์สำเร็จแล้ว';
         this.errorMessage = null;
+        this.isEditing = false;
       } else {
         this.errorMessage = 'Password ต้องมีความยาวไม่น้อยกว่า 8 ตัวอักษร, มีอักษรตัวเล็กและตัวใหญ่, \
                              และมีเครื่องหมายที่ไม่ใช่ตัวอักษร';
+        this.successMessage = null;
       }
     });
   }

@@ -131,7 +131,7 @@ export class AuthService {
     );
   }
 
-  updateUserProfile(password: string) {
+  updateUserProfile(profile: { username: string, password: string }) {
     return this.userId.pipe(
       switchMap(userId => {
         const data = new FormData();
@@ -139,11 +139,17 @@ export class AuthService {
         data.append('moodlewsrestformat', 'json');
         data.append('wstoken', environment.apiKey);
         data.append('users[0][id]', userId.toString());
-        data.append('users[0][password]', password);
+        if (profile.username && profile.username !== '') {
+          data.append('users[0][username]', profile.username);
+        }
+        if (profile.password && profile.password !== '') {
+          data.append('users[0][password]', profile.password);
+        }
         return this.http.post<{ errorcode: string }>(webserviceUrl, data);
       }),
       map(res => {
         if (res && res.errorcode) {
+          console.log(res.errorcode);
           return false;
         }
         return true;
