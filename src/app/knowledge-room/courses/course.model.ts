@@ -4,16 +4,7 @@ export class Category {
     public name: string,
     public imgUrl?: string,
     public imgData?: string
-  ) { }
-
-  toObject() {
-    return {
-      id: this.id,
-      name: this.name,
-      imgUrl: this.imgUrl,
-      imgData: this.imgData
-    };
-  }
+  ) {}
 }
 
 export class Course {
@@ -23,17 +14,7 @@ export class Course {
     public name: string,
     public imgUrl?: string,
     public imgData?: string,
-  ) { }
-
-  toObject() {
-    return {
-      id: this.id,
-      categoryId: this.categoryId,
-      name: this.name,
-      imgUrl: this.imgUrl,
-      imgData: this.imgData
-    };
-  }
+  ) {}
 }
 
 export class Topic {
@@ -42,7 +23,7 @@ export class Topic {
     public courseId: number,
     public name: string,
     public activities: any[]
-  ) { }
+  ) {}
 
   toObject() {
     return {
@@ -86,7 +67,7 @@ export class Page {
       name: this.name,
       type: 'page',
       content: this.content,
-      resources: this.resources ? this.resources.map(resource => resource.toObject()) : null,
+      resources: this.resources,
       img: this.img
     };
   }
@@ -98,16 +79,7 @@ export class PageResource {
     public type: string,
     public url: string,
     public data?: string
-  ) { }
-
-  toObject() {
-    return {
-      name: this.name,
-      type: this.type,
-      url: this.url,
-      data: this.data
-    };
-  }
+  ) {}
 }
 
 

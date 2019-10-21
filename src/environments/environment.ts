@@ -2,12 +2,16 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+const siteUrl = 'http://203.150.199.148';
+// const siteUrl: 'http://santaputra.trueddns.com:46921/moodle37',
+
 export const environment = {
   production: false,
-  // siteUrl: 'http://santaputra.trueddns.com:46921/moodle37',
-  siteUrl: 'http://203.150.199.148',
+  siteUrl,
+  webServiceUrl: siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json',
   timeoutDuration: 20000,
-  apiKey: '226a2f5caba8275e077de43c696171ee'
+  apiKey: '226a2f5caba8275e077de43c696171ee',
+  newsCourseName: 'News and Update'
 };
 
 /*

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, switchMap, timeout, first, withLatestFrom, toArray, flatMap, concatMap, tap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { from, BehaviorSubject, Observable, of } from 'rxjs';
@@ -9,22 +9,8 @@ import { Course, Topic, Page, Quiz, PageResource, Category } from './course.mode
 import { AuthService } from '../../auth/auth.service';
 
 const { Storage } = Plugins;
-const duration = environment.timeoutDuration;
-const siteUrl = environment.siteUrl;
-const coreEnrolGetUsersCoursesWsUrl = siteUrl +
-  '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses';
-const coreCourseGetContentsWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_contents';
-const coreCourseGetCategoriesWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_course_get_categories';
-const newsCourseName = 'News and Update';
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    Accept: 'application/json',
-    'Content-Type': 'application/x-www-form-urlencoded',
-  })
-};
-
-export interface CoreEnrolResponseData {
+interface CoreEnrolResponseData {
   id: number;
   shortname: string;
   category: number;
@@ -32,30 +18,30 @@ export interface CoreEnrolResponseData {
   overviewfiles: OverviewFile[];
 }
 
-export interface OverviewFile {
+interface OverviewFile {
   fileurl: string;
 }
 
-export interface CoreCourseGetContentsResponse {
+interface CoreCourseGetContentsResponse {
   id: number;
   name: string;
   modules: Module[];
 }
 
-export interface Module {
+interface Module {
   id: number;
   name: string;
   modname: string;
   contents: ContentData[];
 }
 
-export interface ContentData {
+interface ContentData {
   filename: string;
   mimetype: string;
   fileurl: string;
 }
 
-export interface CategoryResponseData {
+interface CategoryResponseData {
   id: number;
   name: string;
   description: string;
@@ -212,7 +198,7 @@ export class CoursesService {
   fetchAndDownloadNewsTopics() {
     return this.getCourses().pipe(
       map(courses => {
-        const newsCourse = courses.find(course => course.name === newsCourseName);
+        const newsCourse = courses.find(course => course.name === environment.newsCourseName);
         return newsCourse.id;
       }),
       switchMap(courseId => {
@@ -336,11 +322,15 @@ export class CoursesService {
     return this.authService.token.pipe(
       first(),
       switchMap(token => {
-        const form = new FormData();
-        form.append('wstoken', token);
-        return this.http.post<CategoryResponseData[]>(coreCourseGetCategoriesWsUrl, form);
+        const params = new HttpParams({
+          fromObject: {
+            wstoken: token,
+            wsfunction: 'core_course_get_categories'
+          }
+        });
+        return this.http.post<CategoryResponseData[]>(environment.webServiceUrl, params);
       }),
-      timeout(duration)
+      timeout(environment.timeoutDuration)
     );
   }
 
@@ -351,13 +341,14 @@ export class CoursesService {
       switchMap(([token, userId]) => {
         const params = new HttpParams({
           fromObject: {
+            wstoken: token,
+            wsfunction: 'core_enrol_get_users_courses',
             userid: userId.toString(),
-            wstoken: token
           }
         });
-        return this.http.post<CoreEnrolResponseData[]>(coreEnrolGetUsersCoursesWsUrl, params, httpOptions);
+        return this.http.post<CoreEnrolResponseData[]>(environment.webServiceUrl, params);
       }),
-      timeout(duration)
+      timeout(environment.timeoutDuration)
     );
   }
 
@@ -365,17 +356,16 @@ export class CoursesService {
     return this.authService.token.pipe(
       first(),
       switchMap(token => {
-        const form = new FormData();
-        form.append('wstoken', token);
-        form.append('courseid', courseId.toString());
         const params = new HttpParams({
           fromObject: {
-            courseid: courseId.toString(),
-            wstoken: token
+            wstoken: token,
+            wsfunction: 'core_course_get_contents',
+            courseid: courseId.toString()
           }
         });
-        return this.http.post<CoreCourseGetContentsResponse[]>(coreCourseGetContentsWsUrl, params, httpOptions);
+        return this.http.post<CoreCourseGetContentsResponse[]>(environment.webServiceUrl, params);
       }),
+      timeout(environment.timeoutDuration)
     );
   }
 
@@ -406,9 +396,7 @@ export class CoursesService {
   }
 
   private saveCategoriesToStorage(categories: Category[]) {
-    const data = JSON.stringify(categories.map(category => {
-      return category.toObject();
-    }));
+    const data = JSON.stringify(categories);
     Storage.set({ key: 'categories', value: data });
   }
 
@@ -417,22 +405,14 @@ export class CoursesService {
       if (!storedData || !storedData.value) {
         return null;
       }
-      const parsedData = JSON.parse(storedData.value) as {
-        id: number,
-        name: string,
-        imgUrl: string,
-        imgData: string
-      }[];
-      const categories = parsedData.map(categoryData => {
-        return new Category(categoryData.id, categoryData.name, categoryData.imgUrl, categoryData.imgData);
-      });
+      const categories: Category[] = JSON.parse(storedData.value);
       this._categories.next(categories);
       return categories;
     }));
   }
 
   private saveTopicsToStorage(courseId: number, topics: Topic[]) {
-    const data = JSON.stringify(topics.map(course => course.toObject()));
+    const data = JSON.stringify(topics.map(topic => topic.toObject()));
     Storage.set({ key: `course_${courseId}_topics`, value: data });
   }
 
@@ -485,7 +465,7 @@ export class CoursesService {
   }
 
   private saveCoursestoStorage(courses: Course[]) {
-    const data = JSON.stringify(courses.map(course => course.toObject()));
+    const data = JSON.stringify(courses);
     Storage.set({ key: 'courses', value: data });
   }
 
@@ -494,16 +474,7 @@ export class CoursesService {
       if (!storedData || !storedData.value) {
         return null;
       }
-      const parsedData = JSON.parse(storedData.value) as {
-        id: number;
-        categoryId: number;
-        name: string;
-        imgUrl: string,
-        imgData: string
-      }[];
-      const courses = parsedData.map(courseData => {
-        return new Course(courseData.id, courseData.categoryId, courseData.name, courseData.imgUrl, courseData.imgData);
-      });
+      const courses: Course[] = JSON.parse(storedData.value);
       this._courses.next(courses);
       return courses;
     }));

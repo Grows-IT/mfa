@@ -1,25 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { from, BehaviorSubject, throwError, Observable, of } from 'rxjs';
 import { timeout, map, switchMap, first, withLatestFrom, catchError } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
-
-const duration = environment.timeoutDuration;
-const siteUrl = environment.siteUrl;
-const webserviceUrl = siteUrl + '/webservice/rest/server.php';
-const loginWsUrl = siteUrl + '/login/token.php';
-const getSiteInfoWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_webservice_get_site_info';
-const uploadImageWsUrl = siteUrl + '/webservice/upload.php';
-const coreUserUpdatePictureWsUrl = siteUrl + '/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_user_update_picture';
-const httpOptions = {
-  headers: new HttpHeaders({
-    Accept: 'application/json',
-    'Content-Type': 'application/x-www-form-urlencoded',
-  })
-};
 
 export interface GetSiteInfoResponseData {
   userid: number;
@@ -31,7 +17,7 @@ export interface GetSiteInfoResponseData {
   message: string;
 }
 
-export interface GetTokenResponseData {
+interface FetchTokenResponseData {
   token: string;
   error: string;
   errorcode: string;
@@ -64,7 +50,7 @@ export class AuthService {
   }
 
   login(username: string, password: string) {
-    return this.getToken(username, password).pipe(
+    return this.fetchToken(username, password).pipe(
       map(token => {
         this._token.next(token);
         this.saveTokenToStorage(token);
@@ -121,9 +107,9 @@ export class AuthService {
   }
 
   updateProfilePicture(imageData: Blob | File) {
-    return this.uploadWs(imageData).pipe(
+    return this.uploadFile(imageData).pipe(
       switchMap(itemId => {
-        return this.coreUserUpdatePictureWs(itemId);
+        return this.coreUserUpdatePicture(itemId);
       }),
       switchMap(() => {
         return this.fetchUser();
@@ -145,7 +131,7 @@ export class AuthService {
         if (profile.password && profile.password !== '') {
           data.append('users[0][password]', profile.password);
         }
-        return this.http.post<{ errorcode: string }>(webserviceUrl, data);
+        return this.http.post<{ errorcode: string }>(environment.webServiceUrl, data);
       }),
       map(res => {
         if (res && res.errorcode) {
@@ -157,19 +143,20 @@ export class AuthService {
     );
   }
 
-  private uploadWs(file: File | Blob) {
+  private uploadFile(file: File | Blob) {
     return this.token.pipe(
       first(),
       switchMap(token => {
+        const url = environment.siteUrl + '/webservice/upload.php';
         const uploadData = new FormData();
         uploadData.append('token', token);
         uploadData.append('filearea', 'draft');
         uploadData.append('itemid', '0');
         uploadData.append('file', file);
-        return this.http.post<any>(uploadImageWsUrl, uploadData);
+        return this.http.post<any>(url, uploadData);
       }),
       catchError(() => throwError('อัพโหลดไฟล์ล้มเหลว โปรดลองใหม่อีกครั้ง')),
-      timeout(duration),
+      timeout(environment.timeoutDuration),
       map(res => {
         if (res.errorcode === 'upload_error_ini_size') {
           throw new Error('ไฟล์ขนาดใหญ่ไป');
@@ -179,18 +166,22 @@ export class AuthService {
     );
   }
 
-  private coreUserUpdatePictureWs(itemId: string) {
+  private coreUserUpdatePicture(itemId: string) {
     return this.token.pipe(
       withLatestFrom(this.userId),
       switchMap(([token, userId]) => {
-        const formData = new FormData();
-        formData.append('wstoken', token);
-        formData.append('userid', userId.toString());
-        formData.append('draftitemid', itemId);
-        return this.http.post<{ profileimageurl: string }>(coreUserUpdatePictureWsUrl, formData);
+        const params = new HttpParams({
+          fromObject: {
+            wstoken: token,
+            wsfunction: 'core_user_update_picture',
+            userid: userId.toString(),
+            draftitemid: itemId
+          }
+        });
+        return this.http.post<{ profileimageurl: string }>(environment.webServiceUrl, params);
       }),
       catchError(() => throwError('การเชื่อมต่อ server ล้มเหลว')),
-      timeout(duration),
+      timeout(environment.timeoutDuration),
       map(res => {
         if (!res.profileimageurl) {
           throw new Error('การเปลี่ยนรูปโปรไฟล์ล้มเหลว');
@@ -200,7 +191,8 @@ export class AuthService {
     );
   }
 
-  private getToken(username: string, password: string) {
+  private fetchToken(username: string, password: string) {
+    const url = environment.siteUrl + '/login/token.php';
     const params = new HttpParams({
       fromObject: {
         username,
@@ -208,9 +200,9 @@ export class AuthService {
         service: 'moodle_mobile_app'
       }
     });
-    return this.http.post<GetTokenResponseData>(loginWsUrl, params, httpOptions).pipe(
+    return this.http.post<FetchTokenResponseData>(url, params).pipe(
       catchError(this.handleHttpError),
-      timeout(duration),
+      timeout(environment.timeoutDuration),
       map(res => {
         if (res.errorcode === 'invalidlogin') {
           throw new Error('ชื่อหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่');
@@ -230,12 +222,13 @@ export class AuthService {
         token = t;
         const params = new HttpParams({
           fromObject: {
-            wstoken: token
+            wstoken: token,
+            wsfunction: 'core_webservice_get_site_info'
           }
         });
-        return this.http.post<GetSiteInfoResponseData>(getSiteInfoWsUrl, params, httpOptions);
+        return this.http.post<GetSiteInfoResponseData>(environment.webServiceUrl, params);
       }),
-      timeout(duration),
+      timeout(environment.timeoutDuration),
       switchMap(res => {
         if (res.errorcode) {
           throw new Error(res.message);
@@ -285,14 +278,7 @@ export class AuthService {
   }
 
   private saveUserToStorage(user: User) {
-    const data = JSON.stringify({
-      id: user.id,
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      imgUrl: user.imgUrl,
-      imgData: user.imgData
-    });
+    const data = JSON.stringify(user);
     Plugins.Storage.set({ key: 'user', value: data });
   }
 
@@ -301,22 +287,7 @@ export class AuthService {
       if (!storedData || !storedData.value) {
         return null;
       }
-      const parsedData = JSON.parse(storedData.value) as {
-        id: number;
-        username: string;
-        firstName: string;
-        lastName: string;
-        imgUrl: string;
-        imgData: string;
-      };
-      const user = new User(
-        parsedData.id,
-        parsedData.username,
-        parsedData.firstName,
-        parsedData.lastName,
-        parsedData.imgUrl,
-        parsedData.imgData
-      );
+      const user: User = JSON.parse(storedData.value);
       this._user.next(user);
       return user;
     }));
