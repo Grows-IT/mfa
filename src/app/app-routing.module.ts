@@ -8,12 +8,9 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: './tabs/tabs.module#TabsPageModule',
-    canLoad: [AuthGuard],
-    // canActivate: [AuthGuard]
+    canLoad: [AuthGuard]
   },
-  { path: 'static', loadChildren: './static/static.module#StaticPageModule' },
-  // { path: 'weather', loadChildren: './weather/weather.module#WeatherPageModule' },
-  // { path: 'sugar-price', loadChildren: './sugar-price/sugar-price.module#SugarPricePageModule' }
+  { path: 'static', loadChildren: './static/static.module#StaticPageModule' }
 ];
 
 @NgModule({
