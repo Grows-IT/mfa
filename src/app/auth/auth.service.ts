@@ -234,7 +234,9 @@ export class AuthService {
           throw new Error(res.message);
         }
         user = new User(res.userid, res.username, res.firstname, res.lastname, res.userpictureurl);
-        if (!res.userpictureurl.includes('theme/image.php')) {
+        if (res.userpictureurl.includes('theme/image.php')) {
+          user.imgUrl = 'assets/profile/avatar.png';
+        } else {
           const regex = /(\w+:\/\/[\w\d\.]+)(\S+)/g;
           const match = regex.exec(res.userpictureurl);
           user.imgUrl = `${match[1]}/webservice${match[2]}&token=${token}&offline=1#moodlemobile-embedded`;
