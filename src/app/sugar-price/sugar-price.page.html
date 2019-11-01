@@ -1,15 +1,51 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/home"></ion-back-button>
-          </ion-buttons>
-      <ion-title>ราคาน้ำตาล</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  
-  <ion-content>
-    <ion-text text-center>
-      <h1>Coming Soon</h1>
-    </ion-text>
-  </ion-content>
-  
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>ราคาน้ำตาล</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngIf="data">
+    <ion-card-header>
+      <h1>ราคาน้ำตาลประจำวันที่ {{ data.date | date: 'd/M/yy' }}</h1>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-card-title>
+        <ion-text color="primary">
+          <h1>ราคาปัจจุบัน</h1>
+        </ion-text>
+      </ion-card-title>
+      <ion-card-subtitle>
+        <h2>{{ data.nowPrice }}</h2>
+      </ion-card-subtitle>
+      <ion-card-title>
+        <ion-text color="primary">
+          <h1>ราคาเฉลี่ย</h1>
+        </ion-text>
+      </ion-card-title>
+      <ion-card-subtitle>
+        <h2>{{ data.averagePrice }}</h2>
+      </ion-card-subtitle>
+      <ion-card-title>
+        <ion-text color="primary">
+          <h1>ราคาสูงสุด</h1>
+        </ion-text>
+      </ion-card-title>
+      <ion-card-subtitle>
+        <h2>{{ data.heightPrice }}</h2>
+      </ion-card-subtitle>
+      <ion-card-title>
+        <ion-text color="primary">
+          <h1>ราคาต่ำสุด</h1>
+        </ion-text>
+      </ion-card-title>
+      <ion-card-subtitle>
+        <h2>{{ data.lowPrice }}</h2>
+      </ion-card-subtitle>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
