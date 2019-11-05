@@ -47,7 +47,7 @@ export class QuizPage implements OnInit {
         const data = val.questions[0].html;
         const a = [];
         const match = data.match(regexA);
-
+        
         if (regexA.test(data)) {
           // console.log(val.questions[0].html);
           
