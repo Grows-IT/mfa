@@ -1,9 +1,71 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>quiz</ion-title>
+    <ion-title>แบบทดสอบ</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
+  <form  [formGroup]="userForm">
+    
+  </form>
+  <ion-card>
+    <ion-list lines="none">
+      <ion-radio-group>
+        <ion-list-header>
+          <ion-label>Which direction does the sun rise?</ion-label>
+        </ion-list-header>
 
+        <ion-item>
+          <ion-label>Biff</ion-label>
+          <ion-radio slot="start" value="biff" checked></ion-radio>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Griff</ion-label>
+          <ion-radio slot="start" value="griff"></ion-radio>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Buford</ion-label>
+          <ion-radio slot="start" value="buford"></ion-radio>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>DASJ</ion-label>
+          <ion-radio slot="start" value="biffs" checked></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+  </ion-card>
+  <ion-card>
+    <ion-list lines="none">
+      <ion-radio-group>
+        <ion-list-header>
+          <ion-label>พระอาทิตย์ขึ้นทางไหน?</ion-label>
+        </ion-list-header>
+
+        <ion-item>
+          <ion-label>เหนือ</ion-label>
+          <ion-radio slot="start" value="biff" checked></ion-radio>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>ใต้</ion-label>
+          <ion-radio slot="start" value="griff"></ion-radio>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>ออก</ion-label>
+          <ion-radio slot="start" value="buford" name="ออก"></ion-radio>
+        </ion-item>
+
+        <ion-item>
+            <ion-label>ตก</ion-label>
+            <ion-radio slot="start" value="buford"></ion-radio>
+          </ion-item>
+      </ion-radio-group>
+    </ion-list>
+  </ion-card>
+  <div style="text-align: center; margin-top: 15px;">
+    <ion-button  color="primary" style="text-align: center">ส่งคำตอบ</ion-button>
+  </div>
 </ion-content>
