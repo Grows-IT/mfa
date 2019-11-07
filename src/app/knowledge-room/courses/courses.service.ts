@@ -30,6 +30,7 @@ interface CoreCourseGetContentsResponse {
 
 interface Module {
   id: number;
+  instance: number;
   name: string;
   modname: string;
   contents: ContentData[];
@@ -371,7 +372,7 @@ export class CoursesService {
 
   private parseModule(mod: Module) {
     if (mod.modname === 'quiz') {
-      return of(new Quiz(mod.id, mod.name));
+      return of(new Quiz(mod.id, mod.instance, mod.name));
     } else if (mod.modname === 'page') {
       return from(mod.contents).pipe(
         withLatestFrom(this.authService.token),
@@ -427,6 +428,7 @@ export class CoursesService {
         name: string,
         activities: [{
           id: number,
+          instance: number,
           name: string,
           type: string,
           content: string,
@@ -444,7 +446,7 @@ export class CoursesService {
         if (topicData.activities) {
           activities = topicData.activities.map(activityData => {
             if (activityData.type === 'quiz') {
-              return new Quiz(activityData.id, activityData.name);
+              return new Quiz(activityData.id, activityData.instance, activityData.name);
             }
             if (activityData.type === 'page') {
               let resources: PageResource[];

@@ -40,12 +40,14 @@ export class Topic {
 export class Quiz {
   constructor(
     public id: number,
+    public instance: number,
     public name: string
   ) { }
 
   toObject() {
     return {
       id: this.id,
+      instance: Number,
       name: this.name,
       type: 'quiz'
     };

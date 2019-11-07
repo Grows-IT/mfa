@@ -43,6 +43,10 @@ const routes: Routes = [
                         path: '',
                         redirectTo: 'pages',
                         pathMatch: 'full'
+                      },
+                      {
+                        path: 'quiz',
+                        loadChildren: './topics/activities/quiz/quiz.module#QuizPageModule'
                       }
                     ]
                   }
