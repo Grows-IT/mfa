@@ -1,32 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { AuthService } from 'src/app/auth/auth.service';
-import { timeout, map, switchMap, withLatestFrom, catchError, concatMap, concat } from 'rxjs/operators';
+import { NgForm, FormGroup, FormControl } from '@angular/forms';
+import { map } from 'rxjs/operators';
 
-const url = 'http://203.150.199.148/webservice/rest/server.php';
-const params = new HttpParams({
-  fromObject: {
-    wstoken: 'db66538e0bc1d5b3bda7d8d2c5b897d2',
-    wsfunction: 'mod_quiz_get_attempt_summary',
-    attemptid: '1',
-    moodlewsrestformat: 'json'
-  }
-});
-const regexQ: RegExp = /<div class="qtext"><p>(.+)<\/p><\/div>/;
-const regexA: RegExp = /<label for=\"(.+)\" class=\"ml-1\"><span class=\"answernumber\">(.+) <\/span>(.+)<\/label>/;
+import { AuthService } from 'src/app/auth/auth.service';
+import { environment } from 'src/environments/environment';
 
 class Question {
   constructor(
-    public questions: string,
-    public answer: Answer[],
+    public text: string,
+    public answers: Answer[],
   ) { }
 }
 
 class Answer {
   constructor(
-    public select: string,
+    public id: string,
     public choice: string,
-    public answer: string
+    public text: string
   ) { }
 }
 
@@ -36,51 +27,81 @@ class Answer {
   styleUrls: ['./quiz.page.scss'],
 })
 export class QuizPage implements OnInit {
+  question: any;
+  Object = Object;
+  quizForm = false;
+  allAns = [];
 
-
-  constructor(private http: HttpClient, private authService: AuthService) {
-  }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) { }
 
   ngOnInit() {
-    this.http.post<any>(url, params).pipe(
-      map(val => {
-        const data = val.questions[0].html;
-        const a = [];
-        const match = data.match(regexA);
-        
-        if (regexA.test(data)) {
-          // console.log(val.questions[0].html);
-          
-          console.log(match[1]);
-          console.log(match[2]);
-          console.log(match[3]);
-          console.log(match[4]);
-        }
-
-      }),
-      catchError((err) => {
-        throw err;
-      })
-      // console.log(regexA.exec(val.questions[0].html)[1]);
-
-      // for (let i = 0; i < val.questions.length; i++) {
-      //   const array = [], arrayAns = [], obj = {};
-
-      //   for (let j = 0; j < val.questions[i].html.length; j++) {
-      //     const value = val.questions[j].html;
-
-      //     obj[j] = {};
-
-      //     obj[j] = new Answer(regexA.exec(value)[1], regexA.exec(value)[2], regexA.exec(value)[3]);
-      //     arrayAns.push(obj);
-
-      //   }
-      //   array.push(new Question(regexQ.exec(val.questions[i].html)[1], arrayAns));
-      //   regexA.exec(value)[1], regexA.exec(value)[2], regexA.exec(value)[3]
-      // }
-
-    ).subscribe(data => {
+    this.fetchQuiz().subscribe(data => {
       console.log(data);
+      this.question = data;
     });
   }
+
+  private fetchQuiz() {
+    const params = new HttpParams({
+      fromObject: {
+        wstoken: 'db66538e0bc1d5b3bda7d8d2c5b897d2',
+        wsfunction: 'mod_quiz_get_attempt_summary',
+        attemptid: '4',
+        moodlewsrestformat: 'json'
+      }
+    });
+    return this.http.post<any>(environment.webServiceUrl, params).pipe(
+      map(val => {
+        const questions: Question[] = val.questions.map(questionEl => {
+          const html: string = decodeURI(questionEl.html);
+          return this.parseQuestion(html);
+        });
+        return questions;
+      })
+    );
+  }
+
+  private parseQuestion(text: string) {
+    const regexQue: RegExp = /<div class="qtext"><p>(?<question>.+)<\/p><\/div>/;
+    const regexAns = /<label for="(?<id>.+)\" class="ml-1"><span class="answernumber">(?<choice>.+) <\/span>(?<text>.+)<\/label>/g;
+    const questionData = regexQue.exec(text);
+    const question = new Question(questionData.groups.question, []);
+    let ansData = regexAns.exec(text);
+    while (ansData) {
+      const answer = new Answer(ansData.groups.id, ansData.groups.choice, ansData.groups.text);
+      question.answers.push(answer);
+      ansData = regexAns.exec(text);
+    }
+    return question;
+  }
+
+  public submitAnswers(form: NgForm) {
+    if (form.status === 'INVALID') {
+      return;
+    }
+    this.sliceStr(form.value, Object.keys(form.value));
+  }
+
+  public sliceStr(form: any, length) {
+    const data = [];
+
+    for (let i = 0; i < length.length; i++) {
+      const str = form[i];
+      const res = str.slice(0, str.length - 1);
+      const obj = {
+        name: res,
+        value: i + 1
+      };
+
+      data[i] = obj;
+    }
+
+    console.log(data);
+
+    return data;
+  }
+
 }
