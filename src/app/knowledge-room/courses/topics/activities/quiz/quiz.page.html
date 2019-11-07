@@ -1,9 +1,31 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>quiz</ion-title>
+    <ion-title>แบบทดสอบ</ion-title>
   </ion-toolbar>
 </ion-header>
-
-<ion-content>
-
+<ion-content *ngIf="question">
+  <ion-grid>
+    <ion-row>
+      <ion-col size-sm="10" offset-sm="1">
+        <form #quizForm="ngForm" (ngSubmit)="submitAnswers(quizForm)" novalidate>
+          <ion-card *ngFor="let q of question; let i = index;">
+            <ion-list lines="none">
+              <ion-radio-group radio-group>
+                <ion-list-header>
+                  <ion-label>{{i+1}}. {{ q.text }}</ion-label>
+                </ion-list-header>
+                <ion-item *ngFor="let a of q.answers">
+                  <input type="radio" id="{{a.id}}" slot="start" name="{{i}}" [value]="a.id" required ngModel/>
+                  <label for="{{a.id}}">{{a.choice}} {{a.text}}</label>
+                </ion-item>
+              </ion-radio-group>
+            </ion-list>
+          </ion-card>
+          <div style="text-align: center; margin-top: 15px;">
+            <ion-button color="primary" style="text-align: center" type="submit" [disabled]="quizForm.invalid">ส่งคำตอบ</ion-button>
+          </div>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

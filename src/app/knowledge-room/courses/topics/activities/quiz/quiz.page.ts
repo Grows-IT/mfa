@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { NgForm, FormGroup, FormControl } from '@angular/forms';
 import { map } from 'rxjs/operators';
 
 import { AuthService } from 'src/app/auth/auth.service';
@@ -26,14 +27,20 @@ class Answer {
   styleUrls: ['./quiz.page.scss'],
 })
 export class QuizPage implements OnInit {
+  question: any;
+  Object = Object;
+  quizForm = false;
+  allAns = [];
+
   constructor(
     private http: HttpClient,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+  ) { }
 
   ngOnInit() {
     this.fetchQuiz().subscribe(data => {
       console.log(data);
+      this.question = data;
     });
   }
 
@@ -42,7 +49,7 @@ export class QuizPage implements OnInit {
       fromObject: {
         wstoken: 'db66538e0bc1d5b3bda7d8d2c5b897d2',
         wsfunction: 'mod_quiz_get_attempt_summary',
-        attemptid: '1',
+        attemptid: '4',
         moodlewsrestformat: 'json'
       }
     });
@@ -59,7 +66,7 @@ export class QuizPage implements OnInit {
 
   private parseQuestion(text: string) {
     const regexQue: RegExp = /<div class="qtext"><p>(?<question>.+)<\/p><\/div>/;
-    const regexAns = /<label for="(?<id>.\d:\d_[a-z]+\d)\" class="ml-1"><span class="answernumber">(?<choice>[a-zA-Z\d]+.) <\/span>(?<text>[A-Za-z\d\s]+)<\/label>/g;
+    const regexAns = /<label for="(?<id>.+)\" class="ml-1"><span class="answernumber">(?<choice>.+) <\/span>(?<text>.+)<\/label>/g;
     const questionData = regexQue.exec(text);
     const question = new Question(questionData.groups.question, []);
     let ansData = regexAns.exec(text);
@@ -70,4 +77,31 @@ export class QuizPage implements OnInit {
     }
     return question;
   }
+
+  public submitAnswers(form: NgForm) {
+    if (form.status === 'INVALID') {
+      return;
+    }
+    this.sliceStr(form.value, Object.keys(form.value));
+  }
+
+  public sliceStr(form: any, length) {
+    const data = [];
+
+    for (let i = 0; i < length.length; i++) {
+      const str = form[i];
+      const res = str.slice(0, str.length - 1);
+      const obj = {
+        name: res,
+        value: i + 1
+      };
+
+      data[i] = obj;
+    }
+
+    console.log(data);
+
+    return data;
+  }
+
 }
