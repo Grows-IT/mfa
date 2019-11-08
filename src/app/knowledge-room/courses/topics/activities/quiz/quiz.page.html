@@ -15,28 +15,26 @@
                   <ion-label>{{i+1}}. {{ q.text }}</ion-label>
                 </ion-list-header>
                 <ion-item *ngFor="let a of q.answers">
-                  <input type="radio" id="{{a.id}}" slot="start" name="{{i}}" [value]="a.id" required ngModel/>
+                  <input type="radio" id="{{a.id}}" slot="start" name="{{i}}" [value]="a.id" required ngModel />
                   <label for="{{a.id}}">{{a.choice}} {{a.text}}</label>
                 </ion-item>
               </ion-radio-group>
             </ion-list>
           </ion-card>
           <div style="text-align: center; margin-top: 15px;">
-            <ion-button color="primary" style="text-align: center" type="submit" [disabled]="quizForm.invalid">ส่งคำตอบ</ion-button>
+            <ion-button color="primary" style="text-align: center" type="submit" [disabled]="quizForm.invalid">ส่งคำตอบ
+            </ion-button>
           </div>
         </form>
       </ion-col>
     </ion-row>
   </ion-grid>
-
-<h1 style="text-align: center;">แบบทดสอบ : หัวข้อ</h1>
-
-<div>
-<h2>คะแนน</h2>
-<h3>10/10</h3>
+<div *ngIf="isCompleted">
+    <h1 style="text-align: center;">แบบทดสอบ : หัวข้อ</h1>
+    <div class="grade">
+      <h2>คะแนน</h2>
+      <h3>10/10</h3>
+    </div>
+    <ion-button expand="full" style="bottom: 0;" (click)="onStartQuiz()">ทำอีกครั้ง</ion-button>
 </div>
-
 </ion-content>
-
-<ion-button expand="full" style="bottom: 0;">ทำอีกครั้ง</ion-button>
-
