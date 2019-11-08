@@ -3,8 +3,8 @@
     <ion-title>แบบทดสอบ</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content *ngIf="question">
-  <ion-grid>
+<ion-content>
+  <ion-grid *ngIf="!isCompleted && question">
     <ion-row>
       <ion-col size-sm="10" offset-sm="1">
         <form #quizForm="ngForm" (ngSubmit)="submitAnswers(quizForm)" novalidate>
@@ -28,4 +28,15 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+<h1 style="text-align: center;">แบบทดสอบ : หัวข้อ</h1>
+
+<div>
+<h2>คะแนน</h2>
+<h3>10/10</h3>
+</div>
+
 </ion-content>
+
+<ion-button expand="full" style="bottom: 0;">ทำอีกครั้ง</ion-button>
+
