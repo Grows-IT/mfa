@@ -30,10 +30,10 @@
     </ion-row>
   </ion-grid>
 <div *ngIf="isCompleted">
-    <h1 style="text-align: center;">แบบทดสอบ : หัวข้อ</h1>
-    <div class="grade">
+    <h1 style="text-align: center;">แบบทดสอบ : {{quiz.name}}</h1>
+    <div *ngIf="grade" class="grade">
       <h2>คะแนน</h2>
-      <h3>10/10</h3>
+      <h3>{{grade}}/10</h3>
     </div>
     <ion-button expand="full" style="bottom: 0;" (click)="onStartQuiz()">ทำอีกครั้ง</ion-button>
 </div>

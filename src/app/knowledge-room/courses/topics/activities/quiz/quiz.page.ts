@@ -24,6 +24,7 @@ export class QuizPage implements OnInit {
   quiz: Quiz;
   isCompleted = true;
   attemptId: number;
+  grade: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -71,6 +72,7 @@ export class QuizPage implements OnInit {
       .subscribe(quizGrade => {
         console.log(quizGrade);
         this.isCompleted = true;
+        this.grade = quizGrade.grade;  
       });
   }
 
