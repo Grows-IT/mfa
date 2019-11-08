@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NgForm, FormGroup, FormControl } from '@angular/forms';
-import { map } from 'rxjs/operators';
+import { map, first, switchMap } from 'rxjs/operators';
 
 import { AuthService } from 'src/app/auth/auth.service';
 import { environment } from 'src/environments/environment';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { CoursesService } from '../../../courses.service';
+import { Quiz } from '../../../course.model';
 
 class Question {
   constructor(
@@ -31,32 +35,76 @@ export class QuizPage implements OnInit {
   Object = Object;
   quizForm = false;
   allAns = [];
-  isCompleted = true;
+  isCompleted = false;
+  activitySub: Subscription;
+  quiz: Quiz;
 
   constructor(
     private http: HttpClient,
     private authService: AuthService,
+    private activatedRoute: ActivatedRoute,
+    private coursesService: CoursesService
   ) { }
 
   ngOnInit() {
-    this.fetchQuiz().subscribe(data => {
-      console.log(data);
-      this.question = data;
+    const topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
+    const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
+    this.activitySub = this.coursesService.topics.subscribe(topics => {
+      const currentTopic = topics.find(topic => topic.id === topicId);
+      this.quiz = currentTopic.activities.find(activity => activity.id === activityId);
     });
   }
 
-  private fetchQuiz() {
-    const params = new HttpParams({
-      fromObject: {
-        wstoken: 'db66538e0bc1d5b3bda7d8d2c5b897d2',
-        wsfunction: 'mod_quiz_get_attempt_summary',
-        attemptid: '4',
-        moodlewsrestformat: 'json'
-      }
-    });
-    return this.http.post<any>(environment.webServiceUrl, params).pipe(
-      map(val => {
-        const questions: Question[] = val.questions.map(questionEl => {
+  onStartQuiz() {
+    this.startAttempt(this.quiz.instance)
+      .pipe(
+        switchMap(attemptId => {
+          return this.fetchQuiz(attemptId);
+        })
+      )
+      .subscribe(questions => {
+        console.log(questions);
+        this.question = questions;
+      });
+  }
+
+  private startAttempt(quizInstance: number) {
+    return this.authService.token.pipe(
+      first(),
+      switchMap(token => {
+        const params = new HttpParams({
+          fromObject: {
+            wsfunction: 'mod_quiz_start_attempt',
+            quizid: quizInstance.toString(),
+            forcenew: '1',
+            wstoken: token,
+            moodlewsrestformat: 'json',
+          }
+        });
+        return this.http.post<{ attempt: { id: number } }>(environment.webServiceUrl, params)
+      }),
+      map(res => {
+        return res.attempt.id;
+      })
+    );
+  }
+
+  private fetchQuiz(attemptId: number) {
+    return this.authService.token.pipe(
+      first(),
+      switchMap(token => {
+        const params = new HttpParams({
+          fromObject: {
+            wstoken: token,
+            wsfunction: 'mod_quiz_get_attempt_summary',
+            attemptid: attemptId.toString(),
+            moodlewsrestformat: 'json'
+          }
+        });
+        return this.http.post<any>(environment.webServiceUrl, params);
+      }),
+      map(res => {
+        const questions: Question[] = res.questions.map(questionEl => {
           const html: string = decodeURI(questionEl.html);
           return this.parseQuestion(html);
         });
