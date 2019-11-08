@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { CoursesService } from '../../../courses.service';
 import { Quiz } from '../../../course.model';
 import { QuizService } from './quiz.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-quiz',
@@ -22,11 +23,12 @@ export class QuizPage implements OnInit {
   activitySub: Subscription;
   quiz: Quiz;
   isCompleted = true;
+  attemptId: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private coursesService: CoursesService,
-    private quizService: QuizService
+    private quizService: QuizService,
   ) { }
 
   ngOnInit() {
@@ -42,11 +44,11 @@ export class QuizPage implements OnInit {
     this.quizService.startAttempt(this.quiz.instance)
       .pipe(
         switchMap(attemptId => {
+          this.attemptId = attemptId;
           return this.quizService.fetchQuiz(attemptId);
         })
       )
       .subscribe(questions => {
-        console.log(questions);
         this.question = questions;
         this.isCompleted = false;
       });
@@ -56,7 +58,20 @@ export class QuizPage implements OnInit {
     if (form.status === 'INVALID') {
       return;
     }
-    this.sliceStr(form.value, Object.keys(form.value));
+    this.isCompleted = false;
+    let data;
+    data = this.sliceStr(form.value, Object.keys(form.value));
+
+    return this.quizService.submitQuiz(data, this.attemptId)
+      .pipe(
+        switchMap(res => {
+          return this.quizService.getGrade(this.attemptId);
+        })
+      )
+      .subscribe(quizGrade => {
+        console.log(quizGrade);
+        this.isCompleted = true;
+      });
   }
 
   public sliceStr(form: any, length) {
@@ -64,15 +79,44 @@ export class QuizPage implements OnInit {
 
     for (let i = 0; i < length.length; i++) {
       const str = form[i];
-      const res = str.slice(0, str.length - 1);
-      const obj = {
-        name: res,
-        value: i + 1
-      };
+      const ansName = str.slice(0, str.length - 1);
+      const ansVal = str.substr(str.length - 1);
 
-      data[i] = obj;
+      for (let j = 0; j < this.question[i].answers.length; j++) {
+        if (ansVal === j.toString()) {
+          if (i === 0) {
+            // answer
+            const obj = {
+              name: ansName,
+              value: ansVal,
+            };
+            // sequencecheck
+            const obj2 = {
+              sqId: this.question[i].answers[j].sqId,
+              sqCount: this.question[i].answers[j].sqCount
+            };
+
+            data[i] = obj;
+            data[i + 1] = obj2;
+
+          } else {
+            // answer
+            const obj = {
+              name: ansName,
+              value: ansVal,
+            };
+            // sequencecheck
+            const obj2 = {
+              sqId: this.question[i].answers[j].sqId,
+              sqCount: this.question[i].answers[j].sqCount
+            };
+
+            data[i * 2] = obj;
+            data[i * 2 + 1] = obj2;
+          }
+        }
+      }
     }
-
     console.log(data);
 
     return data;

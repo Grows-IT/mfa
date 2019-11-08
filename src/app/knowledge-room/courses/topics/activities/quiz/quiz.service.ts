@@ -15,7 +15,9 @@ export class Answer {
   constructor(
     public id: string,
     public choice: string,
-    public text: string
+    public text: string,
+    public sqId: string,
+    public sqCount: string
   ) { }
 }
 
@@ -74,14 +76,69 @@ export class QuizService {
     );
   }
 
+  submitQuiz(data: any, attemptId: number) {
+    return this.authService.token.pipe(
+      first(),
+      switchMap(token => {
+        let params = new HttpParams(
+          {
+            fromObject: {
+              finishattempt: '1',
+              timeup: '0',
+              moodlewssettingfilter: 'true',
+              moodlewssettingfileurl: 'true',
+              wstoken: token,
+              wsfunction: 'mod_quiz_process_attempt',
+              attemptid: attemptId.toString(),
+              moodlewsrestformat: 'json',
+            }
+          }
+        );
+        data.forEach((el, index) => {
+          if ((index % 2) === 0) {
+            params = params.set(`data[${index}][name]`, el.name);
+            params = params.set(`data[${index}][value]`, el.value);
+          } else if ((index % 2) === 1) {
+            params = params.set(`data[${index}][name]`, el.sqId);
+            params = params.set(`data[${index}][value]`, el.sqCount);
+          }
+        });
+        return this.http.post<any>(environment.webServiceUrl, params);
+      })
+    );
+  }
+
+  getGrade(attemptId: number) {
+    return this.authService.token.pipe(
+      first(),
+      switchMap(token => {
+        const params2 = new HttpParams(
+          {
+            fromObject: {
+              attemptid: attemptId.toString(),
+              page: '-1',
+              moodlewssettingfilter: 'true',
+              moodlewssettingfileurl: 'true',
+              wsfunction: 'mod_quiz_get_attempt_review',
+              wstoken: token,
+            }
+          }
+        );
+        return this.http.post<any>(environment.webServiceUrl, params2);
+      })
+    );
+  }
+
   private parseQuestion(text: string) {
     const regexQue: RegExp = /<div class="qtext"><p>(?<question>.+)<\/p><\/div>/;
     const regexAns = /<label for="(?<id>.+)\" class="ml-1"><span class="answernumber">(?<choice>.+) <\/span>(?<text>.+)<\/label>/g;
+    const regexSeq = /<\/h4><input type="hidden" name=\"(?<sqId>.+)\" value=\"(?<sqCount>\d+)\" \/>/g;
     const questionData = regexQue.exec(text);
     const question = new Question(questionData.groups.question, []);
+    const SeqData = regexSeq.exec(text);
     let ansData = regexAns.exec(text);
     while (ansData) {
-      const answer = new Answer(ansData.groups.id, ansData.groups.choice, ansData.groups.text);
+      const answer = new Answer(ansData.groups.id, ansData.groups.choice, ansData.groups.text, SeqData.groups.sqId, SeqData.groups.sqCount);
       question.answers.push(answer);
       ansData = regexAns.exec(text);
     }
