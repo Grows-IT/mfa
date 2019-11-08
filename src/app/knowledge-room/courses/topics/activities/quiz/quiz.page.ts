@@ -31,6 +31,7 @@ export class QuizPage implements OnInit {
   Object = Object;
   quizForm = false;
   allAns = [];
+  isCompleted = true;
 
   constructor(
     private http: HttpClient,
