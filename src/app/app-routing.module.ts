@@ -14,7 +14,8 @@ const routes: Routes = [
   {
     path: 'quiz',
     loadChildren: './knowledge-room/courses/topics/activities/quiz/quiz.module#QuizPageModule'
-  }
+  },  { path: 'qa-details', loadChildren: './qa/qa-details/qa-details.module#QaDetailsPageModule' }
+
 ];
 
 @NgModule({
