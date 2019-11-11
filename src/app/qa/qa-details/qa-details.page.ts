@@ -13,10 +13,18 @@ export class QaDetailsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    const discussionId = 1;
+    const discussionId = this.getDiscussionId();
+
     this.qaService.fetchPosts(discussionId).subscribe(posts => {
-      console.log(posts);
     });
+  }
+
+  getDiscussionId() {
+    const url = window.location.pathname;
+    const regex: RegExp = /\/(\d)/;
+    const arrRegex = regex.exec(url);
+    // const discusId = +arrRegex[1];
+    return +arrRegex[1];
   }
 
 }
