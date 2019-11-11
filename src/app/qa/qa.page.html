@@ -1,8 +1,8 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
+    <!-- <ion-buttons slot="start">
       <ion-back-button icon="ios-arrow-back" defaultHref=""></ion-back-button>
-    </ion-buttons>
+    </ion-buttons> -->
     <ion-title>Q&A</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -14,7 +14,7 @@
           <ion-item *ngFor="let item of allDiscus" [routerLink]="[item.id]">
             <ion-label>
               <h1>{{ item.subject }}</h1>
-              <h3>{{ item.userfullname }} <span class="date">{{ item.created * 1000 | date: 'EEE MMM yy' }}</span></h3>
+              <h3>{{ item.username }} <span class="date">{{ item.date | date: 'd MMM yy' }}</span></h3>
             </ion-label>
           </ion-item>
         </ion-col>
