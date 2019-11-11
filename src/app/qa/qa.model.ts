@@ -7,3 +7,12 @@ export class Post {
     public date: Date
   ) {}
 }
+
+export class Discussion {
+  constructor(
+    public id: number,
+    public subject: string,
+    public username: string,
+    public date: Date
+  ) {}
+}
