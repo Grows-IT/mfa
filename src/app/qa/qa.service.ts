@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
 import { first, switchMap, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Post } from './qa.model';
+import { Post, Discussion } from './qa.model';
 
 interface PostResData {
   posts: [
@@ -26,6 +26,30 @@ export class QaService {
     private http: HttpClient,
     private authService: AuthService
   ) { }
+
+  addDiscussion(discussion: Discussion) {
+    return this.authService.token.pipe(
+      first(),
+      switchMap(token => {
+        const params = new HttpParams({
+          fromObject: {
+            wstoken: token,
+            wsfunction: 'mod_forum_add_discussion',
+            formid: `${11}`,
+            subject: discussion.subject,
+            message: discussion.message,
+          }
+        });
+        return this.http.post<{ discussionid: number }>(environment.webServiceUrl, params);
+      }),
+      map(res => {
+        if (res.discussionid) {
+          return true;
+        }
+        return false;
+      })
+    );
+  }
 
   fetchPosts(discussionId: number) {
     return this.authService.token.pipe(
