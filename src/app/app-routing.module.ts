@@ -10,7 +10,8 @@ const routes: Routes = [
     loadChildren: './tabs/tabs.module#TabsPageModule',
     canLoad: [AuthGuard]
   },
-  { path: 'static', loadChildren: './static/static.module#StaticPageModule' },
+  { path: 'static', loadChildren: './static/static.module#StaticPageModule' },  { path: 'qa-new', loadChildren: './qa/qa-new/qa-new.module#QaNewPageModule' },
+
 ];
 
 @NgModule({

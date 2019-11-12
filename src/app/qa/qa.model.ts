@@ -4,7 +4,7 @@ export class Post {
     public subject: string,
     public message: string,
     public username: string,
-    public date: Date
+    public date?: Date
   ) {}
 }
 
@@ -13,6 +13,7 @@ export class Discussion {
     public id: number,
     public subject: string,
     public username: string,
-    public date: Date
+    public message: string,
+    public date?: Date
   ) {}
 }
