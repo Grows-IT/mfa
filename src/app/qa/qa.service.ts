@@ -27,7 +27,7 @@ export class QaService {
     private authService: AuthService
   ) { }
 
-  addDiscussion(discussion: Discussion) {
+  addDiscussion(subject: string, message: string) {
     return this.authService.token.pipe(
       first(),
       switchMap(token => {
@@ -35,9 +35,11 @@ export class QaService {
           fromObject: {
             wstoken: token,
             wsfunction: 'mod_forum_add_discussion',
-            formid: `${11}`,
-            subject: discussion.subject,
-            message: discussion.message,
+            forumid: '11',
+            'options[0][name]': 'discussionsubscribe',
+            'options[0][value]': '1',
+            subject,
+            message,
           }
         });
         return this.http.post<{ discussionid: number }>(environment.webServiceUrl, params);
