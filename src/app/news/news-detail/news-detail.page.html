@@ -11,5 +11,5 @@
   <div text-center>
     <ion-spinner *ngIf="isLoading"></ion-spinner>
   </div>
-  <div *ngIf="!isLoading" [innerHTML]="indexHtml"></div>
+  <div padding *ngIf="!isLoading" [innerHTML]="indexHtml"></div>
 </ion-content>
