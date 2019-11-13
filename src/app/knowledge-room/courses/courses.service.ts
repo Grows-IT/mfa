@@ -7,6 +7,7 @@ import { from, BehaviorSubject, Observable, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Course, Topic, Page, Quiz, PageResource, Category } from './course.model';
 import { AuthService } from '../../auth/auth.service';
+import { Forum } from 'src/app/qa/qa.model';
 
 const { Storage } = Plugins;
 
@@ -385,6 +386,8 @@ export class CoursesService {
           return new Page(mod.id, mod.name, null, resources);
         })
       );
+    } else if (mod.modname === 'forum') {
+      return of(new Forum(mod.instance, mod.name));
     }
   }
 
@@ -447,8 +450,9 @@ export class CoursesService {
           activities = topicData.activities.map(activityData => {
             if (activityData.type === 'quiz') {
               return new Quiz(activityData.id, activityData.instance, activityData.name);
-            }
-            if (activityData.type === 'page') {
+            } else if (activityData.type === 'forum') {
+              return new Forum(activityData.id, activityData.name);
+            } else if (activityData.type === 'page') {
               let resources: PageResource[];
               if (activityData.resources) {
                 resources = activityData.resources.map(resourceData => {
