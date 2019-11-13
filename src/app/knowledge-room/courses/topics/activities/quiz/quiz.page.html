@@ -1,10 +1,20 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>แบบทดสอบ</ion-title>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" [defaultHref]="prevUrl"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ quiz.name }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-grid *ngIf="!isCompleted && question">
+    <div class="outer">
+        <div class="middle">
+          <div class="inner">
+            <ion-spinner *ngIf="isLoading"></ion-spinner>
+          </div>
+        </div>
+      </div>
+  <ion-grid *ngIf="!isCompleted && !isLoading">
     <ion-row>
       <ion-col size-sm="10" offset-sm="1">
         <form #quizForm="ngForm" (ngSubmit)="submitAnswers(quizForm)" novalidate>
@@ -29,12 +39,12 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-<div *ngIf="isCompleted">
+  <div *ngIf="isCompleted && !isLoading">
     <h1 style="text-align: center;">แบบทดสอบ : {{quiz.name}}</h1>
     <div *ngIf="grade" class="grade">
       <h2>คะแนน</h2>
-      <h3>{{grade}}/10</h3>
+      <h3>{{grade}}</h3>
     </div>
-    <ion-button expand="full" style="bottom: 0;" (click)="onStartQuiz()">ทำอีกครั้ง</ion-button>
-</div>
+    <ion-button expand="full" (click)="onStartQuiz()">{{ grade ? 'เริ่มใหม่อีกครั้ง' : 'เริ่ม' }}</ion-button>
+  </div>
 </ion-content>
