@@ -15,12 +15,12 @@ export class QaPage implements OnInit {
   ) { }
 
   ngOnInit() {
+
+  }
+
+  ionViewWillEnter() {
     this.qaService.getDiscussions().subscribe((qa) => {
       return this.allDiscus = qa;
     });
-  }
-
-  onAddNewDiscussion() {
-    
   }
 }
