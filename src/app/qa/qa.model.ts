@@ -28,7 +28,6 @@ export class Discussion {
     public id: number,
     public subject: string,
     public username: string,
-    public message: string,
     public date?: Date
   ) {}
 }

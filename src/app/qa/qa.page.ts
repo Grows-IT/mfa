@@ -19,4 +19,8 @@ export class QaPage implements OnInit {
       return this.allDiscus = qa;
     });
   }
+
+  onAddNewDiscussion() {
+    
+  }
 }
