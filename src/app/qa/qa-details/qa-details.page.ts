@@ -40,7 +40,10 @@ export class QaDetailsPage implements OnInit {
       const discussionId = this.getDiscussionId();
 
       this.qaService.fetchPosts(discussionId).subscribe(posts => {
+        console.log(posts);
+
         el.reset();
+        posts.pop();
         this.qaDetail = posts.reverse();
       });
     });
