@@ -72,7 +72,7 @@ export class QuizPage implements OnInit {
       .subscribe(quizGrade => {
         console.log(quizGrade);
         this.isCompleted = true;
-        this.grade = quizGrade.grade;  
+        this.grade = quizGrade.grade;
       });
   }
 

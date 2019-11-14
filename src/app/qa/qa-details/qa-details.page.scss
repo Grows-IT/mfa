@@ -1,0 +1,35 @@
+.questionHead {
+  padding: 0 !important;
+
+  > ion-item > ion-label {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+
+// .list {
+//   background-color: #e2dbd2;
+
+//   .ion-label, ion-item {
+//     background-color: #e2dbd2 !important;
+//   }
+// }
+
+#comment {
+  background: #80b4c3;
+  padding: 15px;
+
+  ion-label {
+    padding-top: 15px;
+    color: white;
+    margin-left: 2%;
+  }
+
+  form {
+    padding-top: 15px;
+
+    // ion-textarea {
+    //   background-color: red !important;
+    // }
+  }
+}

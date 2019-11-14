@@ -88,4 +88,24 @@ export class QaService {
       })
     );
   }
+
+  postDiscussion(messages: string, id: number, subject: string) {
+    return this.authService.token.pipe(
+      first(),
+      switchMap(token => {
+        const params = new HttpParams({
+          fromObject: {
+            postid: `${id}`,
+            subject: 're : ' + subject,
+            message: messages,
+            moodlewssettingfilter: 'true',
+            moodlewssettingfileurl: 'true',
+            wsfunction: 'mod_forum_add_discussion_post',
+            wstoken: token,
+          }
+        });
+        return this.http.post<any>(environment.webServiceUrl, params);
+      })
+    );
+  }
 }
