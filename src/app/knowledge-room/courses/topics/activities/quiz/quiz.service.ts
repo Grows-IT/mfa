@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from 'src/app/auth/auth.service';
-import { first, switchMap, map } from 'rxjs/operators';
+import { first, switchMap, map, withLatestFrom } from 'rxjs/operators';
 import { HttpParams, HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+
 import { environment } from 'src/environments/environment';
+import { AuthService } from 'src/app/auth/auth.service';
 
 export class Question {
   constructor(
@@ -39,15 +41,18 @@ export class QuizService {
           fromObject: {
             wsfunction: 'mod_quiz_start_attempt',
             quizid: quizInstance.toString(),
-            forcenew: '1',
             wstoken: token,
             moodlewsrestformat: 'json',
           }
         });
-        return this.http.post<{ attempt: { id: number } }>(environment.webServiceUrl, params)
+        return this.http.post<{ attempt: { id: number }, errorcode: string }>(environment.webServiceUrl, params);
       }),
-      map(res => {
-        return res.attempt.id;
+      switchMap(res => {
+        if (res.errorcode === 'attemptstillinprogress') {
+          return this.fetchInprogressAttempt(quizInstance);
+        } else {
+          return of(res.attempt.id);
+        }
       })
     );
   }
@@ -143,5 +148,29 @@ export class QuizService {
       ansData = regexAns.exec(text);
     }
     return question;
+  }
+
+  private fetchInprogressAttempt(quizId: number) {
+    return this.authService.token.pipe(
+      first(),
+      withLatestFrom(this.authService.userId),
+      switchMap(([token, userId]) => {
+        const params = new HttpParams({
+          fromObject: {
+            wstoken: token,
+            wsfunction: 'mod_quiz_get_user_attempts',
+            quizid: quizId.toString(),
+            userid: userId.toString(),
+            status: 'unfinished',
+            moodlewsrestformat: 'json'
+          }
+        });
+        return this.http.post<{ attempts: { id: number }[] }>(environment.webServiceUrl, params).pipe(
+          map(res => {
+            return res.attempts[0].id;
+          })
+        );
+      })
+    );
   }
 }

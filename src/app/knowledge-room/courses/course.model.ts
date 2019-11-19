@@ -47,7 +47,7 @@ export class Quiz {
   toObject() {
     return {
       id: this.id,
-      instance: Number,
+      instance: this.instance,
       name: this.name,
       type: 'quiz'
     };

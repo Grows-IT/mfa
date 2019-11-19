@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { catchError, switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 import { CoursesService } from '../courses.service';

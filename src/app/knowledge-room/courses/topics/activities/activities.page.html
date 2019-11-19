@@ -11,7 +11,7 @@
   <div text-center>
     <ion-spinner *ngIf="isLoading"></ion-spinner>
   </div>
-  <ion-text text-center *ngIf="!isLoading && errorMessage && !pages">
+  <ion-text text-center *ngIf="!isLoading && errorMessage">
     <h1>{{ errorMessage }}</h1>
   </ion-text>
   <ion-list *ngIf="!isLoading && pages">
@@ -21,6 +21,8 @@
       </ion-label>
     </ion-item>
   </ion-list>
-  <div align="center"><img src="assets/quiz/quiz.svg" [routerLink]="[quiz.id, 'quiz']" routerLinkActive="router-link-active" ></div>
-  
+  <div align="center" *ngIf="quiz">
+    <img src="assets/quiz/quiz.svg" [routerLink]="[quiz.id, 'quiz']" routerLinkActive="router-link-active">
+  </div>
+
 </ion-content>

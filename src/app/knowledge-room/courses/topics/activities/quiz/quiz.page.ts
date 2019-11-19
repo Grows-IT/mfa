@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { NgForm, FormGroup, FormControl } from '@angular/forms';
-import { map, first, switchMap } from 'rxjs/operators';
-
-import { ActivatedRoute } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+
 import { CoursesService } from '../../../courses.service';
 import { Quiz } from '../../../course.model';
 import { QuizService } from './quiz.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-quiz',
@@ -25,6 +23,8 @@ export class QuizPage implements OnInit {
   isCompleted = true;
   attemptId: number;
   grade: number;
+  isLoading = false;
+  prevUrl: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -39,9 +39,11 @@ export class QuizPage implements OnInit {
       const currentTopic = topics.find(topic => topic.id === topicId);
       this.quiz = currentTopic.activities.find(activity => activity.id === activityId);
     });
+    this.setPrevUrl(topicId);
   }
 
   onStartQuiz() {
+    this.isLoading = true;
     this.quizService.startAttempt(this.quiz.instance)
       .pipe(
         switchMap(attemptId => {
@@ -52,17 +54,17 @@ export class QuizPage implements OnInit {
       .subscribe(questions => {
         this.question = questions;
         this.isCompleted = false;
+        this.isLoading = false;
       });
   }
 
-  public submitAnswers(form: NgForm) {
+  submitAnswers(form: NgForm) {
     if (form.status === 'INVALID') {
       return;
     }
-    this.isCompleted = false;
-    let data;
-    data = this.sliceStr(form.value, Object.keys(form.value));
+    const data = this.sliceStr(form.value, Object.keys(form.value));
 
+    this.isLoading = true;
     return this.quizService.submitQuiz(data, this.attemptId)
       .pipe(
         switchMap(res => {
@@ -70,13 +72,13 @@ export class QuizPage implements OnInit {
         })
       )
       .subscribe(quizGrade => {
-        console.log(quizGrade);
         this.isCompleted = true;
-        this.grade = quizGrade.grade;  
+        this.isLoading = false;
+        this.grade = quizGrade.grade;
       });
   }
 
-  public sliceStr(form: any, length) {
+  private sliceStr(form: any, length) {
     const data = [];
 
     for (let i = 0; i < length.length; i++) {
@@ -119,8 +121,12 @@ export class QuizPage implements OnInit {
         }
       }
     }
-    console.log(data);
-
     return data;
+  }
+
+  private setPrevUrl(topicId: number) {
+    const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
+    const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
+    this.prevUrl = `/tabs/knowledge-room/${categoryId}/courses/${courseId}/topics/${topicId}/activities`;
   }
 }
