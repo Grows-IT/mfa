@@ -38,7 +38,8 @@ export class PagesPage implements OnInit, OnDestroy {
       otherResources.forEach(resource => {
         htmlContent = htmlContent.replace(resource.name, resource.data);
       });
-      this.slideContents = htmlContent.split('<p></p>').map(str => this.sanitizer.bypassSecurityTrustHtml(str));
+      this.page.content = htmlContent;
+      // this.slideContents = htmlContent.split('<p></p>').map(str => this.sanitizer.bypassSecurityTrustHtml(str));
       this.isLoading = false;
     });
     this.setPrevUrl();

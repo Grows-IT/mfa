@@ -75,9 +75,13 @@ const routes: Routes = [
             loadChildren: '../qa/qa.module#QaPageModule',
           },
           {
+            path: 'new',
+            loadChildren: '../qa/qa-new/qa-new.module#QaNewPageModule'
+          },
+          {
             path: ':id',
             loadChildren: '../qa/qa-details/qa-details.module#QaDetailsPageModule'
-          }
+          },
         ]
       },
       {
