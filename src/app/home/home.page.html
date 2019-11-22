@@ -3,20 +3,24 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>
-      Modern Farm Academy
+    <ion-title *ngIf="user">
+      <ion-row justify-content-center>
+        <p>{{user.username}}</p>
+        <a routerLink="/auth/profile">
+          <ion-avatar *ngIf="user" padding>
+            <img [src]="user.imgData" />
+          </ion-avatar>
+        </a>
+      </ion-row>
     </ion-title>
-    <ion-buttons slot="primary">
-      <a routerLink="/auth/profile">
-        <ion-avatar *ngIf="user" padding>
-          <img [src]="user.imgData" />
-        </ion-avatar>
-      </a>
+    <ion-buttons slot="primary" (click)="presentPopover($event)">
+      <ion-badge *ngIf="numberBadge !== null" color="danger" clear>{{numberBadge}}</ion-badge>
+      <ion-icon name="notifications-outline" size="large"></ion-icon>
     </ion-buttons>
   </ion-toolbar>
 
   <ion-segment>
-    <ion-segment-button layout="icon-start">
+    <ion-segment-button layout="icon-start" [routerLink]="['favorite']">
       <ion-label color="light">Favorite</ion-label>
       <ion-icon src="assets/home/favorite.svg"></ion-icon>
     </ion-segment-button>
@@ -43,7 +47,7 @@
   <ion-text text-center>
     <h1 *ngIf="!isLoading && errorMessage && !newsArticles">{{ errorMessage }}</h1>
   </ion-text>
-  
+
   <ion-grid fixed="true" *ngIf="newsArticles">
     <ion-row>
       <ion-col margin-start>
@@ -71,7 +75,6 @@
         </ion-slide>
       </ion-slides>
     </ion-row>
-
     <ion-row>
       <ion-col margin-start>
         <ion-text>
@@ -102,4 +105,5 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
 </ion-content>
