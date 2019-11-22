@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "794895525147",
+    "firebase_url": "https://test-noti-e5696.firebaseio.com",
+    "project_id": "test-noti-e5696",
+    "storage_bucket": "test-noti-e5696.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:794895525147:android:a799674781a40e311cdfbe",
+        "android_client_info": {
+          "package_name": "com.growsit.mitrpholmfa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "794895525147-69h6n3p3gjkpb9tje4sglgo9r5639hrg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvjGELmVW7Jc4kSeOTN-bykBs-ESeUAiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "794895525147-69h6n3p3gjkpb9tje4sglgo9r5639hrg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

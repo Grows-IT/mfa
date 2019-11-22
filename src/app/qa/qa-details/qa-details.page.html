@@ -9,7 +9,7 @@
   <ion-title class="questionHead" color="dark" *ngIf="qaHeadDetail">
     <ion-item color="dark">
       <ion-label>
-        <h1>{{qaHeadDetail.subject}}</h1><br>
+        <h1 style="white-space: pre-line;">{{qaHeadDetail.subject}}</h1><br>
         <h2 style="white-space: pre-line;" [innerHTML]="qaHeadDetail.message"></h2>
         <p>{{qaHeadDetail.username}}</p>
       </ion-label>

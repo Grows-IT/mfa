@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar mode="ios" color="medium">
     <ion-buttons slot="start">
-      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" [defaultHref]="prevUrl"></ion-back-button>
+      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ"></ion-back-button>
     </ion-buttons>
     <ion-title>
       <h1>
@@ -9,22 +9,30 @@
         {{ course.name }}
       </h1>
     </ion-title>
+    <ion-buttons slot="primary">
+      <ion-button *ngIf="favourite" class="no-ripple" (click)="setFavourite(0)">
+        <ion-icon name="star"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!favourite" class="no-ripple" (click)="setFavourite(1)">
+        <ion-icon name="star-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <div class="outer">
-        <div class="middle">
-          <div class="inner">
-            <ion-spinner *ngIf="isLoading"></ion-spinner>
-          </div>
-        </div>
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <ion-spinner *ngIf="isLoading"></ion-spinner>
       </div>
+    </div>
+  </div>
 
   <ion-text text-center>
     <h1 *ngIf="!isLoading && errorMessage && !topics">{{ errorMessage }}</h1>
   </ion-text>
-  
+
   <ion-list *ngIf="!isLoading && topics">
     <ion-button margin expand="block" shape="round" *ngFor="let topic of topics"
       [routerLink]="[topic.id, 'activities']">
