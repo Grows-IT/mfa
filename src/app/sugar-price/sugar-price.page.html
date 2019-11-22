@@ -8,6 +8,8 @@
 </ion-header>
 
 <ion-content>
+  <ion-spinner *ngIf="!data" class="centerPage"></ion-spinner>
+
   <ion-card *ngIf="data">
     <ion-card-header>
       <h1>ราคาน้ำตาลประจำวันที่ {{ data.date | date: 'd/M/yy' }}</h1>
