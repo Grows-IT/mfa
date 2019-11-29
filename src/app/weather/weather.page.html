@@ -1,14 +1,116 @@
 <ion-header>
-  <ion-toolbar>
-      <ion-buttons slot="start">
-          <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/home"></ion-back-button>
-        </ion-buttons>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button
+        icon="ios-arrow-back"
+        text="ย้อนกลับ"
+        defaultHref="/tabs/home"
+      ></ion-back-button>
+    </ion-buttons>
     <ion-title>พยากรณ์อากาศ</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-text text-center>
-    <h1>Coming Soon</h1>
-  </ion-text>
+  <ion-grid *ngIf="weathers">
+    <ion-row>
+      <ion-col size="3"> </ion-col>
+      <ion-col size="6">
+        <ion-text text-center>
+          <h1 style="color: #0D708D;">{{weathers[0].city}}</h1>
+          <h5>{{weathers[0].description}}</h5>
+          <ion-title style="font-size: 550%;color: #0D708D;"
+            >{{weathers[0].temperature}}</ion-title
+          >
+        </ion-text>
+      </ion-col>
+      <ion-col size="3"> </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid *ngFor="let weather of weathers">
+    <ion-row style="border: 1px solid gray">
+      <ion-col size="2">
+        <h6>{{weather.date}}</h6>
+      </ion-col>
+      <ion-col size="8">
+        <ion-text text-center>
+          <div class="middle">
+            <!-- <img [src] ="weather.img" /> -->
+            <a style="color: black;padding-left: 5%;"
+              >{{weather.description}}</a
+            >
+          </div>
+        </ion-text>
+      </ion-col>
+      <ion-col size="2">
+        <h6 style="float: right;">{{weather.temperature}}</h6>
+      </ion-col>
+    </ion-row>
+
+    <!--
+    <ion-row>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4" style="border: 1px solid black;">
+            <ion-text text-center>
+            <h6>Mon 25</h6>
+            <div class="middle">
+                <img src="assets/icon/cloudy.png"><br> 
+             </div>
+            <h6 style="line-height: 120%;">24°<br>Cloudy</h6>
+          </ion-text>
+          </ion-col>
+          <ion-col size="4" style="border: 1px solid black;">
+            <ion-text text-center>
+             <h6>Tue 26</h6> 
+             <div class="middle">
+                <img src="assets/icon/cloudy.png">
+             </div>
+             <h6 style="line-height: 120%;">24°<br>Cloudy</h6>
+            </ion-text>
+          </ion-col>
+          <ion-col size="4" style="border: 1px solid black;">
+            <ion-text text-center>
+                <h6>Wed 27</h6> 
+                <div class="middle">
+                    <img src="assets/icon/cloudy.png">
+                 </div>
+                 <h6 style="line-height: 120%;">24°<br>Cloudy</h6>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+
+        <ion-row >          
+            <ion-col size="4" style="border: 1px solid black;">
+                <ion-text text-center>
+                <h6>Thu 28</h6>
+                <div class="middle">
+                    <img src="assets/icon/snowflake.png">
+                 </div>
+                 <h6 style="line-height: 120%">-10°<br>Snow</h6>
+              </ion-text>
+              </ion-col>
+              <ion-col size="4" style="border: 1px solid black;">
+                <ion-text text-center>
+                 <h6>Fri 29</h6> 
+                 <div class="middle">
+                    <img src="assets/icon/snowflake.png">
+                 </div>
+                 <h6 style="line-height: 120%;">-10°<br>Snow</h6>
+                </ion-text>
+              </ion-col>
+              <ion-col size="4" style="border: 1px solid black;">
+                <ion-text text-center>
+                    <h6>Sat 30</h6> 
+                    <div class="middle">
+                        <img src="assets/icon/snowflake.png">
+                     </div>
+                     <h6 style="line-height: 120%">-10°<br>Snow</h6>
+                </ion-text>
+              </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-row>-->
+  </ion-grid>
 </ion-content>
