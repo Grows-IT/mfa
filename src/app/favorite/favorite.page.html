@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar mode="ios" color="medium">
+    <ion-buttons slot="start">
+      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Favorite</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-spinner *ngIf="!myFavorite" class="centerPage"></ion-spinner>
+
+  <ion-list *ngIf="myFavorite">
+    <!-- <ion-item-sliding *ngFor="let item of myFavorite; let index = index;">
+      <ion-item lines="inset" [routerLink]="[item.categoryId, 'courses', item.id, 'topics']">
+        <ion-avatar slot="start">
+          <ion-img size [src]="item.imgUrl">
+          </ion-img>
+        </ion-avatar>
+        <ion-label>
+          {{ item.name }}
+        </ion-label>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-buttons slot="primary">
+          <ion-button *ngIf="myFavorite[index].favourite" class="no-ripple" (click)="setFavourite(0, item.id, index)">
+            <ion-icon name="star"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="!myFavorite[index].favourite" class="no-ripple" (click)="setFavourite(1, item.id, index)">
+            <ion-icon name="star-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item-options>
+    </ion-item-sliding> -->
+
+    <ion-item lines="inset" *ngFor="let item of myFavorite" [routerLink]="[item.categoryId, 'courses', item.id, 'topics']">
+      <ion-avatar slot="start">
+        <ion-img size [src]="item.imgUrl">
+        </ion-img>
+      </ion-avatar>
+      <ion-label>
+        {{ item.name }}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

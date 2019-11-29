@@ -7,7 +7,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 13
-        versionName "0.3.0"
+        versionName "0.3.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -38,6 +38,7 @@ dependencies {
 }
 
 apply from: 'capacitor.build.gradle'
+apply plugin: 'com.google.gms.google-services'
 
 try {
     def servicesJSON = file('google-services.json')

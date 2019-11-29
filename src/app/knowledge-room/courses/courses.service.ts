@@ -15,6 +15,7 @@ interface CoreEnrolResponseData {
   id: number;
   shortname: string;
   category: number;
+  isfavourite: boolean;
   visible: number;
   overviewfiles: OverviewFile[];
 }
@@ -179,12 +180,12 @@ export class CoursesService {
       withLatestFrom(this.authService.token),
       concatMap(([res, token]) => {
         if (!res.overviewfiles || res.overviewfiles.length === 0) {
-          return of(new Course(res.id, res.category, res.shortname));
+          return of(new Course(res.id, res.category, res.shortname, res.isfavourite));
         }
         const imgUrl = `${res.overviewfiles[0].fileurl}?token=${token}&offline=1`;
         return this.getBinaryFile(imgUrl).pipe(
           map(imgData => {
-            return new Course(res.id, res.category, res.shortname, imgUrl, imgData);
+            return new Course(res.id, res.category, res.shortname, res.isfavourite, imgUrl, imgData);
           })
         );
       }),
@@ -484,5 +485,48 @@ export class CoursesService {
       this._courses.next(courses);
       return courses;
     }));
+  }
+
+  setFavourite(status: boolean, courseId: number) {
+    return this.authService.token.pipe(
+      first(),
+      switchMap((token) => {
+        const params = new HttpParams({
+          fromObject: {
+            'courses[0][id]': `${courseId}`,
+            'courses[0][favourite]': `${status}`,
+            moodlewssettingfilter: 'true',
+            moodlewssettingfileurl: 'true',
+            wsfunction: 'core_course_set_favourite_courses',
+            wstoken: token,
+          }
+        });
+
+        return this.http.post<any>(environment.webServiceUrl, params);
+      }),
+      switchMap(() => {
+        return this.fetchCourses();
+      })
+    );
+  }
+
+  getFavourite() {
+    let _favoriteIndex = 0;
+    const myFavorite: any = [];
+    return this.authService.token.pipe(
+      first(),
+      switchMap(() => {
+        return this.fetchCourses();
+      }),
+      map((courses, index) => {
+        courses.forEach((el) => {
+          if (el.favourite === true) {
+            myFavorite[_favoriteIndex] = el;
+            _favoriteIndex += 1;
+          }
+        });
+        return myFavorite;
+      })
+    );
   }
 }
