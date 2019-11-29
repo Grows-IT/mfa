@@ -11,7 +11,9 @@ import { Topic, Course } from '../course.model';
   styleUrls: ['./topics.page.scss'],
 })
 export class TopicsPage implements OnInit, OnDestroy {
+  courses: Course[];
   isLoading = false;
+  favourite: boolean;
   topics: Topic[];
   course: Course;
   errorMessage: string;
@@ -28,7 +30,10 @@ export class TopicsPage implements OnInit, OnDestroy {
     this.isLoading = true;
     this.courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
+
       this.course = courses.find(course => course.id === this.courseId);
+      this.favourite = this.course.favourite;
+
     });
     this.setPrevUrl();
     this.coursesService.fetchCourseTopics(this.courseId).pipe(
@@ -62,5 +67,11 @@ export class TopicsPage implements OnInit, OnDestroy {
   private setPrevUrl() {
     const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
     this.prevUrl = `/tabs/knowledge-room/${categoryId}/courses`;
+  }
+
+  setFavourite(status: boolean) {
+    const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
+
+    this.coursesService.setFavourite(status, courseId).subscribe();
   }
 }
