@@ -10,6 +10,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppMinimize } from '@ionic-native/app-minimize/ngx';
+import { from } from 'rxjs';
 
 @NgModule({
   declarations: [AppComponent],
