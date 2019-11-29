@@ -3,16 +3,18 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>
-      Modern Farm Academy
-    </ion-title>
-    <ion-buttons slot="primary">
+    <ion-title *ngIf="user" style="margin-left:25%;">
+     <ion-row>
+        <h4> {{user.username}}</h4>
       <a routerLink="/auth/profile">
         <ion-avatar *ngIf="user" padding>
-          <img [src]="user.imgData" />
+          <img [src] ="user.imgData" />
         </ion-avatar>
-      </a>
-    </ion-buttons>
+      </a>  
+      </ion-row> 
+    </ion-title>
+    
+    <ion-icon name="notifications" slot="primary" style="margin-right: 5%;"></ion-icon>
   </ion-toolbar>
 
   <ion-segment>
