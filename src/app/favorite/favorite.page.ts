@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
-import { map, first, switchMap } from 'rxjs/operators';
-import { Course } from '../knowledge-room/courses/course.model';
-import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-favorite',
@@ -20,6 +17,12 @@ export class FavoritePage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.coursesService.getFavourite().subscribe((favourite) => {
+      this.myFavorite = favourite;
+    });
+  }
+
+  ionViewWillEnter() {
     this.coursesService.getFavourite().subscribe((favourite) => {
       this.myFavorite = favourite;
     });
