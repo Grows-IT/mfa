@@ -27,6 +27,7 @@
     "@capacitor/core": "1.1.1",
     "@capacitor/ios": "^1.1.1",
     "@ionic-native/app-minimize": "^5.14.0",
+    "@ionic-native/barcode-scanner": "^5.17.1",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/geolocation": "^5.17.0",
     "@ionic-native/splash-screen": "^5.0.0",
@@ -37,6 +38,7 @@
     "cordova-plugin-appminimize": "^1.0.1",
     "core-js": "^2.5.4",
     "fix-orientation-capacitor": "^0.1.1",
+    "phonegap-plugin-barcodescanner": "^8.1.0",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"

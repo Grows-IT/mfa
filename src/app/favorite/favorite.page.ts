@@ -9,7 +9,7 @@ import { CoursesService } from '../knowledge-room/courses/courses.service';
 })
 export class FavoritePage implements OnInit {
   _favoriteIndex: number = 0;
-  myFavorite: any = [];
+  myFavorite: any = null;
 
   constructor(
     private coursesService: CoursesService,
