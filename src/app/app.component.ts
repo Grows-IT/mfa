@@ -81,7 +81,7 @@ export class AppComponent implements OnInit, OnDestroy {
         setTimeout(( ) => {
       this.startapp = true;
       document.getElementById('myImg').style.display = 'none' ;
-    }, 5000);
+    }, 0);
         // this.animationImg = '../assets/home/mfa.gif';
       }
     });
