@@ -22,7 +22,6 @@ class Weather {
     public date: Date,
     public temperature: number,
     public description: string
-    //public img: string
   ) { }
 }
 
@@ -41,20 +40,18 @@ class Weather {
 })
 
 export class WeatherPage implements OnInit {
-    name = 'Angular';
-    weathers: Weather[];
+  name = 'Angular';
+  weathers: Weather[];
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    // tslint:disable-next-line: max-line-length
-    this.http.get<Res>('https://api.openweathermap.org/data/2.5/forecast?q=Bangkok&APPID=d1ce964032d54e762e9496e1f4e8eda8').subscribe(res => {
-      this.weathers = res.list.map(data => {
-        return new Weather(res.city.name, new Date(data.dt * 1000), data.main.temp, data.weather[0].main );
+    this.http.get<Res>('https://api.openweathermap.org/data/2.5/forecast?q=Bangkok&APPID=d1ce964032d54e762e9496e1f4e8eda8&units=metric')
+      .subscribe(res => {
+        this.weathers = res.list.map(data => {
+          return new Weather(res.city.name, new Date(data.dt * 1000), data.main.temp, data.weather[0].main);
+        });
       });
-      //console.log(this.weathers);
-    });
   }
-
 }
 

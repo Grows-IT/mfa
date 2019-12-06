@@ -162,7 +162,8 @@ export class QuizService {
             quizid: quizId.toString(),
             userid: userId.toString(),
             status: 'unfinished',
-            moodlewsrestformat: 'json'
+            moodlewsrestformat: 'json',
+            includepreviews: '1'
           }
         });
         return this.http.post<{ attempts: { id: number }[] }>(environment.webServiceUrl, params).pipe(

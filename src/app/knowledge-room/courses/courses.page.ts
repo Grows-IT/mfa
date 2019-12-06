@@ -34,6 +34,7 @@ export class CoursesPage implements OnInit, OnDestroy {
     this.coursesService.fetchCourses().pipe(
       catchError(() => this.coursesService.getCoursesFromStorage())
     ).subscribe(courses => {
+
       this.isLoading = false;
       if (!courses) {
         this.errorMessage = 'การเชื่อมต่อล้มเหลว';
