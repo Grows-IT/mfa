@@ -14,6 +14,7 @@ import { PopoverComponent } from './popover/popover.component';
 import { AgmCoreModule } from '@agm/core';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { environment } from '../environments/environment';
     AppMinimize,
     StatusBar,
     SplashScreen,
+    BarcodeScanner,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
