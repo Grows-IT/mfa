@@ -121,6 +121,10 @@ export class HomePage implements OnInit, OnDestroy {
         return this.http.post<any>('https://grows-it.moodlecloud.com/webservice/rest/server.php?moodlewsrestformat=json&', params);
       }),
       map((data) => {
+        if (data.notifications === null || data.notifications === undefined) {
+          return;
+        }
+
         console.log(data);
         // data.notifications.forEach((element) => {
         //   if (element.read === false) {

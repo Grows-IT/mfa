@@ -529,4 +529,8 @@ export class CoursesService {
       })
     );
   }
+
+  getNote(courseId: number) {
+
+  }
 }

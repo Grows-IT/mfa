@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512.017" height="181.582" viewBox="0 0 512.017 181.582">
+  <defs>
+    <filter id="Path_1326" x="0" y="0" width="512.017" height="181.582" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_1326)">
+    <path id="Path_1326-2" data-name="Path 1326" d="M21,0H473.017a21,21,0,0,1,21,21V142.582a21,21,0,0,1-21,21H21a21,21,0,0,1-21-21V21A21,21,0,0,1,21,0Z" transform="translate(9 6)" fill="#0f4532"/>
+  </g>
+  <text id="_คำนวณพื้นที่" data-name=" คำนวณพื้นที่" transform="translate(142.925 68.703)" fill="#fff" font-size="38" font-family="WorkSans-Bold, Work Sans" font-weight="700"><tspan x="0" y="0"> </tspan><tspan y="0" font-family="LeelawadeeUI-Bold, Leelawadee UI">คำนวณพื้นที่</tspan></text>
+  <text id="_Calculate_Area" data-name=" Calculate Area" transform="translate(163.593 124.242)" fill="#f5f5f5" font-size="26" font-family="Kanit-Regular, Kanit"><tspan x="0" y="0" xml:space="preserve"> Calculate Area</tspan></text>
+</svg>

@@ -1,0 +1,24 @@
+.verticalCenter {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.middle {
+  padding: 8px 0;
+}
+
+.nowWeatherImg > img {
+  width: 50%;
+}
+
+.centerPage {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
