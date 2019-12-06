@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar mode="ios" color="medium">
+    <ion-buttons slot="start">
+      <ion-back-button
+        icon="ios-arrow-back"
+        text="ย้อนกลับ"
+        defaultHref=""
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>New note</ion-title>
+    <ion-icon name="checkmark" style="float: right;"></ion-icon>  <!--complete-->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-item>
+        <ion-input type="text" ngModel name="message" required></ion-input>
+    </ion-item>
+</ion-content>
