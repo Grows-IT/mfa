@@ -11,12 +11,18 @@ import { NewsService } from './news/news.service';
 
 const { SplashScreen, App, Network } = Plugins;
 
+
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
+  element: HTMLImageElement;
+  startapp: boolean;
+  // animationImg: string;
+
   private networkHandler: PluginListenerHandle;
   public appPages = [{
     title: 'Home',
@@ -55,11 +61,13 @@ export class AppComponent implements OnInit, OnDestroy {
     private newsService: NewsService,
     private loadingCtrl: LoadingController,
     private navCtrl: NavController
-  ) { }
+  ) {
+    this.startapp = false;
+  }
 
   ngOnInit() {
     this.initializeApp();
-  }
+    }
 
   ngOnDestroy() {
     this.networkHandler.remove();
@@ -70,6 +78,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.platform.ready().then(() => {
       if (Capacitor.isPluginAvailable('SplashScreen')) {
         SplashScreen.hide();
+        setTimeout(( ) => {
+      this.startapp = true;
+      document.getElementById('myImg').style.display = 'none' ;
+    }, 5000);
+        // this.animationImg = '../assets/home/mfa.gif';
       }
     });
     // Set Android back-button to minimize the app.
