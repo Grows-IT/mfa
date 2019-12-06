@@ -12,6 +12,7 @@ export class Course {
     public id: number,
     public categoryId: number,
     public name: string,
+    public favourite?: boolean,
     public imgUrl?: string,
     public imgData?: string,
   ) {}
