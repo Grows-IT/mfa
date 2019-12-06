@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CoursesService } from '../../../courses.service';
 import { Quiz } from '../../../course.model';
 import { QuizService } from './quiz.service';
+import { queue } from 'rxjs/internal/scheduler/queue';
 
 @Component({
   selector: 'app-quiz',
@@ -48,10 +49,14 @@ export class QuizPage implements OnInit {
       .pipe(
         switchMap(attemptId => {
           this.attemptId = attemptId;
+          console.log(attemptId);
+          
           return this.quizService.fetchQuiz(attemptId);
         })
       )
       .subscribe(questions => {
+        console.log(questions);
+
         this.question = questions;
         this.isCompleted = false;
         this.isLoading = false;

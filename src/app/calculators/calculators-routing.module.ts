@@ -53,6 +53,10 @@ const routes: Routes = [
     path: 'assess-sugar',
     loadChildren: './assess-sugar/assess-sugar.module#AssessSugarPageModule'
   },
+  {
+    path: 'calculate-area',
+    loadChildren: './map/map.module#MapPageModule'
+  },
 ];
 
 @NgModule({
