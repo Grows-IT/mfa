@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      คำนวณพื้นที่
+    </ion-title>
+    <ion-buttons id="removeSharp" slot="primary">
+      <ion-icon name="trash" size="large"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="18" [mapTypeId]="'hybrid'" (mapReady)="onMapReady($event)">
+    <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+  </agm-map>
+  <div style="position: fixed; right: 10px; top: 61px; z-index: 10;">
+    <ion-buttons id="currentLocation" slot="primary">
+      <ion-icon name="locate" size="large"></ion-icon>
+    </ion-buttons>
+  </div>
+  <div style="position: absolute; left: 50%; bottom: 50px; z-index: 10;">
+    <p class="showArea" *ngIf="area">พื้นที่ทั้งหมด : {{area | number}} ตร.ม</p>
+    <p class="showArea" *ngIf="!area">พื้นที่ทั้งหมด : 0 ตร.ม</p>
+  </div>
+</ion-content>
