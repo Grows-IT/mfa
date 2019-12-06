@@ -1,0 +1,14 @@
+<ion-list>
+  <ion-spinner *ngIf="!arr" class="centerPage"></ion-spinner>
+
+  <div *ngIf="arr">
+    <span *ngFor="let item of arr.notifications">
+      <ion-item *ngIf="item.read" (click)="openNotification(item.contexturl)">
+        <h4>{{ item.smallmessage }}</h4>
+      </ion-item>
+      <ion-item *ngIf="!item.read" (click)="openNotification(item.contexturl)" color="dark">
+        <h4>{{ item.smallmessage }}</h4>
+      </ion-item>
+    </span>
+  </div>
+</ion-list>

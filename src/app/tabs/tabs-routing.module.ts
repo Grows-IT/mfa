@@ -6,6 +6,7 @@ import { UserGuard } from '../auth/user.guard';
 import { CategoriesGuard } from '../knowledge-room/categories.guard';
 import { CoursesGuard } from '../knowledge-room/courses/courses.guard';
 import { NewsGuard } from '../news/news.guard';
+import { TopicsGuard } from '../knowledge-room/courses/topics/topics.guard';
 
 const routes: Routes = [
   {
@@ -30,11 +31,109 @@ const routes: Routes = [
             ]
           },
           {
-            path: 'weather', loadChildren: '../weather/weather.module#WeatherPageModule'
+            path: 'weather',
+            loadChildren: '../weather/weather.module#WeatherPageModule'
           },
           {
-            path: 'sugar-price', loadChildren: '../sugar-price/sugar-price.module#SugarPricePageModule'
-          }
+            path: 'sugar-price',
+            loadChildren: '../sugar-price/sugar-price.module#SugarPricePageModule'
+          },
+          {
+            path: 'favorite',
+            children: [
+              {
+                path: '',
+                loadChildren: '../favorite/favorite.module#FavoritePageModule',
+                canLoad: [UserGuard]
+              },
+              {
+                path: ':categoryId',
+                children: [
+                  {
+                    path: 'courses',
+                    children: [
+                      {
+                        path: '',
+                        loadChildren: '../knowledge-room/knowledge-room.module#KnowledgeRoomPageModule',
+                        canLoad: [UserGuard, CategoriesGuard]
+                      },
+                      {
+                        path: ':courseId',
+                        children: [
+                          {
+                            path: 'topics',
+                            canActivate: [CoursesGuard],
+                            children: [
+                              {
+                                path: '',
+                                loadChildren: '../knowledge-room/courses/topics/topics.module#TopicsPageModule',
+                              },
+                              {
+                                path: ':topicId',
+                                children: [
+                                  {
+                                    path: 'activities',
+                                    canActivate: [TopicsGuard],
+                                    children: [
+                                      {
+                                        path: '',
+                                        loadChildren: '../knowledge-room/courses/topics/activities/activities.module#ActivitiesPageModule',
+                                      },
+                                      {
+                                        path: ':activityId',
+                                        children: [
+                                          {
+                                            path: 'pages',
+                                            loadChildren: '../knowledge-room/courses/topics/activities/pages/pages.module#PagesPageModule',
+                                          },
+                                          {
+                                            path: '',
+                                            redirectTo: 'pages',
+                                            pathMatch: 'full'
+                                          },
+                                          {
+                                            path: 'quiz',
+                                            loadChildren: '../knowledge-room/courses/topics/activities/quiz/quiz.module#QuizPageModule'
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    path: '',
+                                    redirectTo: 'activities',
+                                    pathMatch: 'full'
+                                  },
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            path: '',
+                            redirectTo: 'topics',
+                            pathMatch: 'full'
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    path: '',
+                    redirectTo: 'courses',
+                    pathMatch: 'full'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            path: 'qr-code',
+            loadChildren: '../qr-code/qr-code.module#QrCodePageModule'
+          },
+          {
+            path: 'note',
+            loadChildren: '../note/note.module#NotePageModule'
+          },
         ]
       },
       {
