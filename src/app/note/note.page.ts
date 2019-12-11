@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CoursesService } from '../knowledge-room/courses/courses.service';
-import { ActivatedRoute } from '@angular/router';
+import { NoteService } from './note.service';
 
 @Component({
   selector: 'app-note',
@@ -8,13 +7,22 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./note.page.scss'],
 })
 export class NotePage implements OnInit {
+  data: any;
 
   constructor(
-    private coursesService: CoursesService,
-    private activatedRoute: ActivatedRoute
+    private noteService: NoteService,
   ) { }
 
   ngOnInit() {
+    this.noteService.getAllNote().subscribe((data) => {
+      this.data = data.personalnotes;
+      // console.log(this.data);
+    });
   }
 
+  ionViewWillEnter() {
+    this.noteService.getAllNote().subscribe((data) => {
+      this.data = data.personalnotes;
+    });
+  }
 }

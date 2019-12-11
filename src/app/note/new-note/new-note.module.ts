@@ -5,13 +5,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { NotePage } from './note.page';
-import { CutTitlePipe } from './cut-title.pipe';
+import { NewNotePage } from './new-note.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: NotePage
+    component: NewNotePage
   }
 ];
 
@@ -22,6 +21,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [NotePage, CutTitlePipe]
+  declarations: [NewNotePage]
 })
-export class NotePageModule {}
+export class NewNotePageModule {}
