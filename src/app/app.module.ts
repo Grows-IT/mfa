@@ -19,7 +19,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 @NgModule({
   declarations: [
     AppComponent,
-    PopoverComponent
+    PopoverComponent,
   ],
   entryComponents: [
     PopoverComponent
