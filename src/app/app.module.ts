@@ -11,6 +11,10 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppMinimize } from '@ionic-native/app-minimize/ngx';
 import { PopoverComponent } from './popover/popover.component';
+import { AgmCoreModule } from '@agm/core';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
 @NgModule({
   declarations: [
@@ -25,11 +29,17 @@ import { PopoverComponent } from './popover/popover.component';
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyBAjkv0Xdfnxgj479POHG-akwgXD9zyLmM',
+      libraries: ['places', 'drawing', 'geometry'],
+    }),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     AppMinimize,
     StatusBar,
     SplashScreen,
+    BarcodeScanner,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

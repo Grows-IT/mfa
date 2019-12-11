@@ -12,8 +12,6 @@ const routes: Routes = [
   },
   { path: 'static', loadChildren: './static/static.module#StaticPageModule' },
   { path: 'qa-new', loadChildren: './qa/qa-new/qa-new.module#QaNewPageModule' },
-
-
 ];
 
 @NgModule({

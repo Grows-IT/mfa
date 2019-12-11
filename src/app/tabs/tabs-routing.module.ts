@@ -125,7 +125,15 @@ const routes: Routes = [
                 ]
               }
             ]
-          }
+          },
+          {
+            path: 'qr-code',
+            loadChildren: '../qr-code/qr-code.module#QrCodePageModule'
+          },
+          {
+            path: 'note',
+            loadChildren: '../note/note.module#NotePageModule'
+          },
         ]
       },
       {
