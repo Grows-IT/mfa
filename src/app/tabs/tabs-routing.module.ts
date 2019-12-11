@@ -132,7 +132,21 @@ const routes: Routes = [
           },
           {
             path: 'note',
-            loadChildren: '../note/note.module#NotePageModule'
+            children: [
+              {
+                path: '',
+                loadChildren: '../note/note.module#NotePageModule',
+                canLoad: [UserGuard]
+              },
+              {
+                path: 'new-note',
+                loadChildren: '../note/new-note/new-note.module#NewNotePageModule'
+              },
+              {
+                path: ':noteId',
+                loadChildren: '../note/note-details/note-details.module#NoteDetailsPageModule'
+              }
+            ]
           },
         ]
       },
