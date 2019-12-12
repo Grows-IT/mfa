@@ -11,8 +11,6 @@ import { NewsService } from './news/news.service';
 
 const { SplashScreen, App, Network } = Plugins;
 
-
-
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -21,7 +19,6 @@ const { SplashScreen, App, Network } = Plugins;
 export class AppComponent implements OnInit, OnDestroy {
   element: HTMLImageElement;
   startapp: boolean;
-  // animationImg: string;
 
   private networkHandler: PluginListenerHandle;
   public appPages = [{
@@ -67,7 +64,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initializeApp();
-    }
+  }
 
   ngOnDestroy() {
     this.networkHandler.remove();
@@ -78,19 +75,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this.platform.ready().then(() => {
       if (Capacitor.isPluginAvailable('SplashScreen')) {
         SplashScreen.hide();
-        setTimeout(( ) => {
-      this.startapp = true;
-      document.getElementById('myImg').style.display = 'none' ;
-    }, 0);
-        // this.animationImg = '../assets/home/mfa.gif';
+        setTimeout(() => {
+          this.startapp = true;
+         }, 2500);
       }
     });
+
     // Set Android back-button to minimize the app.
     App.addListener('backButton', () => {
       if (window.location.pathname === '/tabs/home' || window.location.pathname === '/auth/login') {
         this.appMinimize.minimize();
       } else if (window.location.pathname === '/tabs/qa' || window.location.pathname === '/tabs/knowledge-room' ||
-                window.location.pathname === '/tabs/calculators' || window.location.pathname === '/tabs/news') {
+        window.location.pathname === '/tabs/calculators' || window.location.pathname === '/tabs/news') {
         this.navCtrl.navigateBack('/tabs/home');
       }
     });
