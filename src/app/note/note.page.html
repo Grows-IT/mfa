@@ -12,21 +12,21 @@
 </ion-header>
 
 <ion-content>
-  <ion-list> 
+  <ion-list *ngIf="data">
     <ion-row>
       <ion-col>
-        <ion-item [routerLink]="['notedetails']">
-          <ion-label >
-            <h2>Message</h2>
-            <h3 style="float: right">date</h3>
+        <ion-item *ngFor="let item of data" [routerLink]="[item.id]">
+          <ion-label>
+            <h2>{{item.content | cutTitle}}</h2>
+            <h3 style="float: right">{{item.lastmodified * 1000 | date: 'd/M/yy, h:mm a'}}</h3>
           </ion-label>
         </ion-item>
       </ion-col>
     </ion-row>
   </ion-list>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
-      <ion-icon name="add" [routerLink]="['newnote']"></ion-icon>
+    <ion-fab-button [routerLink]="['new-note']">
+      <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>

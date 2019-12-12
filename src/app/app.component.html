@@ -1,7 +1,5 @@
 <ion-app>
-  <!-- <div id=splashScreen > -->
-     <img id="myImg" src="../assets/home/mfa.gif"> 
-  <!-- </div> -->
+  <img id="splash" *ngIf="!startapp" src="../assets/home/mfa.gif">
   <ion-split-pane *ngIf="startapp">
     <ion-menu type="overlay">
       <ion-header>
