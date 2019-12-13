@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -24,17 +24,24 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
-@import "~@ionic/angular/css/display.css";
 
 @media screen and (max-width: 575px){
     h1{
-        font-size: 22px;
+      font-size: 22px;
     }
-    h3{
-        font-size: 20px;
+    h2 {
+      font-size: 20px;
+    }
+    h3 {
+      font-size: 18px;
     }
     ion-card-title{
-        font-size: 18px;
+      font-size: 18px;
     }
+  
+  ion-label.ios, ion-label.md {
+    > h1 {
+      font-size: 18px;
+    }
+  }
 }
-
