@@ -26,7 +26,9 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot(
+      // {mode: 'md'}
+    ),
     AppRoutingModule,
     HttpClientModule,
     AgmCoreModule.forRoot({
@@ -40,8 +42,8 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
     StatusBar,
     SplashScreen,
     BarcodeScanner,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

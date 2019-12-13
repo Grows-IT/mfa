@@ -38,7 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
     url: '/tabs/calculators'
   }, {
     title: 'Question - Answer',
-    url: '/static'
+    url: '/tabs/qa'
   }, {
     title: 'Settings',
     url: '/static'

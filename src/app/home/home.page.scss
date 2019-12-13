@@ -3,7 +3,6 @@ ion-segment {
   opacity: 0.23;
   min-height: 40px;
 }
-
 .see-more {
   margin-top: 25px;
 }
@@ -50,4 +49,8 @@ ion-badge {
   padding: 5px !important;
   border-radius: 100%;
   pointer-events: none;
+}
+
+ion-segment-button {
+  border: none;
 }
