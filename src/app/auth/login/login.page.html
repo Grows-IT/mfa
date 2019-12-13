@@ -5,7 +5,7 @@
   <form [formGroup]="loginForm" (keyup.enter)="onSubmitLoginForm()">
     <ion-grid>
       <ion-row>
-        <ion-col offset="2" size="8">
+        <ion-col offset-lg="2" size-lg="8" offset-md="1" size-md="9">
           <ion-item lines="none">
             <ion-label position="fixed" color="danger">USERNAME</ion-label>
             <ion-input type="text" formControlName="username"></ion-input>
@@ -14,7 +14,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col offset="2" size="8">
+        <ion-col offset-lg="2" size-lg="8" offset-md="1" size-md="9">
           <ion-item lines="none">
             <ion-label position="fixed" color="danger">PASSWORD</ion-label>
             <ion-input [type]="passwordType" formControlName="password"></ion-input>

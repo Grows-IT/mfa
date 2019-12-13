@@ -6,7 +6,7 @@ import { User } from '../auth/user.model';
 import { NewsService } from '../news/news.service';
 import { NewsArticle } from '../news/news.model';
 import { switchMap, tap, map, catchError, first } from 'rxjs/operators';
-import { PopoverController, NavController } from '@ionic/angular';
+import { PopoverController, NavController, Platform } from '@ionic/angular';
 import { PopoverComponent } from '../popover/popover.component';
 
 import {
@@ -33,15 +33,19 @@ export class HomePage implements OnInit, OnDestroy {
   private newsSub: Subscription;
   private userSub: Subscription;
   dataReturned: any;
+  isAndroid: boolean;
 
   constructor(
     private authService: AuthService,
     private newsService: NewsService,
     private http: HttpClient,
     public popoverCtrl: PopoverController,
+    public platform: Platform
   ) { }
 
   ngOnInit() {
+    console.log(this.platform.is('android'));
+    this.isAndroid = this.platform.is('android');
     this.isLoading = true;
     this.userSub = this.authService.user.subscribe(user => {
       this.user = user;

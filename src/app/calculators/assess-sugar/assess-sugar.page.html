@@ -4,77 +4,73 @@
       <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/calculators"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-title>
+</ion-header>
+
+<ion-content>
+  <div class="headTitle" >
     <ion-text color="light" class="ion-text-center">
       <h1>การประเมินปริมาณอ้อย</h1>
       <h4>Assessment of Sugarcane Quantity</h4>
     </ion-text>
-  </ion-title>
-</ion-header>
-
-<ion-content>
+  </div>
   <!-- Input -->
   <form [formGroup]="inputForm" (keyup.enter)="calculateTotalWeight(inputForm.value)">
     <ion-grid class="ion-margin-top">
       <ion-row>
-        <ion-col size="1"></ion-col>
-        <ion-col size="4">
+        <ion-col size-xs="6" offset-sm="1" size-sm="4">
           <ion-text color="light" class="ion-float-right">
             <h4>พื้นที่ชาวไร่</h4>
           </ion-text>
         </ion-col>
-        <ion-col size="3">
+        <ion-col size-xs="4" size-sm="3">
           <input class="mfa-input-number" formControlName="area" type="number">
         </ion-col>
-        <ion-col size="2">
+        <ion-col size-xs="2" size-sm="2">
           <ion-text color="light">
             <h4> ไร่</h4>
           </ion-text>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size="1"></ion-col>
-        <ion-col size="4">
+        <ion-col size-xs="6" offset-sm="1" size-sm="4">
           <ion-text color="light" class="ion-float-right">
             <h4>ความกว้างของพื้นที่</h4>
           </ion-text>
         </ion-col>
-        <ion-col size="3">
+        <ion-col size-xs="4" size-sm="3">
           <input class="mfa-input-number" formControlName="areaWidth" type="number">
         </ion-col>
-        <ion-col size="2">
+        <ion-col size-xs="2" size-sm="2">
           <ion-text color="light">
             <h4> เมตร</h4>
           </ion-text>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size="1"></ion-col>
-        <ion-col size="4">
+        <ion-col size-xs="6" offset-sm="1" size-sm="4">
           <ion-text color="light" class="ion-float-right">
             <h4>ระยะร่องปลูก</h4>
           </ion-text>
         </ion-col>
-        <ion-col size="3">
+        <ion-col size-xs="4" size-sm="3">
           <input class="mfa-input-number" formControlName="gap" type="number">
         </ion-col>
-        <ion-col size="2">
+        <ion-col size-xs="2" size-sm="2">
           <ion-text color="light">
             <h4> เมตร</h4>
           </ion-text>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size="1"></ion-col>
-        <ion-col size="4">
+        <ion-col size-xs="6" offset-sm="1" size-sm="4">
           <ion-text color="light" class="ion-float-right">
             <h4>จำนวนหน่ออ้อย</h4>
           </ion-text>
         </ion-col>
-        <ion-col size="3">
+        <ion-col size-xs="4" size-sm="3">
           <input class="mfa-input-number" formControlName="caneBlock" type="number">
         </ion-col>
-        <ion-col size="2">
+        <ion-col size-xs="2" size-sm="2">
           <ion-text color="light">
             <h4> หน่อ</h4>
           </ion-text>
@@ -82,7 +78,7 @@
       </ion-row>
     </ion-grid>
     <div padding align="center">
-      <ion-button color="primary" shape="round" size="large" (click)="calculateTotalWeight(inputForm.value)"
+      <ion-button color="primary" shape="round" size-sm="large" (click)="calculateTotalWeight(inputForm.value)"
         [disabled]="inputForm.invalid">คำนวณ</ion-button>
     </div>
   </form>
@@ -91,32 +87,30 @@
   <div *ngIf="showResult">
     <ion-grid class="ion-margin-top">
       <ion-row>
-        <ion-col size="1"></ion-col>
-        <ion-col size="4">
+        <ion-col size-xs="6" offset-sm="1" size-sm="4">
           <ion-text color="light" class="ion-float-right">
             <h4>น้ำหนักอ้อยทั้งพื้นที่</h4>
           </ion-text>
         </ion-col>
-        <ion-col size="3">
+        <ion-col size-xs="4" size-sm="3">
           <p class="result-border">{{ totalWeightAll.toFixed(0)| number }}</p>
         </ion-col>
-        <ion-col size="2">
+        <ion-col size-xs="2" size-sm="2">
           <ion-text color="light">
             <h4>ตัน</h4>
           </ion-text>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size="1"></ion-col>
-        <ion-col size="4">
+        <ion-col size-xs="6" offset-sm="1" size-sm="4">
           <ion-text color="light" class="ion-float-right">
             <h4>ผลผลิตอ้อย ต่อ ไร่</h4>
           </ion-text>
         </ion-col>
-        <ion-col size="3">
+        <ion-col size-xs="4" size-sm="3">
           <p class="result-border">{{ totalOutput.toFixed(0)| number }}</p>
         </ion-col>
-        <ion-col size="2">
+        <ion-col size-xs="2" size-sm="2">
           <ion-text color="light">
             <h4>ตัน/ไร่</h4>
           </ion-text>
