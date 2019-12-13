@@ -13,7 +13,7 @@
         <ion-col>
           <ion-item *ngFor="let item of allDiscus" [routerLink]="[item.id]">
             <ion-label>
-              <h1>{{ item.subject }}</h1>
+              <h2>{{ item.subject }}</h2>
               <h3>{{ item.username }} <span class="date">{{ item.date | date: 'd/M/yy, h:mm a' }}</span></h3>
             </ion-label>
           </ion-item>
