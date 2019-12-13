@@ -26,6 +26,7 @@
     <h1 *ngIf="!isLoading && errorMessage && !courses">{{ errorMessage }}</h1>
   </ion-text>
 
+  <!-- talet size -->
   <ion-grid fixed="true" *ngIf="!isLoading && courses" class="ion-hide-down">
     <ion-row>
       <ion-col text-center size="4" *ngFor="let course of courses">
@@ -39,12 +40,13 @@
     </ion-row>
   </ion-grid>
 
+  <!-- mobile size -->
   <ion-grid fixed="true" *ngIf="!isLoading && courses" class="ion-hide-sm-up"> 
     <ion-row *ngFor="let course of courses" [routerLink]="[course.id, 'topics']">
-      <ion-col size="4">
-        <img [src]="course.imgData" />
+      <ion-col size="3">
+        <img class="mImgSize" [src]="course.imgData" />
       </ion-col>
-      <ion-col size="8">
+      <ion-col size="9">
         <h3>{{ course.name }}</h3>
       </ion-col>
     </ion-row>

@@ -11,10 +11,7 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   { path: 'static', loadChildren: './static/static.module#StaticPageModule' },
-  { path: 'qa-new', loadChildren: './qa/qa-new/qa-new.module#QaNewPageModule' },  { path: 'new-note', loadChildren: './note/new-note/new-note.module#NewNotePageModule' },
-  { path: 'note-details', loadChildren: './note/note-details/note-details.module#NoteDetailsPageModule' },
-
-
+  { path: 'qa-new', loadChildren: './qa/qa-new/qa-new.module#QaNewPageModule' }
 ];
 
 @NgModule({
