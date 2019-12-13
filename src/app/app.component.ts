@@ -77,11 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
         SplashScreen.hide();
         setTimeout(() => {
           this.startapp = true;
-<<<<<<< HEAD
-        }, 0);
-=======
          }, 2500);
->>>>>>> origin/pr/1
       }
     });
 

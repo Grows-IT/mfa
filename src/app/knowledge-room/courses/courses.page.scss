@@ -1,32 +1,37 @@
 ion-card {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 ion-toolbar {
-    --min-height: 120px;
+  --min-height: 120px;
 }
 
 .title-image {
-    vertical-align: middle;
-    height: 70px;
+  vertical-align: middle;
+  height: 70px;
 }
 
 .outer {
-    display: table;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-  }
-  
-  .middle {
-    display: table-cell;
-    vertical-align: middle;
-  }
-  
-  .inner {
-    margin-left: auto;
-    margin-right: auto;
-    width: 1px;
-  }
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.middle {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.inner {
+  margin-left: auto;
+  margin-right: auto;
+  width: 1px;
+}
+
+.mImgSize {
+  width: 18vw;
+  height: 18vw;
+}
