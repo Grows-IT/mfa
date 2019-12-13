@@ -30,8 +30,8 @@
       <ion-col text-center size="4" *ngFor="let course of courses">
         <ion-card button="true" [routerLink]="[course.id, 'topics']">
           <img [src]="course.imgData" />
-          <ion-card-header>
-            <ion-card-title>{{ course.name }}</ion-card-title>
+          <ion-card-header mode="md">
+            <ion-card-title mode="md">{{ course.name }}</ion-card-title>
           </ion-card-header>
         </ion-card>
       </ion-col>

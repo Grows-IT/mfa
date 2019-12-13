@@ -60,7 +60,7 @@ export class NoteDetailsPage implements OnInit {
             this.deleteNote();
           }
         }, {
-          text: 'ล้อเล่นจ้า',
+          text: 'ยกเลิก',
           role: 'cancel'
         }
       ]
