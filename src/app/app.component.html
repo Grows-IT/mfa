@@ -2,15 +2,15 @@
   <img id="splash" *ngIf="!startapp" src="../assets/home/mfa.gif">
   <ion-split-pane *ngIf="startapp">
     <ion-menu type="overlay">
-      <ion-header>
-        <ion-toolbar>
+      <ion-header mode="md">
+        <ion-toolbar mode="md">
           <ion-title color="light">Menu</ion-title>
-        </ion-toolbar>
+        </ion-toolbar >
       </ion-header>
       <ion-content>
         <ion-list>
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-            <ion-item button="true" [routerDirection]="'root'" (click)="navigate(p)">
+            <ion-item button="true" [routerDirection]="'root'" mode="md" (click)="navigate(p)">
               <ion-label color="light">
                 {{p.title}}
               </ion-label>
