@@ -44,7 +44,7 @@ export class HomePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    console.log(this.platform.is('android'));
+    // console.log(this.platform.is('android'));
     this.isAndroid = this.platform.is('android');
     this.isLoading = true;
     this.userSub = this.authService.user.subscribe(user => {
@@ -55,25 +55,25 @@ export class HomePage implements OnInit, OnDestroy {
     });
 
     // Register with Apple / Google to receive push via APNS/FCM
-    PushNotifications.register();
+    // PushNotifications.register();
 
-    // Show us the notification payload if the app is open on our device
-    // ถ้าอยู่ในแอพ
-    PushNotifications.addListener('pushNotificationReceived',
-      (notification: PushNotification) => {
-        alert('Push received: ' + JSON.stringify(notification));
-      }
-    );
+    // // Show us the notification payload if the app is open on our device
+    // // ถ้าอยู่ในแอพ
+    // PushNotifications.addListener('pushNotificationReceived',
+    //   (notification: PushNotification) => {
+    //     alert('Push received: ' + JSON.stringify(notification));
+    //   }
+    // );
 
-    // Method called when tapping on a notification
-    // ถ้าอยู่นอกแอพ
-    PushNotifications.addListener('pushNotificationActionPerformed',
-      (notification: PushNotificationActionPerformed) => {
-        alert('Push action performed: ' + JSON.stringify(notification));
-      }
-    );
+    // // Method called when tapping on a notification
+    // // ถ้าอยู่นอกแอพ
+    // PushNotifications.addListener('pushNotificationActionPerformed',
+    //   (notification: PushNotificationActionPerformed) => {
+    //     alert('Push action performed: ' + JSON.stringify(notification));
+    //   }
+    // );
 
-    this.getNumberListNotification().subscribe();
+    // this.getNumberListNotification().subscribe();
 
   }
 

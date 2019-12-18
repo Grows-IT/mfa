@@ -9,14 +9,14 @@
         {{ course.name }}
       </h3>
     </ion-title>
-    <ion-buttons slot="primary">
+    <!-- <ion-buttons slot="primary">
       <ion-button *ngIf="favourite" class="no-ripple" (click)="setFavourite(0)">
         <ion-icon name="star"></ion-icon>
       </ion-button>
       <ion-button *ngIf="!favourite" class="no-ripple" (click)="setFavourite(1)">
         <ion-icon name="star-outline"></ion-icon>
       </ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 
@@ -35,7 +35,7 @@
 
   <ion-list *ngIf="!isLoading && topics">
     <ion-button margin expand="block" shape="round" *ngFor="let topic of topics"
-      [routerLink]="[topic.id, 'activities']">
+      [routerLink]="[topic.id, 'activities']" class="ion-text-wrap">
       <h4>{{ topic.name }}</h4>
     </ion-button>
   </ion-list>

@@ -18,11 +18,13 @@ export class CalculatorsPage implements OnInit {
     id: '3',
     img: 'assets/calculators/sugarcane.svg',
     url: 'assess-sugar'
-  }, {
-    id: '4',
-    img: 'assets/calculators/calculateArea.svg',
-    url: 'calculate-area'
-  }];
+  },
+    // {
+    //   id: '4',
+    //   img: 'assets/calculators/calculateArea.svg',
+    //   url: 'calculate-area'
+    // }
+  ];
 
   constructor() { }
 
