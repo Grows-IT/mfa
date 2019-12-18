@@ -19,8 +19,8 @@ export class QaPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.qaService.getDiscussions().subscribe((qa) => {
-      return this.allDiscus = qa;
-    });
+    // this.qaService.getDiscussions().subscribe((qa) => {
+    //   return this.allDiscus = qa;
+    // });
   }
 }
