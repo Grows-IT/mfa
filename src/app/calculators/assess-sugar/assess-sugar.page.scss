@@ -1,39 +1,41 @@
 ion-header {
-    background-color: var(--ion-color-primary);
+  background-color: var(--ion-color-primary);
 }
 
-ion-content{
-    --ion-background-color: var(--ion-color-tertiary);
-}
-.mfa-input-number{
-    border-width: 0px;
-    border-radius: 20px; 
-    padding: 12px 0px; 
-    text-align: center;
-    margin: 6px 5px 8px 5px; 
-    background-color: #FFFFFF;
-    //background-color:var(--ion-color-medium);
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    -webkit-appearance: none; 
-    -moz-appearance:textfield;
-    color: var(--ion-color-dark);
-    font-weight: bold;
-    font-size: 1em;
-    width: 95%;
-    -moz-appearance: textfield;
-    -webkit-appearance: none;
+ion-content {
+  --ion-background-color: var(--ion-color-tertiary);
 }
 
-p.result-border{
-    border-width: 0px;
-    border-radius: 20px; 
-    padding: 12px 0px; 
-    text-align: center;
-    margin: 6px 5px 8px 5px; 
-    background-color: lightgrey;
-    font-weight: bold;
-    font-size: 1em;
-    width: 95%;
-    
+.headTitle {
+  padding: 0.67em 0 1.33em;
+  background: var(--ion-color-primary);
+}
+
+.mfa-input-number {
+  border-width: 0px;
+  border-radius: 20px;
+  padding: 12px 0px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1em;
+  width: 95%;
+  margin: 6px 5px 8px 5px;
+  background-color: #ffffff;
+  color: var(--ion-color-dark);
+  -webkit-border-radius: 20px;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  -moz-border-radius: 20px;
+}
+
+p.result-border {
+  border-width: 0px;
+  border-radius: 20px;
+  padding: 12px 0px;
+  text-align: center;
+  margin: 6px 5px 8px 5px;
+  background-color: lightgrey;
+  font-weight: bold;
+  font-size: 1em;
+  width: 95%;
 }

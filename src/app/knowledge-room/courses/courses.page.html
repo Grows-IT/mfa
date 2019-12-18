@@ -1,13 +1,14 @@
 <ion-header>
   <ion-toolbar mode="ios" color="medium">
     <ion-buttons slot="start">
-      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/knowledge-room"></ion-back-button>
+      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/knowledge-room" class="ion-hide-down"></ion-back-button>
+      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" style="font-size: 15px;" defaultHref="/tabs/knowledge-room" class="ion-hide-sm-up"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      <h1>
+      <h3>
         <img class="title-image" [src]="category.imgData" />
         {{ category.name }}
-      </h1>
+      </h3>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -24,17 +25,30 @@
   <ion-text text-center>
     <h1 *ngIf="!isLoading && errorMessage && !courses">{{ errorMessage }}</h1>
   </ion-text>
-  
-  <ion-grid fixed="true" *ngIf="!isLoading && courses">
+
+  <ion-grid fixed="true" *ngIf="!isLoading && courses" class="ion-hide-down">
     <ion-row>
       <ion-col text-center size="4" *ngFor="let course of courses">
         <ion-card button="true" [routerLink]="[course.id, 'topics']">
           <img [src]="course.imgData" />
-          <ion-card-header>
-            <ion-card-title>{{ course.name }}</ion-card-title>
+          <ion-card-header mode="md">
+            <ion-card-title mode="md">{{ course.name }}</ion-card-title>
           </ion-card-header>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <ion-grid fixed="true" *ngIf="!isLoading && courses" class="ion-hide-sm-up"> 
+    <ion-row *ngFor="let course of courses" [routerLink]="[course.id, 'topics']">
+      <ion-col size="4">
+        <img [src]="course.imgData" />
+      </ion-col>
+      <ion-col size="8">
+        <h3>{{ course.name }}</h3>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  
 </ion-content>
