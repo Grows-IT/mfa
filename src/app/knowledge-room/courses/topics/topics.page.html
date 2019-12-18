@@ -4,10 +4,10 @@
       <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      <h1>
+      <h3>
         <img class="title-image" [src]="course.imgData" />
         {{ course.name }}
-      </h1>
+      </h3>
     </ion-title>
     <ion-buttons slot="primary">
       <ion-button *ngIf="favourite" class="no-ripple" (click)="setFavourite(0)">

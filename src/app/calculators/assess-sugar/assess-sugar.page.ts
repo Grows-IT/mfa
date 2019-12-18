@@ -18,7 +18,7 @@ export class AssessSugarPage implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-  ) { 
+  ) {
     this.inputForm = this.formBuilder.group({
       area: ['', Validators.min(1)],
       areaWidth: ['', Validators.min(1)],

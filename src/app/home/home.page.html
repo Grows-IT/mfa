@@ -13,13 +13,13 @@
         </a>
       </ion-row>
     </ion-title>
-    <ion-buttons slot="primary" (click)="presentPopover($event)">
+    <ion-buttons slot="primary" (click)="presentPopover($event)" >
       <ion-badge *ngIf="numberBadge !== null" color="danger" clear>{{numberBadge}}</ion-badge>
       <ion-icon name="notifications-outline" size="large"></ion-icon>
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-segment>
+  <ion-segment *ngIf="!isAndroid" style="padding: 7px 0;">
     <ion-segment-button layout="icon-start" [routerLink]="['favorite']">
       <ion-label color="light">Favorite</ion-label>
       <ion-icon src="assets/home/favorite.svg"></ion-icon>
@@ -33,6 +33,21 @@
       <ion-icon src="assets/home/qr.svg"></ion-icon>
     </ion-segment-button>
   </ion-segment>
+
+  <ion-segment *ngIf="isAndroid">
+      <ion-segment-button layout="icon-start" [routerLink]="['favorite']">
+        <ion-label color="light">Favorite</ion-label>
+        <ion-icon src="assets/home/favorite.svg"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button layout="icon-start" [routerLink]="['note']">
+        <ion-label color="light">Note</ion-label>
+        <ion-icon src="assets/home/note.svg"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button layout="icon-start" [routerLink]="['qr-code']" >
+        <ion-label color="light">QR Code</ion-label>
+        <ion-icon src="assets/home/qr.svg"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
 </ion-header>
 
 <ion-content>
@@ -57,7 +72,7 @@
       </ion-col>
       <ion-col class="see-more" margin-end text-end>
         <a routerLink="/tabs/news">
-          <ion-text color="medium">SEE MORE</ion-text>
+          <ion-text color="medium">ดูเพิ่มเติม</ion-text>
         </a>
       </ion-col>
     </ion-row>
