@@ -11,12 +11,13 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-title text-center>
-    ตารางค่าใช้จ่าย: <ion-text color="light">{{ result.landSize | number }} ไร่</ion-text>
-  </ion-title>
+  
 </ion-header>
 
 <ion-content>
+  <div class="tdhead">
+    ตารางค่าใช้จ่าย: <ion-text color="light">{{ result.landSize | number }} ไร่</ion-text>
+  </div>
   <table style="width:100%">
     <tr>
       <td rowspan=2 class="tdtopic" style="font-size:29px; height:100px;">รายละเอียดกิจกรรม</td>
