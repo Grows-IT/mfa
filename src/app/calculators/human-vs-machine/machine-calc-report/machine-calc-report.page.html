@@ -1,12 +1,15 @@
-<ion-content no-padding no-margin>
-  <table style="width:100%">
-    <tr>
-      <td class="tdhead" colspan="4">
-        <ion-buttons slot="start">
+<ion-header class="header">
+<ion-buttons slot="start">
           <ion-back-button color="black" icon="ios-arrow-back" text="ย้อนกลับ"
             defaultHref="/tabs/calculators/human-vs-machine">
           </ion-back-button>
         </ion-buttons>
+</ion-header>
+<ion-content no-padding no-margin>
+  <table style="width:100%">
+    <tr>
+      <td class="tdhead" colspan="4">
+        
         ตารางค่าใช้จ่าย: <ion-text color="light">{{ result1Rai.sugarcaneWeight | number }} ตัน</ion-text>
       </td>
     </tr>
