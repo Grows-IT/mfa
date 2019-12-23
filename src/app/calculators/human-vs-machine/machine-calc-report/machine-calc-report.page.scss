@@ -28,11 +28,20 @@ tr,td{
 }
 .tdhead{
     background-color: #FFAE10;
-    font-size:49px; 
+    font-size:30px; 
+    padding: 20px;
     text-align: center;
     vertical-align: middle;
-    height: 167px;
+    // height: 167px;
 }
+.header{
+    background-color: #FFAE10;
+    height: auto;
+    > ion-buttons{
+        padding: 10px 20px;
+    }
+}
+
 .tdbody{
     background-color: #E2DBD2;
     font-size:20px;
