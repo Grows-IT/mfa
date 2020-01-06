@@ -15,7 +15,10 @@
           <h1>My Account</h1>
         </ion-text>
         <ion-avatar>
-          <ion-img [src]="user.imgUrl" (click)="onPickImage()">
+          <div text-center *ngIf="isLoading">
+            <ion-spinner></ion-spinner>
+          </div>
+          <ion-img *ngIf="!isLoading" [src]="user.imgUrl" (click)="onPickImage()">
             <input *ngIf="usePicker" class="picker" type="file" accept="image/jpeg" #filePicker
               (change)="onFileChosen($event)" />
           </ion-img>

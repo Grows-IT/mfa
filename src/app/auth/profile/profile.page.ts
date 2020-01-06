@@ -118,6 +118,7 @@ export class ProfilePage implements OnInit, OnDestroy {
       source: CameraSource.Prompt,
       resultType: CameraResultType.DataUrl
     });
+    this.isLoading = true;
     const fixed = await fixOrientation(image);
     const blob = base64toBlob(fixed.replace('data:image/jpeg;base64,', ''), 'image/jpeg');
     this.updateProfilePicture(blob);
