@@ -54,3 +54,12 @@ ion-badge {
 ion-segment-button {
   border: none;
 }
+
+ion-row.ios {
+  ion-avatar,
+  ion-avatar > img {
+    border: radius 100%;
+    min-width: 20px;
+    min-height: 20px;
+  }
+}
