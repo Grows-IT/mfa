@@ -16,7 +16,7 @@ export class CalculatorsPage implements OnInit {
     url: 'human-vs-machine'
   }, {
     id: '3',
-    img: 'assets/calculators/sugarcane.svg',
+    img: 'assets/calculators/sugarcane.png',
     url: 'assess-sugar'
   },
     // {
