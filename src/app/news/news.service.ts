@@ -6,6 +6,7 @@ import { Plugins } from '@capacitor/core';
 import { Page } from '../knowledge-room/courses/course.model';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
 import { NewsArticle } from './news.model';
+import { DomSanitizer } from '@angular/platform-browser';
 
 const { Storage } = Plugins;
 
@@ -16,7 +17,8 @@ export class NewsService {
   private _newsArticles = new BehaviorSubject<NewsArticle[]>(null);
 
   constructor(
-    private coursesService: CoursesService
+    private coursesService: CoursesService,
+    private domSanitizer: DomSanitizer
   ) { }
 
   get newsArticles() {
@@ -53,14 +55,11 @@ export class NewsService {
             content = content.replace(regex, '"');
             content = content.replace(resource.name, resource.data);
           });
-          const newsArticle = new NewsArticle(page.id, page.name, content);
-          if (imgRes) {
-            newsArticle.imgUrl = imgRes.url;
-            newsArticle.imgData = imgRes.data;
-          }
+          const description = this.domSanitizer.bypassSecurityTrustHtml(page.description);
+          const newsArticle = new NewsArticle(page.id, page.name, content, description);
           return newsArticle;
         });
-        return newsArticles;
+        return newsArticles.reverse();
       }),
       tap(newsArticles => {
         this._newsArticles.next(newsArticles);

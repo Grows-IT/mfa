@@ -1,10 +1,11 @@
+import { SafeHtml } from '@angular/platform-browser';
+
 export class NewsArticle {
   constructor(
     public id: number,
     public name: string,
     public content: string,
-    public imgUrl?: string,
-    public imgData?: string
+    public description: SafeHtml,
   ) {}
 
   toObject() {
@@ -12,8 +13,6 @@ export class NewsArticle {
       id: this.id,
       name: this.name,
       content: this.content,
-      imgUrl: this.imgUrl,
-      imgData: this.imgData
     };
   }
 }

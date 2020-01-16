@@ -35,6 +35,7 @@ interface Module {
   instance: number;
   name: string;
   modname: string;
+  description: string;
   contents: ContentData[];
 }
 
@@ -384,7 +385,7 @@ export class CoursesService {
         }),
         toArray(),
         map(resources => {
-          return new Page(mod.id, mod.name, null, resources);
+          return new Page(mod.id, mod.name, null, mod.description, resources);
         })
       );
     } else if (mod.modname === 'forum') {
@@ -459,7 +460,7 @@ export class CoursesService {
                 resources = activityData.resources.map(resourceData => {
                   return new PageResource(resourceData.name, resourceData.type, resourceData.url, resourceData.data);
                 });
-                return new Page(activityData.id, activityData.name, activityData.content, resources, activityData.img);
+                return new Page(activityData.id, activityData.name, activityData.content, null, resources, activityData.img);
               }
             }
           });
