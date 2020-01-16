@@ -48,7 +48,9 @@ export class NewsService {
           const imgRes = page.resources.find(resource => resource.type && resource.type.includes('image'));
           const otherRes = page.resources.filter(resource => resource.type);
           let content = decodeURI(contentRes.data);
+          const regex = /(\?time=.+?")/;
           otherRes.forEach(resource => {
+            content = content.replace(regex, '"');
             content = content.replace(resource.name, resource.data);
           });
           const newsArticle = new NewsArticle(page.id, page.name, content);

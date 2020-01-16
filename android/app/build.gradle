@@ -6,8 +6,8 @@ android {
         applicationId "com.growsit.mitrpholmfa"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 21
-        versionName "0.3.9"
+        versionCode 22
+        versionName "0.3.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
