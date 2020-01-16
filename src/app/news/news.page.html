@@ -23,8 +23,10 @@
     <ion-row *ngFor="let article of newsArticles">
       <ion-col>
         <ion-card [routerLink]="article.id">
-          <div align="center">
-            <img *ngIf="article.imgUrl" class="card-img" [src]="article.imgData" />
+          <div>
+          </div>
+          <div class="newsInnerHtml" align="center" [innerHTML]="article.description">
+            <!-- <img *ngIf="article.imgUrl" class="card-img" [src]="article.imgData" /> -->
           </div>
           <ion-card-header>
             <ion-card-title>{{ article.name }}</ion-card-title>

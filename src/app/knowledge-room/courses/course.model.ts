@@ -60,6 +60,7 @@ export class Page {
     public id: number,
     public name: string,
     public content: string,
+    public description?: string,
     public resources?: PageResource[],
     public img?: string
   ) { }
