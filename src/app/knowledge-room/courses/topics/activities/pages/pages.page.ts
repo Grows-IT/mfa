@@ -35,10 +35,14 @@ export class PagesPage implements OnInit, OnDestroy {
       const htmlResource = this.page.resources.find(resource => resource.name === 'index.html');
       let htmlContent = decodeURI(htmlResource.data);
       const otherResources = this.page.resources.filter(resource => resource.type);
+      const regex = /(\?time=.+?")/;
       otherResources.forEach(resource => {
+        htmlContent = htmlContent.replace(regex, '"');
         htmlContent = htmlContent.replace(resource.name, resource.data);
       });
+
       this.page.content = htmlContent;
+
       // this.slideContents = htmlContent.split('<p></p>').map(str => this.sanitizer.bypassSecurityTrustHtml(str));
       this.isLoading = false;
     });
