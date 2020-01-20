@@ -5,7 +5,9 @@ export class NewsArticle {
     public id: number,
     public name: string,
     public content: string,
-    public description: SafeHtml,
+    public description: string,
+    // public imgUrl?: string,
+    // public imgData?: string
   ) {}
 
   toObject() {
@@ -13,6 +15,8 @@ export class NewsArticle {
       id: this.id,
       name: this.name,
       content: this.content,
+      // imgUrl: this.imgUrl,
+      // imgData: this.imgData
     };
   }
 }

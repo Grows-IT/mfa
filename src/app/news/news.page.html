@@ -23,8 +23,6 @@
     <ion-row *ngFor="let article of newsArticles">
       <ion-col>
         <ion-card [routerLink]="article.id">
-          <div>
-          </div>
           <div class="newsInnerHtml" align="center" [innerHTML]="article.description">
             <!-- <img *ngIf="article.imgUrl" class="card-img" [src]="article.imgData" /> -->
           </div>
