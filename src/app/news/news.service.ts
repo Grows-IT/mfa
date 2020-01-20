@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, of, from } from 'rxjs';
-import { switchMap, map, first, tap, catchError } from 'rxjs/operators';
+import { switchMap, map, first, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
 import { Page } from '../knowledge-room/courses/course.model';
 import { CoursesService } from '../knowledge-room/courses/courses.service';
 import { NewsArticle } from './news.model';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AuthService } from '../auth/auth.service';
 
 const { Storage } = Plugins;
 
@@ -18,7 +19,8 @@ export class NewsService {
 
   constructor(
     private coursesService: CoursesService,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private authService: AuthService,
   ) { }
 
   get newsArticles() {
@@ -43,7 +45,8 @@ export class NewsService {
 
   fetchNewsArticles() {
     return this.coursesService.fetchAndDownloadNewsTopics().pipe(
-      map(topics => {
+      withLatestFrom(this.authService.token),
+      map(([topics, token]) => {
         const pages = topics[0].activities as Page[];
         const newsArticles = pages.map(page => {
           const contentRes = page.resources.find(resource => resource.name === 'index.html');
@@ -51,12 +54,29 @@ export class NewsService {
           const otherRes = page.resources.filter(resource => resource.type);
           let content = decodeURI(contentRes.data);
           const regex = /(\?time=.+?")/;
+          const regex2 = /.148(\/pluginfile)/;
+          const regex3 = /src=\"(\S+)\"/;
+          let description = null;
+
+          if (page.description) {
+            const match = regex3.exec(page.description);
+            if (match) {
+              description = page.description.replace(regex3, 'src=' + match[1] + '?token=' + token + '"');
+              description = description.replace(regex2, '.148/webservice/pluginfile');
+            }
+          }
+
           otherRes.forEach(resource => {
             content = content.replace(regex, '"');
             content = content.replace(resource.name, resource.data);
           });
-          const description = this.domSanitizer.bypassSecurityTrustHtml(page.description);
+          // const description = this.domSanitizer.bypassSecurityTrustHtml(page.description);
           const newsArticle = new NewsArticle(page.id, page.name, content, description);
+          // if (imgRes) {
+          //   newsArticle.imgUrl = imgRes.url;
+          //   newsArticle.imgData = imgRes.data;
+          // }
+
           return newsArticle;
         });
         return newsArticles.reverse();
