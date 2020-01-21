@@ -311,7 +311,7 @@ export class CoursesService {
     );
   }
 
-  private readFile(blob: Blob): Observable<string> {
+  readFile(blob: Blob): Observable<string> {
     return new Observable(obs => {
       const reader = new FileReader();
       reader.onerror = err => obs.error(err);
