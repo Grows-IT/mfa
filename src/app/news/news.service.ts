@@ -69,7 +69,10 @@ export class NewsService {
         if (page.description) {
           const match = regex2.exec(page.description);
           if (match) {
+            const regexDeleteTime = /(\?time=.+\?)/;
             descriptionUrl = `${match[1]}/webservice${match[2]}?token=${token}`;
+            descriptionUrl = descriptionUrl.replace(regexDeleteTime, '?');
+
             return this.http.get(descriptionUrl, { responseType: 'blob' }).pipe(
               switchMap(blob => this.authService.readFile(blob)),
               map(imgData => {
