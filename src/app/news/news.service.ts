@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, of, from } from 'rxjs';
-import { switchMap, map, first, tap, catchError, withLatestFrom } from 'rxjs/operators';
+import { switchMap, map, first, tap, withLatestFrom, concatMap, toArray } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
 import { Page } from '../knowledge-room/courses/course.model';
@@ -8,6 +8,7 @@ import { CoursesService } from '../knowledge-room/courses/courses.service';
 import { NewsArticle } from './news.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AuthService } from '../auth/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 const { Storage } = Plugins;
 
@@ -21,6 +22,7 @@ export class NewsService {
     private coursesService: CoursesService,
     private domSanitizer: DomSanitizer,
     private authService: AuthService,
+    private http: HttpClient
   ) { }
 
   get newsArticles() {
@@ -45,43 +47,44 @@ export class NewsService {
 
   fetchNewsArticles() {
     return this.coursesService.fetchAndDownloadNewsTopics().pipe(
-      withLatestFrom(this.authService.token),
-      map(([topics, token]) => {
+      switchMap(topics => {
         const pages = topics[0].activities as Page[];
-        const newsArticles = pages.map(page => {
-          const contentRes = page.resources.find(resource => resource.name === 'index.html');
-          const imgRes = page.resources.find(resource => resource.type && resource.type.includes('image'));
-          const otherRes = page.resources.filter(resource => resource.type);
-          let content = decodeURI(contentRes.data);
-          const regex = /(\?time=.+?")/;
-          const regex2 = /.148(\/pluginfile)/;
-          const regex3 = /src=\"(\S+)\"/;
-          let description = null;
-
-          if (page.description) {
-            const match = regex3.exec(page.description);
-            if (match) {
-              description = page.description.replace(regex3, 'src=' + match[1] + '?token=' + token + '"');
-              description = description.replace(regex2, '.148/webservice/pluginfile');
-            }
-          }
-
-          otherRes.forEach(resource => {
-            content = content.replace(regex, '"');
-            content = content.replace(resource.name, resource.data);
-          });
-          // const description = this.domSanitizer.bypassSecurityTrustHtml(page.description);
-          const newsArticle = new NewsArticle(page.id, page.name, content, description);
-          // if (imgRes) {
-          //   newsArticle.imgUrl = imgRes.url;
-          //   newsArticle.imgData = imgRes.data;
-          // }
-
-          return newsArticle;
-        });
-        return newsArticles.reverse();
+        return from(pages);
       }),
+      withLatestFrom(this.authService.token),
+      concatMap(([page, token]) => {
+        // Parse news content
+        const contentRes = page.resources.find(resource => resource.name === 'index.html');
+        const otherRes = page.resources.filter(resource => resource.type);
+        let content = decodeURI(contentRes.data);
+        const regex = /(\?time=.+?")/;
+        otherRes.forEach(resource => {
+          content = content.replace(regex, '"');
+          content = content.replace(resource.name, resource.data);
+        });
+        // Get description for cover image
+        const regex2 = /(\w+:\/\/[\w\d\.]+)(\S+)"/g;
+        let descriptionUrl = null;
+
+        if (page.description) {
+          const match = regex2.exec(page.description);
+          if (match) {
+            descriptionUrl = `${match[1]}/webservice${match[2]}?token=${token}`;
+            return this.http.get(descriptionUrl, { responseType: 'blob' }).pipe(
+              switchMap(blob => this.authService.readFile(blob)),
+              map(imgData => {
+                const description = page.description.replace(regex2, imgData + '"');
+                return new NewsArticle(page.id, page.name, content, description);
+              })
+            );
+          }
+          return of(new NewsArticle(page.id, page.name, content, page.description));
+        }
+        return of(new NewsArticle(page.id, page.name, content, null));
+      }),
+      toArray(),
       tap(newsArticles => {
+        newsArticles = newsArticles.reverse();
         this._newsArticles.next(newsArticles);
         this.saveNewsArticlesToStorage(newsArticles);
       })

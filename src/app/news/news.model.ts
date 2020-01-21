@@ -15,6 +15,7 @@ export class NewsArticle {
       id: this.id,
       name: this.name,
       content: this.content,
+      description: this.description
       // imgUrl: this.imgUrl,
       // imgData: this.imgData
     };
