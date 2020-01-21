@@ -63,7 +63,7 @@ export class NewsService {
           content = content.replace(resource.name, resource.data);
         });
         // Get description for cover image
-        const regex2 = /(\w+:\/\/[\w\d\.]+)(\S+)"/g;
+        const regex2 = /<img src=\"(\w+:\/\/[\w\d\.]+)(\S+)"/g;
         let descriptionUrl = null;
 
         if (page.description) {
@@ -73,7 +73,7 @@ export class NewsService {
             return this.http.get(descriptionUrl, { responseType: 'blob' }).pipe(
               switchMap(blob => this.authService.readFile(blob)),
               map(imgData => {
-                const description = page.description.replace(regex2, imgData + '"');
+                const description = page.description.replace(regex2, '<img src=\"' + imgData + '"');
                 return new NewsArticle(page.id, page.name, content, description);
               })
             );
