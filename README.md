@@ -42,3 +42,10 @@ Let the gradle sync completes.
 4. Select the app. Go to Realease management ▸ App releases.
 5. Under production click manage then create release
 6. Upload the app bundle file. Enter release note. Click save and review.
+
+#### Release iOS app to App Store
+1. 
+```
+ionic cap run iod --prod
+ionic cap sync iod
+```
