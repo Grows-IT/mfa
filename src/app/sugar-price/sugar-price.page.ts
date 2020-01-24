@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { from, BehaviorSubject, throwError, Observable, of } from 'rxjs';
-import { timeout, map, switchMap, first, withLatestFrom, catchError, concatMap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 class PriceSugar {
   constructor(
@@ -26,7 +27,7 @@ export class SugarPricePage implements OnInit {
   }
 
   ngOnInit() {
-    this.http.get<any>('https://www.quandl.com/api/v3/datasets/CHRIS/ICE_SB1/data.json?start_date=2019-10-29&api_key=ai-bz1DwAQYdXnfBW5v2').pipe(
+    this.http.get<any>(`https://www.quandl.com/api/v3/datasets/CHRIS/ICE_SB1/data.json?start_date=2019-10-29&api_key=${environment.sugarApiKey}`).pipe(
       map(val => {
         const price: any = new PriceSugar(val.dataset_data.data[0][0], val.dataset_data.data[0][1], val.dataset_data.data[0][2],
           val.dataset_data.data[0][3], val.dataset_data.data[0][4]);

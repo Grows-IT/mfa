@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 interface Res {
   city: {
@@ -46,7 +47,7 @@ export class WeatherPage implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.http.get<Res>('https://api.openweathermap.org/data/2.5/forecast?q=Bangkok&APPID=d1ce964032d54e762e9496e1f4e8eda8&units=metric')
+    this.http.get<Res>(`https://api.openweathermap.org/data/2.5/forecast?q=Bangkok&APPID=${environment.weatherApiKey}&units=metric`)
       .subscribe(res => {
         this.weathers = res.list.map(data => {
           return new Weather(res.city.name, new Date(data.dt * 1000), data.main.temp, data.weather[0].main);
