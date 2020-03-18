@@ -19,11 +19,11 @@ export class CalculatorsPage implements OnInit {
     img: 'assets/calculators/sugarcane.png',
     url: 'assess-sugar'
   },
-    // {
-    //   id: '4',
-    //   img: 'assets/calculators/calculateArea.svg',
-    //   url: 'calculate-area'
-    // }
+    {
+      id: '4',
+      img: 'assets/calculators/calculateArea.svg',
+      url: 'calculate-area'
+    }
   ];
 
   constructor() { }
