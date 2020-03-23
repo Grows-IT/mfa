@@ -14,13 +14,11 @@ export class QaPage implements OnInit {
     private qaService: QaService
   ) { }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() { }
 
   ionViewWillEnter() {
-    // this.qaService.getDiscussions().subscribe((qa) => {
-    //   return this.allDiscus = qa;
-    // });
+    this.qaService.getDiscussions().subscribe((qa) => {
+      return this.allDiscus = qa;
+    });
   }
 }

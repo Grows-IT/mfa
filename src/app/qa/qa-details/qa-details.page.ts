@@ -10,6 +10,7 @@ import { NgForm } from '@angular/forms';
 export class QaDetailsPage implements OnInit {
   qaDetail;
   qaHeadDetail;
+  haveComment: boolean;
 
   constructor(
     private qaService: QaService
@@ -19,20 +20,29 @@ export class QaDetailsPage implements OnInit {
     const discussionId = this.getDiscussionId();
 
     this.qaService.fetchPosts(discussionId).subscribe(posts => {
+      console.log(posts.length);
+      if (posts.length === 1) {
+        this.haveComment = false;
+      } else {
+        this.haveComment = true;
+      }
+
       this.qaHeadDetail = posts.pop();
       this.qaDetail = posts.reverse();
+      // console.log(this.haveComment);
     });
   }
 
   getDiscussionId() {
     const url = window.location.pathname;
-    const regex: RegExp = /\/(\d)/;
+
+    const regex: RegExp = /\/(.+)[\/&|](?<id>\d+)/;
     const arrRegex = regex.exec(url);
-    return +arrRegex[1];
+    return +arrRegex.groups.id;
   }
 
   postComment(discussionForm: any, id: number, subject: string, el: NgForm) {
-    if (discussionForm.value['message'] === null || discussionForm.value['message'] === undefined || discussionForm.value['message'] === '') {
+    if (discussionForm.value['message'] || discussionForm.value['message'] === '') {
       return;
     }
 
@@ -40,7 +50,11 @@ export class QaDetailsPage implements OnInit {
       const discussionId = this.getDiscussionId();
 
       this.qaService.fetchPosts(discussionId).subscribe(posts => {
-        console.log(posts);
+        if (posts.length === 1) {
+          this.haveComment = false;
+        } else {
+          this.haveComment = true;
+        }
 
         el.reset();
         posts.pop();

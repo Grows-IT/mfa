@@ -10,7 +10,7 @@
   <ion-spinner *ngIf="!myFavorite" class="centerPage"></ion-spinner>
 
   <ion-list *ngIf="myFavorite">
-    <!-- <ion-item-sliding *ngFor="let item of myFavorite; let index = index;">
+    <ion-item-sliding *ngFor="let item of myFavorite; let index = index;">
       <ion-item lines="inset" [routerLink]="[item.categoryId, 'courses', item.id, 'topics']">
         <ion-avatar slot="start">
           <ion-img size [src]="item.imgUrl">
@@ -30,9 +30,9 @@
           </ion-button>
         </ion-buttons>
       </ion-item-options>
-    </ion-item-sliding> -->
+    </ion-item-sliding>
 
-    <ion-item lines="inset" *ngFor="let item of myFavorite" [routerLink]="[item.categoryId, 'courses', item.id, 'topics']">
+    <!-- <ion-item lines="inset" *ngFor="let item of myFavorite" [routerLink]="[item.categoryId, 'courses', item.id, 'topics']">
       <ion-avatar slot="start">
         <ion-img size [src]="item.imgUrl">
         </ion-img>
@@ -40,6 +40,6 @@
       <ion-label>
         {{ item.name }}
       </ion-label>
-    </ion-item>
+    </ion-item> -->
   </ion-list>
 </ion-content>

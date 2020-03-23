@@ -10,10 +10,10 @@
 </ion-header>
 
 <ion-content>
-  <!-- <div text-center>
+  <div text-center>
     <ion-spinner *ngIf="isLoading"></ion-spinner>
-  </div> -->
-  <!-- <ion-slides pager *ngIf="page">
+  </div>
+  <ion-slides pager *ngIf="page">
     <ion-slide text-start *ngFor="let content of slideContents">
       <ion-grid>
         <ion-row>
@@ -23,6 +23,6 @@
         </ion-row>
       </ion-grid>
     </ion-slide>
-  </ion-slides> -->
+  </ion-slides>
   <div padding [innerHTML]="page.content"></div>
 </ion-content>

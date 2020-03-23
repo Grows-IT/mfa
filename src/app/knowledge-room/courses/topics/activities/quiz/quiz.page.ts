@@ -50,7 +50,7 @@ export class QuizPage implements OnInit {
         switchMap(attemptId => {
           this.attemptId = attemptId;
           console.log(attemptId);
-          
+
           return this.quizService.fetchQuiz(attemptId);
         })
       )

@@ -17,31 +17,35 @@
   </ion-title>
 </ion-header>
 <ion-content>
-  <ion-list class="list" *ngIf="qaDetail">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <div *ngFor="let item of qaDetail; let i = index">
-            <ion-item>
-              <ion-label>
-                <p><b>ความคิดเห็นที่ {{i + 1}}</b></p><br>
-                <!-- <h2>{{item.subject}}</h2> -->
-                <h2 style="white-space: pre-line; color: black; font-size: 20px;" [innerHTML]="item.message"></h2>
-                <p></p>
-                <p>{{ item.username }} : {{ item.date | date: 'd/M/yy, h:mm a' }}</p>
-                <!-- <p>reply message</p> -->
-              </ion-label>
-            </ion-item>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-list>
+  <!-- {{qaDetail|json}} -->
+  <div *ngIf="haveComment === true">
+    <ion-list class="list" *ngIf="qaDetail">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <div *ngFor="let item of qaDetail; let i = index">
+              <ion-item>
+                <ion-label>
+                  <p><b>ความคิดเห็นที่ {{i + 1}}</b></p><br>
+                  <h2>{{item.subject}}</h2>
+                  <h2 style="white-space: pre-line; color: black; font-size: 20px;" [innerHTML]="item.message"></h2>
+                  <p></p>
+                  <p>{{ item.username }} : {{ item.date | date: 'd/M/yy, h:mm a' }}</p>
+                  <!-- <p>reply message</p> -->
+                </ion-label>
+              </ion-item>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-list>
+  </div>
   <ion-grid id="comment">
     <ion-row>
       <ion-col>
         <ion-label>ตอบกลับ</ion-label>
-        <form #discussionForm="ngForm" (ngSubmit)="postComment(discussionForm, qaHeadDetail.id, qaHeadDetail.subject, discussionForm)">
+        <form #discussionForm="ngForm"
+          (ngSubmit)="postComment(discussionForm, qaHeadDetail.id, qaHeadDetail.subject, discussionForm)">
           <ion-item class="itemCss">
             <ion-textarea placeholder="แสดงความคิดเห็น" name="message" [ngModel]></ion-textarea>
           </ion-item>

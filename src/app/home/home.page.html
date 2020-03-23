@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <!-- <ion-title *ngIf="user">
+    <ion-title *ngIf="user">
       <ion-row justify-content-center>
         <p>{{user.username}}</p>
         <a routerLink="/auth/profile">
@@ -12,10 +12,10 @@
           </ion-avatar>
         </a>
       </ion-row>
-    </ion-title> -->
-    <ion-title>Modern Farm Academy</ion-title>
-    <!-- <ion-buttons slot="primary" (click)="presentPopover($event)"> -->
-    <ion-buttons slot="primary">
+    </ion-title>
+    <!-- <ion-title>Modern Farm Academy</ion-title> -->
+    <ion-buttons slot="primary" (click)="presentPopover($event)">
+    <!-- <ion-buttons slot="primary"> -->
       <ion-badge *ngIf="numberBadge !== null" color="danger" clear>{{numberBadge}}</ion-badge>
       <ion-icon name="notifications-outline" size="large"></ion-icon>
     </ion-buttons>

@@ -33,8 +33,10 @@ export class MapPage implements OnInit {
 
     this.lat = coordinates.coords.latitude;
     this.lng = coordinates.coords.longitude;
-    // console.log('getCurrentLocation ', this.lat, this.lng);
+    console.log('lat' + this.lat);
+    console.log('lng' + this.lng);
 
+    // console.log('getCurrentLocation ', this.lat, this.lng);
 
     return this.http
       .get<any>(
@@ -45,9 +47,12 @@ export class MapPage implements OnInit {
   onMapReady(map) {
     this.map = map;
     this.initDrawingManager(map);
+    this.getCurrentLocation();
   }
 
   initDrawingManager(map: any) {
+    console.log(map);
+
     const options = {
       drawingControl: true,
       drawingControlOptions: {
@@ -60,15 +65,18 @@ export class MapPage implements OnInit {
       drawingMode: google.maps.drawing.OverlayType.POLYGON
     };
 
-
-
     const drawingManager = new google.maps.drawing.DrawingManager(options);
     drawingManager.setMap(map);
 
+    console.log(drawingManager);
+
     google.maps.event.addListener(drawingManager, 'overlaycomplete', (event) => {
+      console.log(event);
+
       if (event.type === google.maps.drawing.OverlayType.POLYGON) {
         this.area = google.maps.geometry.spherical.computeArea(event.overlay.getPath());
       }
+
 
       google.maps.event.addDomListener(document.getElementById('removeSharp'), 'click', () => {
         this.area = null;
@@ -82,8 +90,10 @@ export class MapPage implements OnInit {
       google.maps.event.addListener(event.overlay.getPath(), 'insert_at', () => {
         this.area = google.maps.geometry.spherical.computeArea(event.overlay.getPath());
       });
+
     });
 
+    // re center
     google.maps.event.addDomListener(document.getElementById('currentLocation'), 'click', () => {
 
       this.getCurrentLocation();

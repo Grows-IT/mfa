@@ -12,10 +12,14 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="18" [mapTypeId]="'hybrid'" (mapReady)="onMapReady($event)">
+  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="18" [streetViewControl]="false" [zoomControl]="true" [mapTypeId]="'hybrid'" (mapReady)="onMapReady($event)">
     <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
   </agm-map>
+
   <div style="position: fixed; right: 10px; top: 12vh; z-index: 10;">
+    <!-- <ion-buttons id="addSharp" slot="primary">
+      <ion-icon name="locate" size="large"></ion-icon>
+    </ion-buttons> -->
     <ion-buttons id="currentLocation" slot="primary">
       <ion-icon name="locate" size="large"></ion-icon>
     </ion-buttons>

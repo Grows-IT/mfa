@@ -46,7 +46,7 @@ export class QaService {
           fromObject: {
             wstoken: token,
             wsfunction: 'mod_forum_add_discussion',
-            forumid: '11',
+            forumid: '15',
             'options[0][name]': 'discussionsubscribe',
             'options[0][value]': '1',
             subject,
@@ -72,7 +72,7 @@ export class QaService {
           fromObject: {
             wstoken: token,
             wsfunction: 'mod_forum_get_forum_discussion_posts',
-            discussionid: discussionId.toString(),
+            discussionid: discussionId.toString()
           }
         });
         return this.http.post<PostResData>(environment.webServiceUrl, params);
@@ -82,6 +82,7 @@ export class QaService {
           const date = new Date(resPost.modified * 1000);
           return new Post(resPost.id, resPost.subject, resPost.message, resPost.userfullname, date);
         });
+        // console.log(posts);
         return posts;
       })
     );
@@ -93,7 +94,7 @@ export class QaService {
       switchMap(token => {
         const params = new HttpParams({
           fromObject: {
-            forumid: '11',
+            forumid: '15',
             page: '0',
             perpage: '10',
             sortorder: '1',
