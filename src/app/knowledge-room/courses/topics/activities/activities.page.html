@@ -1,7 +1,8 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" [defaultHref]="prevUrl"></ion-back-button>
+      <ion-back-button id="tab_tablet" icon="ios-arrow-back" text="ย้อนกลับ" [defaultHref]="prevUrl"></ion-back-button>
+      <ion-back-button id="tab_moblie" icon="ios-arrow-back" [defaultHref]="prevUrl"></ion-back-button>
     </ion-buttons>
     <ion-title *ngIf="!isLoading">{{ topic.name }}</ion-title>
   </ion-toolbar>
@@ -17,7 +18,7 @@
   <ion-list *ngIf="!isLoading && pages">
     <ion-item padding lines="none" button="true" *ngFor="let page of pages" [routerLink]="[page.id, 'pages']">
       <ion-label text-center>
-        <h1>{{ page.name }}</h1>
+        {{ page.name }}
       </ion-label>
     </ion-item>
   </ion-list>

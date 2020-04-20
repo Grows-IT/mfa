@@ -1,13 +1,14 @@
 <ion-header>
   <ion-toolbar mode="ios" color="medium">
     <ion-buttons slot="start">
-      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ"></ion-back-button>
+      <ion-back-button id="tab_tablet" icon="ios-arrow-back" text="ย้อนกลับ"></ion-back-button>
+      <ion-back-button id="tab_moblie" icon="ios-arrow-back" [defaultHref]="prevUrl"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      <h3>
+      <ion-label>
         <img class="title-image" [src]="course.imgData" />
         {{ course.name }}
-      </h3>
+      </ion-label>
     </ion-title>
     <ion-buttons slot="primary">
       <ion-button *ngIf="favourite" class="no-ripple" (click)="setFavourite(0)">
@@ -21,22 +22,15 @@
 </ion-header>
 
 <ion-content>
-  <div class="outer">
-    <div class="middle">
-      <div class="inner">
-        <ion-spinner *ngIf="isLoading"></ion-spinner>
-      </div>
-    </div>
-  </div>
-
   <ion-text text-center>
     <h1 *ngIf="!isLoading && errorMessage && !topics">{{ errorMessage }}</h1>
   </ion-text>
-
+  
+  <ion-spinner class="centerPage" *ngIf="!topics"></ion-spinner>
   <ion-list *ngIf="!isLoading && topics">
     <ion-button margin expand="block" shape="round" *ngFor="let topic of topics"
-      [routerLink]="[topic.id, 'activities']" class="ion-text-wrap">
-      <h4>{{ topic.name }}</h4>
-    </ion-button>
+    [routerLink]="[topic.id, 'activities']" class="ion-text-wrap">
+    <ion-label>{{ topic.name }}</ion-label>
+  </ion-button>
   </ion-list>
 </ion-content>

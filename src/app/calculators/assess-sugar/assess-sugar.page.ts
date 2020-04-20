@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-assess-sugar',
@@ -18,33 +19,53 @@ export class AssessSugarPage implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    private route: ActivatedRoute
   ) {
-    this.inputForm = this.formBuilder.group({
-      area: ['', Validators.min(1)],
-      areaWidth: ['', Validators.min(1)],
-      gap: ['', Validators.min(1)],
-      caneBlock: ['', Validators.min(1)],
-    });
+    // this.inputForm = this.formBuilder.group({
+    //   area: ['', Validators.min(1)],
+    //   areaWidth: ['', Validators.min(1)],
+    //   gap: ['', Validators.min(1)],
+    //   caneBlock: ['', Validators.min(1)],
+    // });
+
   }
 
   ngOnInit() {
+    console.log(+this.route.snapshot.queryParamMap.get('areaWidth'));
+    this.areaWidth = +this.route.snapshot.queryParamMap.get('areaWidth');
+    console.log(this.areaWidth);
+    if (this.areaWidth) {
+      this.inputForm = this.formBuilder.group({
+        area: ['', Validators.min(1)],
+        areaWidth: [this.areaWidth.toFixed(2), Validators.min(1)],
+        gap: ['', Validators.min(1)],
+        caneBlock: ['', Validators.min(1)],
+      });
+    } else {
+      this.inputForm = this.formBuilder.group({
+        area: ['', Validators.min(1)],
+        areaWidth: ['', Validators.min(1)],
+        gap: ['', Validators.min(1)],
+        caneBlock: ['', Validators.min(1)],
+      });
+    }
   }
 
   calculateTotalWeight(data) {
     if (data.area <= 0 || data.areaWidth <= 0 || data.gap <= 0 || data.caneBlock <= 0) return;
     this.area = data.area;
-    this.areaWidth = data.areaWidth
+    this.areaWidth = data.areaWidth;
     this.gap = data.gap;
     this.caneBlock = data.caneBlock;
 
-    const areaLenght = this.area * 1600 / this.areaWidth
-    const totalGap = this.areaWidth / this.gap
-    const totalCaneBlock = areaLenght * totalGap * (12 * this.caneBlock)
+    const areaLenght = this.area * 1600 / this.areaWidth;
+    const totalGap = this.areaWidth / this.gap;
+    const totalCaneBlock = areaLenght * totalGap * (12 * this.caneBlock);
 
-    const totalWeight = totalCaneBlock * 0.002
-    this.totalOutput = totalWeight / this.area
-    this.totalWeightAll = Math.floor(this.area * 1600 / this.areaWidth * this.areaWidth / this.gap * this.caneBlock * 0.002)
-    this.totalOutput = Math.floor(this.area * 1600 / this.areaWidth * this.areaWidth / this.gap * this.caneBlock * 0.002 / this.area)
+    const totalWeight = totalCaneBlock * 0.002;
+    this.totalOutput = totalWeight / this.area;
+    this.totalWeightAll = Math.floor(this.area * 1600 / this.areaWidth * this.areaWidth / this.gap * this.caneBlock * 0.002);
+    this.totalOutput = Math.floor(this.area * 1600 / this.areaWidth * this.areaWidth / this.gap * this.caneBlock * 0.002 / this.area);
     this.showResult = true;
   }
 }

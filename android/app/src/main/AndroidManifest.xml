@@ -11,11 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+            <!-- android:screenOrientation="portrait" -->
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
             android:name="com.growsit.mitrpholmfa.MainActivity"
             android:label="@string/title_activity_main"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarLaunch"
             android:launchMode="singleTask">
 

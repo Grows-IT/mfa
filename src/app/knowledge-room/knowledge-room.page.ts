@@ -6,6 +6,7 @@ import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { Category } from './courses/course.model';
 import { CoursesService } from './courses/courses.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-knowledge-room',
@@ -21,7 +22,9 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private coursesService: CoursesService
+    private coursesService: CoursesService,
+    private router: Router
+
   ) { }
 
   ngOnInit() {
@@ -47,5 +50,9 @@ export class KnowledgeRoomPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.userSub.unsubscribe();
+  }
+
+  goToHome() {
+    this.router.navigate(['/tabs/home']);
   }
 }

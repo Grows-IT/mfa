@@ -1,14 +1,14 @@
 <ion-header>
   <ion-toolbar mode="ios" color="medium">
     <ion-buttons slot="start">
-      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/knowledge-room" class="ion-hide-down"></ion-back-button>
-      <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" style="font-size: 15px;" defaultHref="/tabs/knowledge-room" class="ion-hide-sm-up"></ion-back-button>
+      <ion-back-button id="tab_tablet" icon="ios-arrow-back" text="ย้อนกลับ" defaultHref="/tabs/knowledge-room"></ion-back-button>
+      <ion-back-button id="tab_moblie" icon="ios-arrow-back" defaultHref="/tabs/knowledge-room"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      <h3>
+      <ion-label>
         <img class="title-image" [src]="category.imgData" />
         {{ category.name }}
-      </h3>
+      </ion-label>
     </ion-title>
   </ion-toolbar>
 </ion-header>

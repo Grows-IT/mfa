@@ -6,15 +6,18 @@
     <ion-title>ราคาน้ำตาล</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
   <ion-spinner *ngIf="!data" class="centerPage"></ion-spinner>
-
-  <ion-card *ngIf="data">
+  <div *ngIf="data" class="ion-text-center details">
+    <h1 style="font-size: 35px;">ราคาสินค้าโภคภัณฑ์</h1>
+    <h1 style="font-size: 35px;">US Sugar #11 Futures</h1>
+    <h1 style="font-size: xx-large; padding: 20px 0">{{ data.nowPrice }}</h1>
+    <p style="font-size: 22px; margin-top: 20px">หน่วย : เซ็นต์/ปอนด์ <br> ราคาปิด ณ วันที่ {{ date }}</p>
+  </div>
+  <!-- <ion-card *ngIf="data">
     <ion-card-header>
       <h1>ราคาน้ำตาลประจำวันที่ {{ data.date | date: 'd/M/yy' }}</h1>
     </ion-card-header>
-
     <ion-card-content>
       <ion-card-title>
         <ion-text color="primary">
@@ -49,5 +52,5 @@
         <h2>{{ data.lowPrice }}</h2>
       </ion-card-subtitle>
     </ion-card-content>
-  </ion-card>
+  </ion-card> -->
 </ion-content>

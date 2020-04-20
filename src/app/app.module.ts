@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +16,7 @@ import { AgmCoreModule } from '@agm/core';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { NgxIonicImageViewerModule } from 'ngx-ionic-image-viewer';
 
 @NgModule({
   declarations: [
@@ -30,18 +32,20 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
       // {mode: 'md'}
     ),
     AppRoutingModule,
+    NgxIonicImageViewerModule,
     HttpClientModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyBAjkv0Xdfnxgj479POHG-akwgXD9zyLmM',
       libraries: ['places', 'drawing', 'geometry'],
     }),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     AppMinimize,
     StatusBar,
     SplashScreen,
     BarcodeScanner,
+    NativeStorage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent]

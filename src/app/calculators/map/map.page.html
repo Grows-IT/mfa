@@ -23,9 +23,13 @@
     <ion-buttons id="currentLocation" slot="primary">
       <ion-icon name="locate" size="large"></ion-icon>
     </ion-buttons>
+    <ion-buttons *ngIf="area" id="calculate" slot="primary" (click)="calculate(area)">
+      <!-- <ion-icon name="locate" size="large"></ion-icon> -->
+      <ion-icon src="assets/tabs/calculator.svg" size="large"></ion-icon>
+    </ion-buttons>
   </div>
   <div style="position: absolute; left: 50%; bottom: 50px; z-index: 10;">
-    <p class="showArea" *ngIf="area">พื้นที่ทั้งหมด : {{area | number}} ตร.ม</p>
-    <p class="showArea" *ngIf="!area">พื้นที่ทั้งหมด : 0 ตร.ม</p>
+    <p class="showArea" *ngIf="area">พื้นที่ทั้งหมด <br>{{area | number}} ตร.ม</p>
+    <p class="showArea" *ngIf="!area">พื้นที่ทั้งหมด <br>0 ตร.ม</p>
   </div>
 </ion-content>

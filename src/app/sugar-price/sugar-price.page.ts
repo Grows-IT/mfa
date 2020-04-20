@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { from, BehaviorSubject, throwError, Observable, of } from 'rxjs';
-import { timeout, map, switchMap, first, withLatestFrom, catchError, concatMap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 class PriceSugar {
   constructor(
@@ -21,6 +21,8 @@ class PriceSugar {
 export class SugarPricePage implements OnInit {
 
   data: any;
+  date: string;
+  month: string[] = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
 
   constructor(private http: HttpClient) {
   }
@@ -30,11 +32,14 @@ export class SugarPricePage implements OnInit {
       map(val => {
         const price: any = new PriceSugar(val.dataset_data.data[0][0], val.dataset_data.data[0][1], val.dataset_data.data[0][2],
           val.dataset_data.data[0][3], val.dataset_data.data[0][4]);
+        console.log(val.dataset_data.data[0]);
 
         return price;
       }),
       catchError(err => throwError('Error sugar price = ' + err)),
     ).subscribe(data => {
+      const day = new Date(data.date);
+      this.date = day.getDate() + ' ' + this.month[day.getMonth()] + ' ' + (day.getFullYear() + 543);
       this.data = data;
     });
   }

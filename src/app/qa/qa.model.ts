@@ -2,7 +2,7 @@ export class Forum {
   constructor(
     public id: number,
     public name: string
-  ) {}
+  ) { }
 
   toObject() {
     return {
@@ -20,7 +20,17 @@ export class Post {
     public message: string,
     public username: string,
     public date?: Date
-  ) {}
+  ) { }
+
+  toObject() {
+    return {
+      id: this.id,
+      subject: this.subject,
+      message: this.message,
+      username: this.username,
+      date: this.date
+    };
+  }
 }
 
 export class Discussion {
@@ -29,5 +39,15 @@ export class Discussion {
     public subject: string,
     public username: string,
     public date?: Date
-  ) {}
+  ) { }
+
+  toObject() {
+    return {
+      id: this.id,
+      subject: this.subject,
+      username: this.username,
+      date: this.date
+    };
+  }
 }
+

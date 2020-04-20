@@ -8,6 +8,8 @@ import { environment } from '../../../environments/environment';
 import { Course, Topic, Page, Quiz, PageResource, Category } from './course.model';
 import { AuthService } from '../../auth/auth.service';
 import { Forum } from 'src/app/qa/qa.model';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { ToastController } from '@ionic/angular';
 
 const { Storage } = Plugins;
 
@@ -62,6 +64,8 @@ export class CoursesService {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
+    private nativeStorage: NativeStorage,
+    public toastController: ToastController
   ) { }
 
   get categories() {
@@ -176,6 +180,7 @@ export class CoursesService {
     return this.coreEnrolGetUsersCourses().pipe(
       switchMap(resArr => {
         const courseDataArray = resArr.filter(courseData => courseData.visible === 1);
+        // console.log(courseDataArray);
         return from(courseDataArray);
       }),
       withLatestFrom(this.authService.token),
@@ -275,6 +280,7 @@ export class CoursesService {
             if (activity instanceof Page) {
               const page = activity as Page;
               let savedResource: PageResource;
+
               return from(page.resources).pipe(
                 concatMap(resource => {
                   savedResource = resource;
@@ -301,8 +307,9 @@ export class CoursesService {
             return of(activity);
           }),
           toArray(),
-          map(activities => {
+          map((activities, i) => {
             topic.activities = activities;
+
             return topic;
           }),
         );
@@ -375,6 +382,7 @@ export class CoursesService {
 
   private parseModule(mod: Module) {
     if (mod.modname === 'quiz') {
+      console.log(mod);
       return of(new Quiz(mod.id, mod.instance, mod.name));
     } else if (mod.modname === 'page') {
       return from(mod.contents).pipe(
@@ -418,15 +426,53 @@ export class CoursesService {
   }
 
   private saveTopicsToStorage(courseId: number, topics: Topic[]) {
-    const data = JSON.stringify(topics.map(topic => topic.toObject()));
-    Storage.set({ key: `course_${courseId}_topics`, value: data });
+    // const data = JSON.stringify(topics.map(topic => topic.toObject()));
+    // Storage.set({ key: `course_${courseId}_topics`, value: data });
+
+    const data = topics.map(topic => topic.toObject());
+    console.log(data);
+
+    if (data[0].activities[data[0].activities.length - 1].type === 'quiz') {
+      if (data[0].activities[data[0].activities.length - 2].resources[0].data) {
+        this.nativeStorage.setItem(`course_${courseId}_topics`, { value: JSON.stringify(data) })
+          .then(
+            () => {
+              console.log('Stored item!');
+              this.presentToastWithOptions();
+            },
+            error => {
+              console.error('Error storing item', error);
+              // this.presentToastWithOptions(error);
+            }
+          );
+      }
+    } else if (data[0].activities[data[0].activities.length - 1].type === 'page') {
+      if (data[0].activities[data[0].activities.length - 1].resources[0].data) {
+        this.nativeStorage.setItem(`course_${courseId}_topics`, { value: JSON.stringify(data) })
+          .then(
+            () => {
+              console.log('Stored item!');
+              this.presentToastWithOptions();
+            },
+            error => {
+              console.error('Error storing item', error);
+              // this.presentToastWithOptions(error);
+            }
+          );
+      }
+    }
   }
 
   getTopicsFromStorage(courseId: number) {
-    return from(Storage.get({ key: `course_${courseId}_topics` })).pipe(map(storedData => {
+
+    // return from(Storage.get({ key: `course_${courseId}_topics` })).pipe(map(storedData => {
+
+    return from(this.nativeStorage.getItem(`course_${courseId}_topics`)).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
         return null;
       }
+      // console.log(storedData.value);
+
       const parsedData = JSON.parse(storedData.value) as {
         id: number,
         courseId: number,
@@ -451,6 +497,7 @@ export class CoursesService {
         if (topicData.activities) {
           activities = topicData.activities.map(activityData => {
             if (activityData.type === 'quiz') {
+              console.log(activityData);
               return new Quiz(activityData.id, activityData.instance, activityData.name);
             } else if (activityData.type === 'forum') {
               return new Forum(activityData.id, activityData.name);
@@ -470,6 +517,57 @@ export class CoursesService {
       this._topics.next(topics);
       return topics;
     }));
+
+
+    // return from(this.nativeStorage.getItem(`course_${courseId}_topics`)).pipe(map(storedData => {
+    //   if (!storedData || !storedData.value) {
+    //     return null;
+    //   }
+    //   console.log(storedData.value);
+
+    //   const parsedData = JSON.parse(storedData.value) as {
+    //     id: number,
+    //     courseId: number,
+    //     name: string,
+    //     activities: [{
+    //       id: number,
+    //       instance: number,
+    //       name: string,
+    //       type: string,
+    //       content: string,
+    //       img: string,
+    //       resources: [{
+    //         name: string,
+    //         type: string,
+    //         url: string,
+    //         data: string
+    //       }]
+    //     }]
+    //   }[];
+    //   const topics = parsedData.map(topicData => {
+    //     let activities: any[];
+    //     if (topicData.activities) {
+    //       activities = topicData.activities.map(activityData => {
+    //         if (activityData.type === 'quiz') {
+    //           return new Quiz(activityData.id, activityData.instance, activityData.name);
+    //         } else if (activityData.type === 'forum') {
+    //           return new Forum(activityData.id, activityData.name);
+    //         } else if (activityData.type === 'page') {
+    //           let resources: PageResource[];
+    //           if (activityData.resources) {
+    //             resources = activityData.resources.map(resourceData => {
+    //               return new PageResource(resourceData.name, resourceData.type, resourceData.url, resourceData.data);
+    //             });
+    //             return new Page(activityData.id, activityData.name, activityData.content, null, resources, activityData.img);
+    //           }
+    //         }
+    //       });
+    //     }
+    //     return new Topic(topicData.id, topicData.courseId, topicData.name, activities);
+    //   });
+    //   this._topics.next(topics);
+    //   return topics;
+    // }));
   }
 
   private saveCoursestoStorage(courses: Course[]) {
@@ -529,5 +627,20 @@ export class CoursesService {
         return myFavorite;
       })
     );
+  }
+
+  async presentToastWithOptions() {
+    const toast = await this.toastController.create({
+      header: 'เก็บข้อมูลแบบออฟไลน์สำเร็จแล้ว',
+      // message: 'Stored item!',
+      position: 'bottom',
+      animated: true,
+      duration: 2000,
+      buttons: [{
+        text: 'Done',
+        role: 'cancel'
+      }]
+    });
+    toast.present();
   }
 }

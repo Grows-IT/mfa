@@ -16,9 +16,14 @@
     </div>
   </div>
 
-  <ion-text text-center>
-    <h1 *ngIf="!isLoading && errorMessage && !categories">{{ errorMessage }}</h1>
+  <ion-text text-center *ngIf="!isLoading && errorMessage && !categories">
+    <h1>{{ errorMessage }}</h1>
+    <div style="text-align: center;">
+      <ion-button size="default" (click)="goToHome()">กลับสู่หน้าหลัก</ion-button>
+    </div>
   </ion-text>
+
+  <!-- tablet size -->
   <ion-grid fixed="true" *ngIf="!isLoading && categories">
     <ion-row>
       <ion-col text-center>
@@ -35,7 +40,7 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="6" *ngFor="let category of categories">
+      <ion-col size="6" *ngFor="let category of categories" class="ion-hide-down">
         <div align="center">
           <ion-card button="true" [routerLink]="[category.id, 'courses']">
             <img [src]="category.imgData" />
@@ -47,4 +52,17 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <!-- mobile size -->
+  <ion-grid fixed="true" *ngIf="!isLoading && categories" class="ion-hide-sm-up">
+    <ion-row *ngFor="let category of categories" [routerLink]="[category.id, 'courses']">
+      <ion-col size="3">
+        <img class="mImgSize" [src]="category.imgData" />
+      </ion-col>
+      <ion-col size="9">
+        <h3>{{ category.name }}</h3>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>

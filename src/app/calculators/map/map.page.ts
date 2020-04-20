@@ -3,6 +3,7 @@ import { Plugins } from '@capacitor/core';
 
 import { HttpClient } from '@angular/common/http';
 import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 const { Geolocation } = Plugins;
 declare const google: any;
@@ -21,7 +22,8 @@ export class MapPage implements OnInit {
 
   constructor(
     private http: HttpClient,
-    public toastController: ToastController,
+    private router: Router,
+    public toastController: ToastController
   ) { }
 
   ngOnInit() {
@@ -33,9 +35,6 @@ export class MapPage implements OnInit {
 
     this.lat = coordinates.coords.latitude;
     this.lng = coordinates.coords.longitude;
-    console.log('lat' + this.lat);
-    console.log('lng' + this.lng);
-
     // console.log('getCurrentLocation ', this.lat, this.lng);
 
     return this.http
@@ -51,7 +50,7 @@ export class MapPage implements OnInit {
   }
 
   initDrawingManager(map: any) {
-    console.log(map);
+    // console.log(map);
 
     const options = {
       drawingControl: true,
@@ -68,10 +67,10 @@ export class MapPage implements OnInit {
     const drawingManager = new google.maps.drawing.DrawingManager(options);
     drawingManager.setMap(map);
 
-    console.log(drawingManager);
+    // console.log(drawingManager);
 
     google.maps.event.addListener(drawingManager, 'overlaycomplete', (event) => {
-      console.log(event);
+      // console.log(event);
 
       if (event.type === google.maps.drawing.OverlayType.POLYGON) {
         this.area = google.maps.geometry.spherical.computeArea(event.overlay.getPath());
@@ -104,5 +103,9 @@ export class MapPage implements OnInit {
       this.map.setZoom(18);
       // console.log('button ', this.lat, this.lng);
     });
+  }
+
+  calculate(area) {
+    this.router.navigate(['/tabs/calculators/assess-sugar'], { queryParams: { areaWidth: area } });
   }
 }

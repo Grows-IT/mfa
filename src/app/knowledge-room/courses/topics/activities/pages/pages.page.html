@@ -2,18 +2,24 @@
   <div>
     <ion-toolbar color="tertiary">
       <ion-buttons slot="start">
-        <ion-back-button icon="ios-arrow-back" text="ย้อนกลับ" [defaultHref]="prevUrl"></ion-back-button>
+        <ion-back-button id="tab_tablet" icon="ios-arrow-back" text="ย้อนกลับ" [defaultHref]="prevUrl"></ion-back-button>
+        <ion-back-button id="tab_moblie" icon="ios-arrow-back" [defaultHref]="prevUrl"></ion-back-button>
       </ion-buttons>
       <ion-title>{{ page.name }}</ion-title>
+      <ion-buttons slot="primary">
+        <ion-button *ngIf="isSlideMode" class="no-ripple" (click)="setMode(false)">
+          <ion-icon style="color: white" name="document"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="!isSlideMode" class="no-ripple" (click)="setMode(true)">
+          <ion-icon style="color: white" name="book"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-toolbar>
   </div>
 </ion-header>
 
 <ion-content>
-  <div text-center>
-    <ion-spinner *ngIf="isLoading"></ion-spinner>
-  </div>
-  <ion-slides pager *ngIf="page">
+  <!-- <ion-slides pager *ngIf="page">
     <ion-slide text-start *ngFor="let content of slideContents">
       <ion-grid>
         <ion-row>
@@ -23,6 +29,20 @@
         </ion-row>
       </ion-grid>
     </ion-slide>
+  </ion-slides> -->
+  <ion-spinner class="centerPage" *ngIf="page.content === 'undefined' && imgUrl !== []"></ion-spinner>
+  <!-- <div *ngIf="page.content !== 'undefined' && !isSlideMode">
+    <div (click)="openViewer($event)" #pageContent padding [innerHTML]="page.content"></div>
+  </div> -->
+  <!-- padding -->
+  <div *ngIf="imgUrl !== [] && !isSlideMode">
+    <p *ngFor="let item of imgUrl">
+      <img *ngIf="item.data" (click)="openViewer($event)" [src]="item.data" class="landImg">
+    </p> 
+  </div>
+  <ion-slides class="slider" *ngIf="imgUrl !== [] && isSlideMode" pager="false">
+    <ion-slide class="slider-slide" *ngFor="let item of imgUrl">
+      <img *ngIf="item.data" (click)="openViewer($event)" [src]="item.data" />
+    </ion-slide>
   </ion-slides>
-  <div padding [innerHTML]="page.content"></div>
 </ion-content>

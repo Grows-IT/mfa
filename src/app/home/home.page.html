@@ -23,35 +23,28 @@
   <ion-segment>
     <ion-segment-button layout="icon-start" [routerLink]="['favorite']">
     <!-- <ion-segment-button layout="icon-start"> -->
-      <ion-label color="light">Favorite</ion-label>
+      <ion-label color="light" class="font_segment">Favorite</ion-label>
       <ion-icon src="assets/home/favorite.svg"></ion-icon>
     </ion-segment-button>
     <ion-segment-button layout="icon-start" [routerLink]="['note']">
     <!-- <ion-segment-button layout="icon-start"> -->
-      <ion-label color="light">Note</ion-label>
+      <ion-label color="light" class="font_segment">Note</ion-label>
       <ion-icon src="assets/home/note.svg"></ion-icon>
     </ion-segment-button>
     <ion-segment-button layout="icon-start" [routerLink]="['qr-code']">
     <!-- <ion-segment-button layout="icon-start"> -->
-      <ion-label color="light">QR Code</ion-label>
+      <ion-label color="light" class="font_segment">QR Code</ion-label>
       <ion-icon src="assets/home/qr.svg"></ion-icon>
     </ion-segment-button>
   </ion-segment>
 </ion-header>
 
 <ion-content>
-  <div class="outer">
-    <div class="middle">
-      <div class="inner">
-        <ion-spinner *ngIf="isLoading && !newsArticles"></ion-spinner>
-      </div>
-    </div>
-  </div>
-
-  <ion-text text-center>
-    <h1 *ngIf="!isLoading && errorMessage && !newsArticles">{{ errorMessage }}</h1>
+  <ion-text text-center *ngIf="!isLoading && errorMessage && !newsArticles">
+    <h1 >{{ errorMessage }}</h1>
   </ion-text>
-
+  
+  <ion-spinner *ngIf="isLoading && !newsArticles" class="centerPage"></ion-spinner>
   <ion-grid fixed="true" *ngIf="newsArticles">
     <ion-row>
       <ion-col margin-start>
@@ -99,17 +92,14 @@
       </ion-col>
       <ion-col>
         <ion-card class="directory-card" button="true" routerLink="sugar-price">
-          <!-- <ion-card class="directory-card" button="true"> -->
           <img src="assets/home/sugar.png" />
         </ion-card>
       </ion-col>
       <ion-col>
         <ion-card class="directory-card" button="true" routerLink="weather">
-          <!-- <ion-card class="directory-card" button="true"> -->
           <img src="assets/home/weather.png" />
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
-
 </ion-content>

@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { CoursesService } from '../../../courses.service';
 import { Page } from '../../../course.model';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
+import { ModalController } from '@ionic/angular';
+import { ViewerModalComponent } from 'ngx-ionic-image-viewer';
 
 @Component({
   selector: 'app-pages',
@@ -16,17 +18,21 @@ export class PagesPage implements OnInit, OnDestroy {
   page: Page;
   slideContents: SafeHtml[];
   prevUrl: string;
+  isSlideMode: boolean;
+  imgUrl = [];
   private activitySub: Subscription;
   private topicId: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private coursesService: CoursesService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    public modalController: ModalController
   ) { }
 
   ngOnInit() {
     this.isLoading = true;
+    this.isSlideMode = true;
     this.topicId = +this.activatedRoute.snapshot.paramMap.get('topicId');
     const activityId = +this.activatedRoute.snapshot.paramMap.get('activityId');
     this.activitySub = this.coursesService.topics.subscribe(topics => {
@@ -36,12 +42,17 @@ export class PagesPage implements OnInit, OnDestroy {
       let htmlContent = decodeURI(htmlResource.data);
       const otherResources = this.page.resources.filter(resource => resource.type);
       const regex = /(\?time=.+?")/;
-      otherResources.forEach(resource => {
+
+      otherResources.forEach((resource, i) => {
+        this.imgUrl.push({ url: resource.url, data: resource.data });
         htmlContent = htmlContent.replace(regex, '"');
         htmlContent = htmlContent.replace(resource.name, resource.data);
-      });
 
+        // console.log(resource);
+
+      });
       this.page.content = htmlContent;
+      // console.log(this.page.content);
 
       // this.slideContents = htmlContent.split('<p></p>').map(str => this.sanitizer.bypassSecurityTrustHtml(str));
       this.isLoading = false;
@@ -57,5 +68,26 @@ export class PagesPage implements OnInit, OnDestroy {
     const categoryId = +this.activatedRoute.snapshot.paramMap.get('categoryId');
     const courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.prevUrl = `/tabs/knowledge-room/${categoryId}/courses/${courseId}/topics/${this.topicId}/activities`;
+  }
+
+  async openViewer(e) {
+    // console.log(e);
+
+    const modal = await this.modalController.create({
+      component: ViewerModalComponent,
+      componentProps: {
+        src: e.target.src
+      },
+      cssClass: 'ion-img-viewer',
+      keyboardClose: true,
+      showBackdrop: true
+    });
+
+    return await modal.present();
+  }
+
+  setMode(mode) {
+    this.isSlideMode = mode;
+    // console.log(mode);
   }
 }

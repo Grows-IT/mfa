@@ -11,17 +11,25 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-item *ngFor="let item of allDiscus" [routerLink]="[item.id]">
-            <ion-label>
-              <h2>{{ item.subject }}</h2>
-              <h3>{{ item.username }} <span class="date">{{ item.date | date: 'd/M/yy, h:mm a' }}</span></h3>
-            </ion-label>
-          </ion-item>
+          <ion-text text-center *ngIf="!allDiscus && !isLoading">
+            <h1>{{ errorMessage }}</h1>
+            <div style="text-align: center;">
+              <ion-button size="default" (click)="goToHome()">กลับสู่หน้าหลัก</ion-button>
+            </div>
+          </ion-text>
+          <div *ngIf="allDiscus && isLoading">
+            <ion-item *ngFor="let item of allDiscus" [routerLink]="[item.id]">
+              <ion-label>
+                <h2>{{ item.subject }}</h2>
+                <h3>{{ item.username }} <span class="date">{{ item.date | date: 'd/M/yy, h:mm a' }}</span></h3>
+              </ion-label>
+            </ion-item>
+          </div>
         </ion-col>
       </ion-row>
     </ion-grid>
   </ion-list>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab *ngIf="allDiscus && isLoading" vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
       <ion-icon name="add" [routerLink]="['new']"></ion-icon>
     </ion-fab-button>

@@ -16,8 +16,11 @@
     </div>
   </div>
 
-  <ion-text *ngIf="errorMessage && !isLoading && !newsArticles">
+  <ion-text text-center *ngIf="errorMessage && !isLoading && !newsArticles">
     <h1>{{ errorMessage }}</h1>
+    <div style="text-align: center;">
+      <ion-button size="default" (click)="goToHome()">กลับสู่หน้าหลัก</ion-button>
+    </div>
   </ion-text>
   <ion-grid *ngIf="!isLoading && newsArticles">
     <ion-row *ngFor="let article of newsArticles">

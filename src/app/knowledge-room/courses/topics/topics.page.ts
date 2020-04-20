@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 
 import { CoursesService } from '../courses.service';
 import { Topic, Course } from '../course.model';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-topics',
@@ -30,7 +31,6 @@ export class TopicsPage implements OnInit, OnDestroy {
     this.isLoading = true;
     this.courseId = +this.activatedRoute.snapshot.paramMap.get('courseId');
     this.coursesSub = this.coursesService.courses.subscribe(courses => {
-
       this.course = courses.find(course => course.id === this.courseId);
       this.favourite = this.course.favourite;
 
@@ -44,8 +44,12 @@ export class TopicsPage implements OnInit, OnDestroy {
           this.errorMessage = 'Coming soon';
           return;
         }
-        this.topics = topics;
-        this.coursesService.downloadCourseTopics(this.courseId).subscribe();
+        this.coursesService.downloadCourseTopics(this.courseId).subscribe((t) => {
+          // console.log(t);
+
+          this.topics = t;
+        });
+        // this.topics = topics;
       },
       () => {
         this.coursesService.getTopicsFromStorage(this.courseId).subscribe(topics => {

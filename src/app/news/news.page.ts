@@ -4,6 +4,7 @@ import { Subscription, Observable } from 'rxjs';
 import { NewsService } from './news.service';
 import { NewsArticle } from './news.model';
 import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-news',
@@ -17,7 +18,8 @@ export class NewsPage implements OnInit, OnDestroy {
   private newsSub: Subscription;
 
   constructor(
-    private newsService: NewsService
+    private newsService: NewsService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -40,5 +42,9 @@ export class NewsPage implements OnInit, OnDestroy {
         this.errorMessage = 'การเชื่อมต่อล้มเหลว';
       }
     });
+  }
+
+  goToHome() {
+    this.router.navigate(['/tabs/home']);
   }
 }
