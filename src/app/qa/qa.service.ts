@@ -101,13 +101,13 @@ export class QaService {
         this._posts.next(posts);
         this.savePostToStroage(posts, res.posts[res.posts.length - 1]['discussion']);
         return posts;
-      //   return [{ posts: posts, discussion: res.posts[res.posts.length - 1]['discussion'] }];
-      // }),
-      // tap(data => {
-      //   console.log(data[0]);
+        //   return [{ posts: posts, discussion: res.posts[res.posts.length - 1]['discussion'] }];
+        // }),
+        // tap(data => {
+        //   console.log(data[0]);
 
-      //   this._posts.next(data[0].posts);
-      //   this.savePostToStroage(data[0].posts, data[0].discussion);
+        //   this._posts.next(data[0].posts);
+        //   this.savePostToStroage(data[0].posts, data[0].discussion);
       })
     );
   }
@@ -147,6 +147,8 @@ export class QaService {
   }
 
   postDiscussion(messages: string, id: number, subject: string) {
+    console.log(messages);
+
     return this.authService.token.pipe(
       first(),
       switchMap(token => {

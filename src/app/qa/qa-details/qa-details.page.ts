@@ -39,7 +39,7 @@ export class QaDetailsPage implements OnInit, OnDestroy {
         this.qaHeadDetail = this.postObj.pop();
         this.qaDetail = this.postObj.reverse();
         // console.log(this.qaDetail);
-        console.log(this.qaHeadDetail);
+        // console.log(this.qaHeadDetail);
       }
     });
 
@@ -79,11 +79,14 @@ export class QaDetailsPage implements OnInit, OnDestroy {
 
     const regex: RegExp = /\/(.+)[\/&|](?<id>\d+)/;
     const arrRegex = regex.exec(url);
+    console.log(arrRegex.groups.id);
+    console.log(+arrRegex.groups.id);
+
     return +arrRegex.groups.id;
   }
 
   postComment(discussionForm: any, id: number, subject: string, el: NgForm) {
-    if (discussionForm.value['message'] || discussionForm.value['message'] === '') {
+    if (!discussionForm.value['message'] || discussionForm.value['message'] === '') {
       return;
     }
 

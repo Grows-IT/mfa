@@ -280,7 +280,7 @@ export class CoursesService {
             if (activity instanceof Page) {
               const page = activity as Page;
               let savedResource: PageResource;
-
+              // console.log(activity);
               return from(page.resources).pipe(
                 concatMap(resource => {
                   savedResource = resource;
@@ -426,48 +426,47 @@ export class CoursesService {
   }
 
   private saveTopicsToStorage(courseId: number, topics: Topic[]) {
-    // const data = JSON.stringify(topics.map(topic => topic.toObject()));
-    // Storage.set({ key: `course_${courseId}_topics`, value: data });
+    const data = JSON.stringify(topics.map(topic => topic.toObject()));
+    Storage.set({ key: `course_${courseId}_topics`, value: data });
 
-    const data = topics.map(topic => topic.toObject());
-    console.log(data);
+    // const data = topics.map(topic => topic.toObject());
+    // console.log(data);
 
-    if (data[0].activities[data[0].activities.length - 1].type === 'quiz') {
-      if (data[0].activities[data[0].activities.length - 2].resources[0].data) {
-        this.nativeStorage.setItem(`course_${courseId}_topics`, { value: JSON.stringify(data) })
-          .then(
-            () => {
-              console.log('Stored item!');
-              this.presentToastWithOptions();
-            },
-            error => {
-              console.error('Error storing item', error);
-              // this.presentToastWithOptions(error);
-            }
-          );
-      }
-    } else if (data[0].activities[data[0].activities.length - 1].type === 'page') {
-      if (data[0].activities[data[0].activities.length - 1].resources[0].data) {
-        this.nativeStorage.setItem(`course_${courseId}_topics`, { value: JSON.stringify(data) })
-          .then(
-            () => {
-              console.log('Stored item!');
-              this.presentToastWithOptions();
-            },
-            error => {
-              console.error('Error storing item', error);
-              // this.presentToastWithOptions(error);
-            }
-          );
-      }
-    }
+    // if (data[0].activities[data[0].activities.length - 1].type === 'quiz') {
+    //   if (data[0].activities[data[0].activities.length - 2].resources[0].data) {
+    //     this.nativeStorage.setItem(`course_${courseId}_topics`, { value: JSON.stringify(data) })
+    //       .then(
+    //         () => {
+    //           console.log('Stored item!');
+    //           this.presentToastWithOptions();
+    //         },
+    //         error => {
+    //           console.error('Error storing item', error);
+    //           // this.presentToastWithOptions(error);
+    //         }
+    //       );
+    //   }
+    // } else if (data[0].activities[data[0].activities.length - 1].type === 'page') {
+    //   if (data[0].activities[data[0].activities.length - 1].resources[0].data) {
+    //     this.nativeStorage.setItem(`course_${courseId}_topics`, { value: JSON.stringify(data) })
+    //       .then(
+    //         () => {
+    //           console.log('Stored item!');
+    //           this.presentToastWithOptions();
+    //         },
+    //         error => {
+    //           console.error('Error storing item', error);
+    //           // this.presentToastWithOptions(error);
+    //         }
+    //       );
+    //   }
+    // }
   }
 
   getTopicsFromStorage(courseId: number) {
+    return from(Storage.get({ key: `course_${courseId}_topics` })).pipe(map(storedData => {
 
-    // return from(Storage.get({ key: `course_${courseId}_topics` })).pipe(map(storedData => {
-
-    return from(this.nativeStorage.getItem(`course_${courseId}_topics`)).pipe(map(storedData => {
+      // return from(this.nativeStorage.getItem(`course_${courseId}_topics`)).pipe(map(storedData => {
       if (!storedData || !storedData.value) {
         return null;
       }
@@ -497,7 +496,7 @@ export class CoursesService {
         if (topicData.activities) {
           activities = topicData.activities.map(activityData => {
             if (activityData.type === 'quiz') {
-              console.log(activityData);
+              // console.log(activityData);
               return new Quiz(activityData.id, activityData.instance, activityData.name);
             } else if (activityData.type === 'forum') {
               return new Forum(activityData.id, activityData.name);

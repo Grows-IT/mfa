@@ -14,10 +14,6 @@ export class NotePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.noteService.getAllNote().subscribe((data) => {
-      this.data = data.personalnotes;
-      // console.log(this.data);
-    });
   }
 
   ionViewWillEnter() {

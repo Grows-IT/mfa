@@ -2,7 +2,8 @@
   <div>
     <ion-toolbar color="tertiary">
       <ion-buttons slot="start">
-        <ion-back-button id="tab_tablet" icon="ios-arrow-back" text="ย้อนกลับ" [defaultHref]="prevUrl"></ion-back-button>
+        <ion-back-button id="tab_tablet" icon="ios-arrow-back" text="ย้อนกลับ" [defaultHref]="prevUrl">
+        </ion-back-button>
         <ion-back-button id="tab_moblie" icon="ios-arrow-back" [defaultHref]="prevUrl"></ion-back-button>
       </ion-buttons>
       <ion-title>{{ page.name }}</ion-title>
@@ -19,29 +20,44 @@
 </ion-header>
 
 <ion-content>
-  <!-- <ion-slides pager *ngIf="page">
+  <ion-slides pager *ngIf="page">
     <ion-slide text-start *ngFor="let content of slideContents">
       <ion-grid>
         <ion-row>
           <ion-col>
+            {{content}}
             <div [innerHTML]="content"></div>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-slide>
-  </ion-slides> -->
+  </ion-slides>
   <ion-spinner class="centerPage" *ngIf="page.content === 'undefined' && imgUrl !== []"></ion-spinner>
   <!-- <div *ngIf="page.content !== 'undefined' && !isSlideMode">
     <div (click)="openViewer($event)" #pageContent padding [innerHTML]="page.content"></div>
   </div> -->
   <!-- padding -->
-  <div *ngIf="imgUrl !== [] && !isSlideMode">
-    <p *ngFor="let item of imgUrl">
+
+  <!-- <div *ngIf="url !== null">
+    {{url}}
+    <iframe width="560" height="315" [src]="controllerSrc" frameborder="0"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+  </div> -->
+
+  <!-- normal mode -->
+  <div *ngIf="allUrl !== [] && !isSlideMode">
+    <p *ngFor="let item of allUrl">
+      <iframe *ngIf="!item.data" [src]="getSafeUrl(item)" frameborder="0"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
       <img *ngIf="item.data" (click)="openViewer($event)" [src]="item.data" class="landImg">
-    </p> 
+    </p>
   </div>
-  <ion-slides class="slider" *ngIf="imgUrl !== [] && isSlideMode" pager="false">
-    <ion-slide class="slider-slide" *ngFor="let item of imgUrl">
+
+  <!-- slide mode -->
+  <ion-slides class="slider" *ngIf="allUrl !== [] && isSlideMode" pager="false">
+    <ion-slide class="slider-slide" *ngFor="let item of allUrl">
+      <iframe *ngIf="!item.data" [src]="getSafeUrl(item)" frameborder="0"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
       <img *ngIf="item.data" (click)="openViewer($event)" [src]="item.data" />
     </ion-slide>
   </ion-slides>

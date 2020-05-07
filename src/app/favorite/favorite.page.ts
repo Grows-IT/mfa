@@ -17,9 +17,6 @@ export class FavoritePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.coursesService.getFavourite().subscribe((favourite) => {
-      this.myFavorite = favourite;
-    });
   }
 
   ionViewWillEnter() {

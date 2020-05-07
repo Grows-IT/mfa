@@ -107,7 +107,6 @@ export class QuizPage implements OnInit {
 
             data[i] = obj;
             data[i + 1] = obj2;
-
           } else {
             // answer
             const obj = {

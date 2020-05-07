@@ -82,6 +82,21 @@
   right: 0;
 }
 
+iframe {
+  width: 100%;
+  height: calc(100vw / 1.95);
+}
+// div.no-overflow > p {
+//   position: relative;
+//   padding-bottom: 56.25%; /* 16:9 */
+//   padding-top: 25px;
+//   height: 0;
+// }
+div.no-overflow > p > iframe {
+  width: 100%;
+  height: calc(100vw / 1.95);
+}
+
 // /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-device-width: 400px) and (orientation: portrait) {
   .font_tab {

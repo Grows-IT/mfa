@@ -38,6 +38,7 @@
     "@ionic/storage": "^2.2.0",
     "cordova-plugin-appminimize": "^1.0.1",
     "cordova-plugin-nativestorage": "^2.3.2",
+    "cordova-sqlite-storage": "^5.0.0",
     "core-js": "^2.5.4",
     "fix-orientation-capacitor": "^0.1.1",
     "ionic-img-viewer": "^2.9.0",

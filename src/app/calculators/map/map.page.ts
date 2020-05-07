@@ -76,31 +76,39 @@ export class MapPage implements OnInit {
         this.area = google.maps.geometry.spherical.computeArea(event.overlay.getPath());
       }
 
-
       google.maps.event.addDomListener(document.getElementById('removeSharp'), 'click', () => {
         this.area = null;
         event.overlay.setMap(null);
       });
 
-      google.maps.event.addListener(event.overlay.getPath(), 'set_at', () => {
-        this.area = google.maps.geometry.spherical.computeArea(event.overlay.getPath());
-      });
+      // google.maps.event.addListener(event.overlay.getPath(), 'set_at', () => {
+      //   console.log('set at');
+      //   this.area = google.maps.geometry.spherical.computeArea(event.overlay.getPath());
+      // });
 
-      google.maps.event.addListener(event.overlay.getPath(), 'insert_at', () => {
-        this.area = google.maps.geometry.spherical.computeArea(event.overlay.getPath());
-      });
+      // google.maps.event.addListener(event.overlay.getPath(), 'insert_at', () => {
+      //   console.log('insert at');
+      //   this.area = google.maps.geometry.spherical.computeArea(event.overlay.getPath());
+      // });
 
     });
 
     // re center
     google.maps.event.addDomListener(document.getElementById('currentLocation'), 'click', () => {
 
-      this.getCurrentLocation();
-      // this.lat = 13.0;
-      // this.lng = 100;
+      this.getCurrentLocation().then(
+        data => {
+          data.subscribe(map => {
+            console.log(map.results[0].geometry.location);
+            this.map.panTo({ lat: map.results[0].geometry.location.lat, lng: map.results[0].geometry.location.lng });
+            this.map.setZoom(18);
+          });
+        }
+      );
 
-      this.map.panTo({ lat: this.lat, lng: this.lng });
-      this.map.setZoom(18);
+      // this.getCurrentLocation()
+      // this.map.panTo({ lat: this.lat, lng: this.lng });
+      // this.map.setZoom(18);
       // console.log('button ', this.lat, this.lng);
     });
   }

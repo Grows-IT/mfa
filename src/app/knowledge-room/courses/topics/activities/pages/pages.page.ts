@@ -20,6 +20,10 @@ export class PagesPage implements OnInit, OnDestroy {
   prevUrl: string;
   isSlideMode: boolean;
   imgUrl = [];
+  youtubeUrl = [];
+  allUrl = [];
+  controllerSrc;
+
   private activitySub: Subscription;
   private topicId: number;
 
@@ -41,19 +45,41 @@ export class PagesPage implements OnInit, OnDestroy {
       const htmlResource = this.page.resources.find(resource => resource.name === 'index.html');
       let htmlContent = decodeURI(htmlResource.data);
       const otherResources = this.page.resources.filter(resource => resource.type);
-      const regex = /(\?time=.+?")/;
+      const regex: RegExp = /(\?time=.+?")/;
+      const regexYoutube: RegExp = /<iframe.+?src="https?:\/\/www.youtube.com\/embed\/(?<url>[a-zA-Z0-9_-]{11})"[^>]+?><\/iframe>/;
+      const allTag = htmlResource.data.match(/<img|<iframe/g);
+
+      // console.log(otherResources);
+      htmlResource.data.split(regexYoutube).map(str => {
+        if (str.length === 11) {
+          // console.log(str);
+          this.youtubeUrl.push(str);
+        }
+      });
 
       otherResources.forEach((resource, i) => {
         this.imgUrl.push({ url: resource.url, data: resource.data });
         htmlContent = htmlContent.replace(regex, '"');
-        htmlContent = htmlContent.replace(resource.name, resource.data);
-
-        // console.log(resource);
-
+        // htmlContent = htmlContent.replace(resource.name, resource.data);
       });
+
+      let j = 0;
+      for (let i = 0; i < allTag.length; i++) {
+        if (allTag[i] === '<iframe' && j === 0) {
+          this.allUrl.push('https://www.youtube.com/embed/' + this.youtubeUrl[i]);
+          j++;
+        } else if (allTag[i] === '<img' && j === 0) {
+          this.allUrl.push(this.imgUrl[i]);
+        } else if (allTag[i] === '<iframe' && j !== 0) {
+          this.allUrl.push('https://www.youtube.com/embed/' + this.youtubeUrl[j]);
+          j++;
+        } else if (allTag[i] === '<img' && j !== 0) {
+          this.allUrl.push(this.imgUrl[i - j]);
+        }
+      }
+
       this.page.content = htmlContent;
       // console.log(this.page.content);
-
       // this.slideContents = htmlContent.split('<p></p>').map(str => this.sanitizer.bypassSecurityTrustHtml(str));
       this.isLoading = false;
     });
@@ -62,6 +88,11 @@ export class PagesPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.activitySub.unsubscribe();
+  }
+
+  getSafeUrl(url) {
+    this.controllerSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    return this.controllerSrc;
   }
 
   private setPrevUrl() {
@@ -76,7 +107,8 @@ export class PagesPage implements OnInit, OnDestroy {
     const modal = await this.modalController.create({
       component: ViewerModalComponent,
       componentProps: {
-        src: e.target.src
+        src: e.target.src,
+        swipeToClose: false
       },
       cssClass: 'ion-img-viewer',
       keyboardClose: true,

@@ -7,6 +7,11 @@
   </feature>
 
 
+  <feature name="SQLitePlugin">
+    <param name="ios-package" value="SQLitePlugin"/>
+  </feature>
+
+
   <feature name="BarcodeScanner">
     <param name="ios-package" value="CDVBarcodeScanner"/>
   </feature>
